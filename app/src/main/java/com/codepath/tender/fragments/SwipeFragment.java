@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
 import com.codepath.tender.R;
-import com.codepath.tender.YelpSearchResult;
+import com.codepath.tender.models.YelpSearchResult;
 import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.models.Restaurant;
@@ -21,13 +21,10 @@ import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
 import com.yuyakaido.android.cardstackview.Direction;
-import com.yuyakaido.android.cardstackview.Duration;
-import com.yuyakaido.android.cardstackview.RewindAnimationSetting;
 import com.yuyakaido.android.cardstackview.StackFrom;
 import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,8 +115,6 @@ public class SwipeFragment extends Fragment {
 
         setLayoutManager();
 
-        populateCards();
-
         adapter = new CardStackAdapter(getContext(), restaurants);
 
         cardStackView.setLayoutManager(layoutManager);
@@ -142,6 +137,13 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
                 Log.d(TAG, "onSuccess " + response);
+                YelpSearchResult searchResult = response.body();
+                if(searchResult == null){
+                    Log.e(TAG, "No restaurants retrieved");
+                    return;
+                }
+                restaurants.addAll(searchResult.restaurants);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -194,14 +196,5 @@ public class SwipeFragment extends Fragment {
         layoutManager.setMaxDegree(20.0f); //sets how much the cards rotate when swiped
         layoutManager.setDirections(Direction.HORIZONTAL); //allows user to swipe horizontally only (user can still drag vertically)
         layoutManager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual); //sets swiping method
-    }
-
-    //populates the list of restaurants with data
-    private void populateCards() {
-        restaurants.add(new Restaurant("Italia", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "5.8 miles away", 4.6f));
-        restaurants.add(new Restaurant("Citris Grill", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "5.8 miles away", 4.4f));
-        restaurants.add(new Restaurant("Burger Hut", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "2.3 miles away", 4.2f));
-        restaurants.add(new Restaurant("Garden Cafe", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "7.2 miles away", 4.5f));
-        restaurants.add(new Restaurant("Coffee Bar", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "2.6 miles away", 4.2f));
     }
 }

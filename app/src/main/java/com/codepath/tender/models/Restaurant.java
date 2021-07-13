@@ -2,18 +2,21 @@ package com.codepath.tender.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Restaurant {
 
     private String name;
-    private String url;
-    private String distance;
+    private String image_url;
+    private float distance;
     private float rating;
+    //private List<Location> location;
 
     public Restaurant() {}
 
-    public Restaurant(String name, String url, String distance, float rating) {
+    public Restaurant(String name, String image_url, float distance, float rating) {
         this.name = name;
-        this.url = url;
+        this.image_url = image_url;
         this.distance = distance;
         this.rating = rating;
     }
@@ -23,14 +26,21 @@ public class Restaurant {
     }
 
     public String getImage() {
-        return url;
+        return image_url;
     }
 
-    public String getDistance() {
+    public float getDistance() {
         return distance;
     }
 
     public float getRating() {
         return rating;
+    }
+
+    public String getDisplayDistance() {
+        float milesPerMeter = 0.000621371f;
+        float distanceInMiles = milesPerMeter * distance;
+        return distanceInMiles + " mi";
+
     }
 }

@@ -1,6 +1,6 @@
 package com.codepath.tender;
 
-import com.codepath.tender.models.Restaurant;
+import com.codepath.tender.models.YelpSearchResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
