@@ -41,6 +41,17 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
 
+        <RatingBar
+            android:id="@+id/rbRating"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:progressBackgroundTint="#FFFFFF"
+            android:progressTint="#FFFFFF"
+            android:secondaryProgressTint="#FFFFFF"
+            android:stepSize="0.1" />
+
     </LinearLayout>
 
     <FrameLayout

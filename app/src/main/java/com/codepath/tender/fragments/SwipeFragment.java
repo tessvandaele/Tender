@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
 import com.codepath.tender.R;
+import com.codepath.tender.YelpSearchResult;
+import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
@@ -25,12 +27,23 @@ import com.yuyakaido.android.cardstackview.StackFrom;
 import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SwipeFragment extends Fragment {
 
     private static final String TAG = "SwipeFragment";
+    private static final String BASE_URL = "https://api.yelp.com/v3/";
+    private static final String API_KEY = "Bearer GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
+
+    private Retrofit retrofit;
 
     private CardStackLayoutManager layoutManager;
     private CardStackAdapter adapter;
@@ -45,12 +58,13 @@ public class SwipeFragment extends Fragment {
     //empty constructor
     public SwipeFragment() {}
 
-    //set up to view object hierarchy
+    //inflate layout
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_swipe, container, false);
     }
 
+    //construct view hierarchy
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -60,6 +74,7 @@ public class SwipeFragment extends Fragment {
         ibDislike = view.findViewById(R.id.ibDislike);
         ibRefresh = view.findViewById(R.id.ibRefresh);
 
+        //initializing card stack layout manager
         layoutManager = new CardStackLayoutManager(getContext(), new CardStackListener() {
             //called when a card is dragged from original position
             @Override
@@ -71,29 +86,10 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onCardSwiped(Direction direction) {
                 Log.d(TAG, "onCardSwiped: p = " + layoutManager.getTopPosition() + " d = " + direction.name());
-                if(direction == Direction.Right) {
-                    Toast.makeText(getContext(), "Swipe right", Toast.LENGTH_SHORT).show();
-                }
-                if(direction == Direction.Left) {
-                    Toast.makeText(getContext(), "Swipe left", Toast.LENGTH_SHORT).show();
-                }
-                if(direction == Direction.Bottom) {
-                    Toast.makeText(getContext(), "Swipe down", Toast.LENGTH_SHORT).show();
-                }
-                if(direction == Direction.Top) {
-                    Toast.makeText(getContext(), "Swipe up", Toast.LENGTH_SHORT).show();
-                }
-
-                //refill the recyclerview when the end is reached
-                if(layoutManager.getTopPosition() == adapter.getItemCount() - 1 ) {
-                    Toast.makeText(getContext(), "reached bottom of stack", Toast.LENGTH_SHORT).show();
-                    //disable swiping
-                    layoutManager.setCanScrollHorizontal(false);
-                    layoutManager.setCanScrollVertical(false);
-                }
+                Toast.makeText(getContext(), "Swiped " + direction.name(), Toast.LENGTH_SHORT).show();
             }
 
-            //called when a card is rewinded
+            //called when a card is rewinded/brought back using .rewind()
             @Override
             public void onCardRewound() {
                 Log.d(TAG, "onCardRewound: " + layoutManager.getTopPosition());
@@ -122,7 +118,7 @@ public class SwipeFragment extends Fragment {
 
         setLayoutManager();
 
-        populate();
+        populateCards();
 
         adapter = new CardStackAdapter(getContext(), restaurants);
 
@@ -130,6 +126,33 @@ public class SwipeFragment extends Fragment {
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
 
+        setAutomatedSwiping();
+
+        fetchRestaurants();
+    }
+
+    private void fetchRestaurants() {
+        retrofit = new Retrofit.Builder()
+                            .baseUrl(BASE_URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+        YelpService yelpService = retrofit.create(YelpService.class);
+        yelpService.getRestaurants(API_KEY, "New York").enqueue(new Callback<YelpSearchResult>() {
+            @Override
+            public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
+                Log.d(TAG, "onSuccess " + response);
+            }
+
+            @Override
+            public void onFailure(Call<YelpSearchResult> call, Throwable t) {
+                Log.d(TAG, "onFailure " + t);
+            }
+        });
+    }
+
+    //helper method to set up automated swiping
+    private void setAutomatedSwiping() {
         //automatically swipe right
         ibLike.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,12 +181,11 @@ public class SwipeFragment extends Fragment {
         ibRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardStackView.smoothScrollToPosition(0);
-                adapter.notifyDataSetChanged();
+                cardStackView.scrollToPosition(0);
             }
         });
-
     }
+
 
     //sets all preferences on visual and functional features of card stack
     private void setLayoutManager() {
@@ -175,19 +197,11 @@ public class SwipeFragment extends Fragment {
     }
 
     //populates the list of restaurants with data
-    private void populate() {
-        restaurants.add(new Restaurant("Italia", R.drawable.sample1, "5.8 miles away", 4.8));
-        restaurants.add(new Restaurant("Citris Grill", R.drawable.sample2, "5.8 miles away", 4.6));
-        restaurants.add(new Restaurant("Burger Hut", R.drawable.sample3, "2.3 miles away", 4.6));
-        restaurants.add(new Restaurant("Garden Cafe", R.drawable.sample4, "7.2 miles away", 4.5));
-        restaurants.add(new Restaurant("Coffee Bar", R.drawable.sample5, "2.6 miles away", 4.2));
-
-        restaurants.add(new Restaurant("Italia", R.drawable.sample1, "5.8 miles away", 4.8));
-        restaurants.add(new Restaurant("Citris Grill", R.drawable.sample2, "5.8 miles away", 4.6));
-        restaurants.add(new Restaurant("Burger Hut", R.drawable.sample3, "2.3 miles away", 4.6));
-        restaurants.add(new Restaurant("Garden Cafe", R.drawable.sample4, "7.2 miles away", 4.5));
-        restaurants.add(new Restaurant("Coffee Bar", R.drawable.sample5, "2.6 miles away", 4.2));
-
-
+    private void populateCards() {
+        restaurants.add(new Restaurant("Italia", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "5.8 miles away", 4.6f));
+        restaurants.add(new Restaurant("Citris Grill", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "5.8 miles away", 4.4f));
+        restaurants.add(new Restaurant("Burger Hut", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "2.3 miles away", 4.2f));
+        restaurants.add(new Restaurant("Garden Cafe", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "7.2 miles away", 4.5f));
+        restaurants.add(new Restaurant("Coffee Bar", "https://images.pexels.com/photos/3887985/pexels-photo-3887985.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", "2.6 miles away", 4.2f));
     }
 }

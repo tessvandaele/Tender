@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         private ImageView image;
         private TextView name;
         private TextView distance;
+        private RatingBar rating;
 
         //vew holder constructor
         public ViewHolder(@NonNull View itemView) {
@@ -60,6 +62,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
             image = itemView.findViewById(R.id.item_image);
             name = itemView.findViewById(R.id.item_name);
             distance = itemView.findViewById(R.id.item_distance);
+            rating = itemView.findViewById(R.id.rbRating);
         }
 
         //binding the data to the view holder
@@ -70,6 +73,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
             name.setText(restaurant.getName());
             distance.setText(restaurant.getDistance());
+            rating.setRating(restaurant.getRating());
         }
     }
 }

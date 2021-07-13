@@ -1,17 +1,19 @@
 package com.codepath.tender.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Restaurant {
 
     private String name;
-    private int image;
+    private String url;
     private String distance;
-    private double rating;
+    private float rating;
 
     public Restaurant() {}
 
-    public Restaurant(String name, int image, String distance, double rating) {
+    public Restaurant(String name, String url, String distance, float rating) {
         this.name = name;
-        this.image = image;
+        this.url = url;
         this.distance = distance;
         this.rating = rating;
     }
@@ -20,15 +22,15 @@ public class Restaurant {
         return name;
     }
 
-    public int getImage() {
-        return image;
+    public String getImage() {
+        return url;
     }
 
     public String getDistance() {
         return distance;
     }
 
-    public double getRating() {
+    public float getRating() {
         return rating;
     }
 }
