@@ -1,5 +1,7 @@
 package com.codepath.tender.models;
 
+/* location class filled by Yelp API */
+
 public class Location {
     private String city;
     private String country;

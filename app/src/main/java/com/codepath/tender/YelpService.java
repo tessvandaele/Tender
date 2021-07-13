@@ -7,11 +7,13 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Query;
 
+/* interface declaring API call to fetch YelpSearchResult object */
+
 public interface YelpService {
 
     @GET("businesses/search")
     Call<YelpSearchResult> getRestaurants(
-            @Header("Authorization") String authHeader,
-            @Query("location") String location);
+            @Header("Authorization") String authHeader, //authorization using API key
+            @Query("location") String location); //location paramater
 
 }

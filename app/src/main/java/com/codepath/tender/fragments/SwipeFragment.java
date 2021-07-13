@@ -38,13 +38,15 @@ public class SwipeFragment extends Fragment {
 
     private static final String TAG = "SwipeFragment";
     private static final String BASE_URL = "https://api.yelp.com/v3/";
-    private static final String API_KEY = "Bearer GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
+    private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
 
+    //library used for easier API requests and querying
     private Retrofit retrofit;
 
     private CardStackLayoutManager layoutManager;
     private CardStackAdapter adapter;
 
+    //declaring views
     private CardStackView cardStackView;
     private ImageButton ibLike;
     private ImageButton ibDislike;
@@ -71,7 +73,21 @@ public class SwipeFragment extends Fragment {
         ibDislike = view.findViewById(R.id.ibDislike);
         ibRefresh = view.findViewById(R.id.ibRefresh);
 
-        //initializing card stack layout manager
+        initializeLayoutManager();
+        setLayoutManagerProperties();
+
+        adapter = new CardStackAdapter(getContext(), restaurants);
+
+        cardStackView.setLayoutManager(layoutManager);
+        cardStackView.setAdapter(adapter);
+        cardStackView.setItemAnimator(new DefaultItemAnimator());
+
+        setAutomatedSwiping();
+
+        fetchRestaurants();
+    }
+
+    private void initializeLayoutManager() {
         layoutManager = new CardStackLayoutManager(getContext(), new CardStackListener() {
             //called when a card is dragged from original position
             @Override
@@ -112,20 +128,9 @@ public class SwipeFragment extends Fragment {
                 Log.d(TAG, "onCardDisappeared: " + position + ", name: " + text.getText());
             }
         });
-
-        setLayoutManager();
-
-        adapter = new CardStackAdapter(getContext(), restaurants);
-
-        cardStackView.setLayoutManager(layoutManager);
-        cardStackView.setAdapter(adapter);
-        cardStackView.setItemAnimator(new DefaultItemAnimator());
-
-        setAutomatedSwiping();
-
-        fetchRestaurants();
     }
 
+    //helper method to run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
     private void fetchRestaurants() {
         retrofit = new Retrofit.Builder()
                             .baseUrl(BASE_URL)
@@ -133,10 +138,9 @@ public class SwipeFragment extends Fragment {
                             .build();
 
         YelpService yelpService = retrofit.create(YelpService.class);
-        yelpService.getRestaurants(API_KEY, "New York").enqueue(new Callback<YelpSearchResult>() {
+        yelpService.getRestaurants("Bearer " + API_KEY, "New York").enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
-                Log.d(TAG, "onSuccess " + response);
                 YelpSearchResult searchResult = response.body();
                 if(searchResult == null){
                     Log.e(TAG, "No restaurants retrieved");
@@ -188,9 +192,8 @@ public class SwipeFragment extends Fragment {
         });
     }
 
-
     //sets all preferences on visual and functional features of card stack
-    private void setLayoutManager() {
+    private void setLayoutManagerProperties() {
         layoutManager.setStackFrom(StackFrom.None); //sets whether and where the stack graphic is displayed
         layoutManager.setSwipeThreshold(0.3f); //sets how far a card must swipe to be automatically swiped off the stack
         layoutManager.setMaxDegree(20.0f); //sets how much the cards rotate when swiped

@@ -1,16 +1,13 @@
 package com.codepath.tender.models;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
+import java.text.DecimalFormat;
 
 public class Restaurant {
 
     private String name;
     private String image_url;
-    private float distance;
+    private float distance; //in meters
     private float rating;
-    //private List<Location> location;
 
     public Restaurant() {}
 
@@ -37,10 +34,12 @@ public class Restaurant {
         return rating;
     }
 
+    //helper method that returns a display string of the distance in miles
     public String getDisplayDistance() {
         float milesPerMeter = 0.000621371f;
+        DecimalFormat df = new DecimalFormat("#.#");
         float distanceInMiles = milesPerMeter * distance;
-        return distanceInMiles + " mi";
+        return df.format(distanceInMiles) + " mi";
 
     }
 }
