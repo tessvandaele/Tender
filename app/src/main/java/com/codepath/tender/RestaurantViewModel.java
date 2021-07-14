@@ -28,6 +28,10 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void insert(Restaurant restaurant) { repository.insert(restaurant); }
 
+    public void delete(String name) {
+        repository.delete(name);
+    }
+
     public void setOffset(int offset) {
         this.offset = offset;
     }

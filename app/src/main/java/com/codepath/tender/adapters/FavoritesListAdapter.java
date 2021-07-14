@@ -3,6 +3,7 @@ package com.codepath.tender.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -13,18 +14,21 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.codepath.tender.R;
 import com.codepath.tender.models.Restaurant;
 
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-
-
 public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListAdapter.FavoritesViewHolder> {
 
-    public FavoritesListAdapter(@NonNull DiffUtil.ItemCallback<Restaurant> diffCallback) {
+    OnClickListenerDelete listener;
+
+    //interface to retrieve data from MainActivity class on which item to delete
+    public interface OnClickListenerDelete {
+        void onItemClicked(String name);
+    }
+
+    public FavoritesListAdapter(@NonNull DiffUtil.ItemCallback<Restaurant> diffCallback, OnClickListenerDelete listener) {
         super(diffCallback);
+        this.listener = listener;
     }
 
     //inflating the item_card layout as the view for the view holder
@@ -59,6 +63,7 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
         private ImageView image;
         private RatingBar ratingBar;
         private TextView distance;
+        private ImageButton delete;
 
         //vew holder constructor
         public FavoritesViewHolder(@NonNull View itemView) {
@@ -67,6 +72,7 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
             image = itemView.findViewById(R.id.ivImage);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             distance = itemView.findViewById(R.id.tvDistance);
+            delete = itemView.findViewById(R.id.ibDelete);
         }
 
         //binding the data to the view holder
@@ -78,6 +84,12 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
                     .load(restaurant.getImage_url())
                     .centerCrop()
                     .into(image);
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClicked(restaurant.getName());
+                }
+            });
         }
     }
 }

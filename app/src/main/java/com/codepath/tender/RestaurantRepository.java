@@ -30,4 +30,10 @@ class RestaurantRepository {
             mRestaurantDao.insert(restaurant);
         });
     }
+
+    void delete(String name) {
+        RestaurantRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mRestaurantDao.delete(name);
+        });
+    }
 }

@@ -1,7 +1,6 @@
 package com.codepath.tender.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.adapters.FavoritesListAdapter;
-import com.codepath.tender.models.Restaurant;
-
-import java.util.List;
 
 public class FavoritesFragment extends Fragment {
-
-    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
     //empty constructor
     public FavoritesFragment() {
@@ -35,14 +29,27 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         RecyclerView recyclerView = view.findViewById(R.id.rvRestaurants);
-        final FavoritesListAdapter adapter = new FavoritesListAdapter(new FavoritesListAdapter.RestaurantDiff());
+
+        RestaurantViewModel model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+
+        //setting up the Items Adapter which handles the View Holder
+        FavoritesListAdapter.OnClickListenerDelete listener = new FavoritesListAdapter.OnClickListenerDelete() {
+            @Override
+            public void onItemClicked(String name) {
+                //delete item from list
+                model.delete(name);
+            }
+        };
+
+
+        final FavoritesListAdapter adapter = new FavoritesListAdapter(new FavoritesListAdapter.RestaurantDiff(), listener);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        RestaurantViewModel model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
         model.getAllRestaurants().observe(getViewLifecycleOwner(), words -> {
             // Update the cached copy of the words in the adapter.
             adapter.submitList(words);
         });
+
     }
 }

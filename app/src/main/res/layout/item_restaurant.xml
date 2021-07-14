@@ -59,4 +59,14 @@
         android:layout_marginTop="5dp"
         android:background="?android:attr/listDivider" />
 
+    <ImageButton
+        android:id="@+id/ibDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/divider"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="#00FFFFFF"
+        app:srcCompat="@drawable/ic_trash_grey" />
+
 </RelativeLayout>

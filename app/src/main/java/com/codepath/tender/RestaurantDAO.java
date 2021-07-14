@@ -24,4 +24,8 @@ public interface RestaurantDAO {
 
     @Query("SELECT * FROM restaurant_table ORDER BY name ASC")
     LiveData<List<Restaurant>> getAlphabetizedWords();
+
+    @Query("DELETE FROM restaurant_table WHERE name=:param_name")
+    void delete(String param_name);
+
 }
