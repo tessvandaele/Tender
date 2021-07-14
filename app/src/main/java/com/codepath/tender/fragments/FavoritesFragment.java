@@ -16,6 +16,8 @@ import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.adapters.FavoritesListAdapter;
 import com.codepath.tender.models.Restaurant;
 
+import java.util.List;
+
 public class FavoritesFragment extends Fragment {
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
@@ -38,20 +40,9 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         RestaurantViewModel model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
-
-        Restaurant restaurant = model.getLatestRestaurant();
-        Log.d("Restaurant", restaurant.getName());
-
-//        restaurantViewModel = new ViewModelProvider(this).get(RestaurantViewModel.class);
-//
-//        restaurantViewModel.getAllRestaurants().observe(getViewLifecycleOwner(), words -> {
-//            // Update the cached copy of the words in the adapter.
-//            adapter.submitList(words);
-//        });
-//
-//        Restaurant restaurant = new Restaurant("Testing!!");
-//        restaurantViewModel.insert(restaurant);
-//
-//        Log.d("favorites", "done");
+        model.getAllRestaurants().observe(getViewLifecycleOwner(), words -> {
+            // Update the cached copy of the words in the adapter.
+            adapter.submitList(words);
+        });
     }
 }
