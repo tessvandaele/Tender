@@ -5,8 +5,11 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.parceler.Parcel;
+
 import java.text.DecimalFormat;
 
+@Parcel
 @Entity(tableName = "restaurant_table")
 public class Restaurant {
 

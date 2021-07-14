@@ -1,5 +1,7 @@
 package com.codepath.tender.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,16 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.tender.DetailsActivity;
 import com.codepath.tender.R;
 import com.codepath.tender.models.Restaurant;
+
+import org.parceler.Parcels;
 
 public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListAdapter.FavoritesViewHolder> {
 
     OnClickListenerDelete listener;
+    Context context;
 
     //interface to retrieve data from MainActivity class on which item to delete
     public interface OnClickListenerDelete {
@@ -35,6 +41,7 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
     @NonNull
     @Override
     public FavoritesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_restaurant, parent, false);
         return new FavoritesViewHolder(view);
     }
@@ -57,7 +64,7 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
         holder.bind(getItem(position));
     }
 
-    public class FavoritesViewHolder extends RecyclerView.ViewHolder{
+    public class FavoritesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView name;
         private ImageView image;
@@ -73,6 +80,8 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
             ratingBar = itemView.findViewById(R.id.ratingBar);
             distance = itemView.findViewById(R.id.tvDistance);
             delete = itemView.findViewById(R.id.ibDelete);
+
+            itemView.setOnClickListener(this);
         }
 
         //binding the data to the view holder
@@ -90,6 +99,22 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
                     listener.onItemClicked(restaurant.getName());
                 }
             });
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            //check that position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                //retrieve movie at position
+                Restaurant restaurant = getItem(position);
+                //create intent for new activity
+                Intent intent = new Intent(context, DetailsActivity.class);
+                //serialize the movie
+                intent.putExtra(Restaurant.class.getSimpleName(), Parcels.wrap(restaurant));
+                //start the activity
+                context.startActivity(intent);
+            }
         }
     }
 }

@@ -7,12 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
@@ -140,14 +138,14 @@ public class SwipeFragment extends Fragment {
             //called when a new card appears
             @Override
             public void onCardAppeared(View view, int position) {
-                TextView text = view.findViewById(R.id.item_name);
+                TextView text = view.findViewById(R.id.tvNameDetails);
                 Log.d(TAG, "onCardAppeared: " + position + ", name: " + text.getText());
             }
 
             //called when a card disappears
             @Override
             public void onCardDisappeared(View view, int position) {
-                TextView text = view.findViewById(R.id.item_name);
+                TextView text = view.findViewById(R.id.tvNameDetails);
                 Log.d(TAG, "onCardDisappeared: " + position + ", name: " + text.getText());
             }
         });

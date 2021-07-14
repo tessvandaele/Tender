@@ -46,9 +46,9 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        model.getAllRestaurants().observe(getViewLifecycleOwner(), words -> {
+        model.getAllRestaurants().observe(getViewLifecycleOwner(), restaurants -> {
             // Update the cached copy of the words in the adapter.
-            adapter.submitList(words);
+            adapter.submitList(restaurants);
         });
 
     }
