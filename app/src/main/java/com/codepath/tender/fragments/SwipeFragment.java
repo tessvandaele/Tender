@@ -87,12 +87,18 @@ public class SwipeFragment extends Fragment {
         cardStackView.setLayoutManager(layoutManager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
+        restaurantViewModel = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
         setAutomatedSwiping();
+        retrieveOldData();
+    }
 
-        fetchRestaurants();
-
-        restaurantViewModel = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+    //saving state of fragment to view model
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        restaurantViewModel.setTopPosition(layoutManager.getTopPosition());
+        restaurantViewModel.setOffset(offset);
     }
 
     private void initializeLayoutManager() {
@@ -106,13 +112,14 @@ public class SwipeFragment extends Fragment {
             //called when a card is swiped off the deck
             @Override
             public void onCardSwiped(Direction direction) {
+                Log.d(TAG, "onCardSwiped: p = " + layoutManager.getTopPosition() + " d = " + direction.name());
+
                 //check if more cards need to be loaded
                 if(offset - layoutManager.getTopPosition() < 2) {
                     fetchRestaurants();
                 }
 
-                Log.d(TAG, "onCardSwiped: p = " + layoutManager.getTopPosition() + " d = " + direction.name());
-                Toast.makeText(getContext(), "Swiped " + direction.name(), Toast.LENGTH_SHORT).show();
+                //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
                     restaurantViewModel.insert(restaurants.get(layoutManager.getTopPosition()-1));
                 }
@@ -142,6 +149,51 @@ public class SwipeFragment extends Fragment {
             public void onCardDisappeared(View view, int position) {
                 TextView text = view.findViewById(R.id.item_name);
                 Log.d(TAG, "onCardDisappeared: " + position + ", name: " + text.getText());
+            }
+        });
+    }
+
+    //retrieves the data that user had already loaded in last fragment access
+    //currently makes a new request to API (will be adjusted to use database instead)
+    private void retrieveOldData() {
+        //setting the stored value of offset and current position in stack
+        offset = restaurantViewModel.getOffset();
+        layoutManager.setTopPosition(restaurantViewModel.getTopPosition());
+
+        //calls a normal fetch of data (user has not yet swiped through any cards)
+        if(restaurantViewModel.getTopPosition() == 0) {
+            fetchRestaurants();
+            return;
+        }
+
+        //API call to retrieve cards that user had previously loaded
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        yelpService = retrofit.create(YelpService.class);
+        yelpService.getRestaurants("Bearer " + API_KEY, "New York", offset, 0).enqueue(new Callback<YelpSearchResult>() {
+            @Override
+            public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
+                YelpSearchResult searchResult = response.body();
+                if(searchResult == null){
+                    Log.e(TAG, "No restaurants retrieved");
+                    return;
+                }
+                restaurants.addAll(searchResult.restaurants);
+
+                //saving location since adapter will override value of topPosition
+                int saved_location = layoutManager.getTopPosition();
+
+                adapter.notifyDataSetChanged();
+
+                //setting the position to where user was previously
+                cardStackView.scrollToPosition(saved_location);
+            }
+
+            @Override
+            public void onFailure(Call<YelpSearchResult> call, Throwable t) {
+                Log.d(TAG, "onFailure " + t);
             }
         });
     }

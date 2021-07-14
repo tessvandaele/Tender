@@ -15,7 +15,8 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     private RestaurantRepository repository;
     private final LiveData<List<Restaurant>> restaurants;
-    private Restaurant latestRestaurant;
+    private int topPosition;
+    private int offset;
 
     public RestaurantViewModel (Application application) {
         super(application);
@@ -25,10 +26,21 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public LiveData<List<Restaurant>> getAllRestaurants() { return restaurants; }
 
-    public void insert(Restaurant restaurant) { repository.insert(restaurant);
-    latestRestaurant = restaurant;}
+    public void insert(Restaurant restaurant) { repository.insert(restaurant); }
 
-    public Restaurant getLatestRestaurant() {
-        return this.latestRestaurant;
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public void setTopPosition(int topPosition) {
+        this.topPosition = topPosition;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public int getTopPosition() {
+        return topPosition;
     }
 }
