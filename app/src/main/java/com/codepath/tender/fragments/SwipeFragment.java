@@ -12,8 +12,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.codepath.tender.MainActivity;
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.YelpSearchResult;
@@ -45,6 +45,8 @@ public class SwipeFragment extends Fragment {
 
     //library used for easier API requests and querying
     private Retrofit retrofit;
+    private YelpService yelpService;
+    private int offset;
 
     private CardStackLayoutManager layoutManager;
     private CardStackAdapter adapter;
@@ -56,7 +58,6 @@ public class SwipeFragment extends Fragment {
     private ImageButton ibRefresh;
 
     private List<Restaurant> restaurants;
-
     private RestaurantViewModel restaurantViewModel;
 
     //empty constructor
@@ -105,6 +106,11 @@ public class SwipeFragment extends Fragment {
             //called when a card is swiped off the deck
             @Override
             public void onCardSwiped(Direction direction) {
+                //check if more cards need to be loaded
+                if(offset - layoutManager.getTopPosition() < 2) {
+                    fetchRestaurants();
+                }
+
                 Log.d(TAG, "onCardSwiped: p = " + layoutManager.getTopPosition() + " d = " + direction.name());
                 Toast.makeText(getContext(), "Swiped " + direction.name(), Toast.LENGTH_SHORT).show();
                 if(direction == Direction.Right) {
@@ -143,12 +149,12 @@ public class SwipeFragment extends Fragment {
     //helper method to run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
     private void fetchRestaurants() {
         retrofit = new Retrofit.Builder()
-                            .baseUrl(BASE_URL)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        yelpService = retrofit.create(YelpService.class);
 
-        YelpService yelpService = retrofit.create(YelpService.class);
-        yelpService.getRestaurants("Bearer " + API_KEY, "New York").enqueue(new Callback<YelpSearchResult>() {
+        yelpService.getRestaurants("Bearer " + API_KEY, "New York", 5, offset).enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
                 YelpSearchResult searchResult = response.body();
@@ -157,7 +163,8 @@ public class SwipeFragment extends Fragment {
                     return;
                 }
                 restaurants.addAll(searchResult.restaurants);
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeInserted(offset, 5);
+                offset += 5;
             }
 
             @Override
@@ -165,6 +172,7 @@ public class SwipeFragment extends Fragment {
                 Log.d(TAG, "onFailure " + t);
             }
         });
+
     }
 
     //helper method to set up automated swiping
