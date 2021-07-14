@@ -10,9 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
+import com.codepath.tender.MainActivity;
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.YelpSearchResult;
 import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
@@ -54,6 +57,8 @@ public class SwipeFragment extends Fragment {
 
     private List<Restaurant> restaurants;
 
+    private RestaurantViewModel restaurantViewModel;
+
     //empty constructor
     public SwipeFragment() {}
 
@@ -85,6 +90,8 @@ public class SwipeFragment extends Fragment {
         setAutomatedSwiping();
 
         fetchRestaurants();
+
+        restaurantViewModel = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
     }
 
     private void initializeLayoutManager() {
@@ -100,6 +107,9 @@ public class SwipeFragment extends Fragment {
             public void onCardSwiped(Direction direction) {
                 Log.d(TAG, "onCardSwiped: p = " + layoutManager.getTopPosition() + " d = " + direction.name());
                 Toast.makeText(getContext(), "Swiped " + direction.name(), Toast.LENGTH_SHORT).show();
+                if(direction == Direction.Right) {
+                    restaurantViewModel.insert(restaurants.get(layoutManager.getTopPosition()-1));
+                }
             }
 
             //called when a card is rewinded/brought back using .rewind()

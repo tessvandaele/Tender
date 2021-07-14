@@ -1,28 +1,35 @@
 package com.codepath.tender.models;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.text.DecimalFormat;
 
+@Entity(tableName = "restaurant_table")
 public class Restaurant {
 
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "name")
     private String name;
     private String image_url;
-    private float distance; //in meters
+    private float distance;
     private float rating;
 
     public Restaurant() {}
 
-    public Restaurant(String name, String image_url, float distance, float rating) {
+    public Restaurant(@NonNull String name) {
         this.name = name;
-        this.image_url = image_url;
-        this.distance = distance;
-        this.rating = rating;
+        this.image_url = "";
+        this.distance = 0;
+        this.rating = 0;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName(){return this.name;}
 
-    public String getImage() {
+    public String getImage_url() {
         return image_url;
     }
 
@@ -34,6 +41,22 @@ public class Restaurant {
         return rating;
     }
 
+    public void setName(@NonNull String name) {
+        this.name = name;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
     //helper method that returns a display string of the distance in miles
     public String getDisplayDistance() {
         float milesPerMeter = 0.000621371f;
@@ -43,3 +66,4 @@ public class Restaurant {
 
     }
 }
+

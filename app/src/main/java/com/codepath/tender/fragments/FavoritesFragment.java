@@ -7,23 +7,51 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantViewModel;
+import com.codepath.tender.adapters.FavoritesListAdapter;
+import com.codepath.tender.models.Restaurant;
 
 public class FavoritesFragment extends Fragment {
+
+    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
 
     //empty constructor
     public FavoritesFragment() {
     }
 
-    //set up to view object hierarchy
+    //inflate layout
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("listFragment", "in on create view!");
         return inflater.inflate(R.layout.fragment_favorites, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        RecyclerView recyclerView = view.findViewById(R.id.rvRestaurants);
+        final FavoritesListAdapter adapter = new FavoritesListAdapter(new FavoritesListAdapter.RestaurantDiff());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        RestaurantViewModel model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+
+        Restaurant restaurant = model.getLatestRestaurant();
+        Log.d("Restaurant", restaurant.getName());
+
+//        restaurantViewModel = new ViewModelProvider(this).get(RestaurantViewModel.class);
+//
+//        restaurantViewModel.getAllRestaurants().observe(getViewLifecycleOwner(), words -> {
+//            // Update the cached copy of the words in the adapter.
+//            adapter.submitList(words);
+//        });
+//
+//        Restaurant restaurant = new Restaurant("Testing!!");
+//        restaurantViewModel.insert(restaurant);
+//
+//        Log.d("favorites", "done");
     }
 }
