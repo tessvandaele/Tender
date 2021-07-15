@@ -110,7 +110,7 @@ public class SwipeFragment extends Fragment {
         restaurantViewModel = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
         setAutomatedSwiping();
-        retrieveOldData();
+        fetchRestaurants();
 
         setBottomSheet();
     }
@@ -180,48 +180,6 @@ public class SwipeFragment extends Fragment {
         });
     }
 
-    //retrieves the data that user had already loaded in last fragment access
-    //currently makes a new request to API (will be adjusted to use database instead)
-    private void retrieveOldData() {
-        //setting the stored value of offset and current position in stack
-        offset = restaurantViewModel.getOffset();
-        layoutManager.setTopPosition(restaurantViewModel.getTopPosition());
-
-        //calls a normal fetch of data (user has not yet swiped through any cards)
-        if(restaurantViewModel.getTopPosition() == 0) {
-            fetchRestaurants();
-            return;
-        }
-
-        //API call to retrieve cards that user had previously loaded
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        yelpService = retrofit.create(YelpService.class);
-        yelpService.getRestaurants("Bearer " + API_KEY, "New York", offset, 0).enqueue(new Callback<YelpSearchResult>() {
-            @Override
-            public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
-                YelpSearchResult searchResult = response.body();
-                if(searchResult == null){
-                    Log.e(TAG, "No restaurants retrieved");
-                    return;
-                }
-                restaurants.addAll(searchResult.restaurants);
-                //saving location since adapter will override value of topPosition
-                int saved_location = layoutManager.getTopPosition();
-                adapter.notifyDataSetChanged();
-                //setting the position to where user was previously
-                cardStackView.scrollToPosition(saved_location);
-            }
-
-            @Override
-            public void onFailure(Call<YelpSearchResult> call, Throwable t) {
-                Log.d(TAG, "onFailure " + t);
-            }
-        });
-    }
-
     //helper method to run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
     private void fetchRestaurants() {
         retrofit = new Retrofit.Builder()
@@ -230,7 +188,7 @@ public class SwipeFragment extends Fragment {
                 .build();
         yelpService = retrofit.create(YelpService.class);
 
-        yelpService.getRestaurants("Bearer " + API_KEY, "New York", 5, offset).enqueue(new Callback<YelpSearchResult>() {
+        yelpService.getRestaurants("Bearer " + API_KEY, "Chicago", 30, offset).enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
                 YelpSearchResult searchResult = response.body();
@@ -242,13 +200,13 @@ public class SwipeFragment extends Fragment {
                 adapter.notifyItemRangeInserted(offset, 5);
 
                 //initialize the first bottom sheet
-                if(offset == 0) {
+                if(restaurantViewModel.getTopPosition() == 0) {
                     nameSheet.setText(restaurants.get(restaurantViewModel.getTopPosition()).getName());
                     distanceSheet.setText(restaurants.get(restaurantViewModel.getTopPosition()).getDisplayDistance());
                     ratingBarSheet.setRating(restaurants.get(restaurantViewModel.getTopPosition()).getRating());
                 }
 
-                offset += 5;
+                offset += 30;
             }
 
             @Override
@@ -333,5 +291,47 @@ public class SwipeFragment extends Fragment {
         layoutManager.setMaxDegree(20.0f); //sets how much the cards rotate when swiped
         layoutManager.setDirections(Direction.HORIZONTAL); //allows user to swipe horizontally only (user can still drag vertically)
         layoutManager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual); //sets swiping method
+    }
+
+    //retrieves the data that user had already loaded in last fragment access
+    //currently makes a new request to API (will be adjusted to use database instead)
+    private void retrieveOldData() {
+        //setting the stored value of offset and current position in stack
+        offset = restaurantViewModel.getOffset();
+        layoutManager.setTopPosition(restaurantViewModel.getTopPosition());
+
+        //calls a normal fetch of data (user has not yet swiped through any cards)
+        if(restaurantViewModel.getTopPosition() == 0) {
+            fetchRestaurants();
+            return;
+        }
+
+        //API call to retrieve cards that user had previously loaded
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        yelpService = retrofit.create(YelpService.class);
+        yelpService.getRestaurants("Bearer " + API_KEY, "New York", offset, 0).enqueue(new Callback<YelpSearchResult>() {
+            @Override
+            public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
+                YelpSearchResult searchResult = response.body();
+                if(searchResult == null){
+                    Log.e(TAG, "No restaurants retrieved");
+                    return;
+                }
+                restaurants.addAll(searchResult.restaurants);
+                //saving location since adapter will override value of topPosition
+                int saved_location = layoutManager.getTopPosition();
+                adapter.notifyDataSetChanged();
+                //setting the position to where user was previously
+                cardStackView.scrollToPosition(saved_location);
+            }
+
+            @Override
+            public void onFailure(Call<YelpSearchResult> call, Throwable t) {
+                Log.d(TAG, "onFailure " + t);
+            }
+        });
     }
 }
