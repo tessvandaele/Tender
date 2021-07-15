@@ -25,7 +25,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvNameDetails"
+            android:id="@+id/tvNameCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
@@ -33,7 +33,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvDistanceDetails"
+            android:id="@+id/tvDistanceCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
@@ -41,7 +41,7 @@
             android:textStyle="bold" />
 
         <RatingBar
-            android:id="@+id/rbRatingDetails"
+            android:id="@+id/rbRatingCard"
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

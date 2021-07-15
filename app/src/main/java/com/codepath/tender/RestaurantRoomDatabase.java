@@ -51,11 +51,6 @@ public abstract class RestaurantRoomDatabase extends RoomDatabase {
                 // If you want to start with more words, just add them.
                 RestaurantDAO dao = INSTANCE.restaurantDAO();
                 dao.deleteAll();
-
-                Restaurant restaurant = new Restaurant("First restaurant");
-                dao.insert(restaurant);
-                restaurant = new Restaurant("Second restaurant");
-                dao.insert(restaurant);
             });
         }
     };

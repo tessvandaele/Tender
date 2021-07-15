@@ -65,6 +65,8 @@ public class SwipeFragment extends Fragment {
     private TextView nameSheet;
     private TextView distanceSheet;
     private RatingBar ratingBarSheet;
+    private TextView reviewCount;
+    private TextView price;
 
     private List<Restaurant> restaurants;
     private RestaurantViewModel restaurantViewModel;
@@ -94,6 +96,8 @@ public class SwipeFragment extends Fragment {
         nameSheet = view.findViewById(R.id.tvNameSheet);
         distanceSheet = view.findViewById(R.id.tvDistanceSheet);
         ratingBarSheet = view.findViewById(R.id.ratingBarSheet);
+        reviewCount = view.findViewById(R.id.tvReviewCountSheet);
+        price = view.findViewById(R.id.tvPriceSheet);
 
         //setting the bottom sheet behavior
         LinearLayout linearLayout = view.findViewById(R.id.design_bottom_sheet);
@@ -162,20 +166,14 @@ public class SwipeFragment extends Fragment {
             //called when a new card appears
             @Override
             public void onCardAppeared(View view, int position) {
-                //populating bottom sheet
-                TextView name = view.findViewById(R.id.tvNameDetails);
-                TextView distance = view.findViewById(R.id.tvDistanceDetails);
-                RatingBar rating = view.findViewById(R.id.rbRatingDetails);
-                populateBottomSheet(name.getText().toString(), distance.getText().toString(), rating.getRating());
-                nameSheet.setText(name.getText().toString());
-                Log.d(TAG, "onCardAppeared: " + position + ", name: " + name.getText());
+                populateBottomSheet(position);
+                Log.d(TAG, "onCardAppeared: " + position);
             }
 
             //called when a card disappears
             @Override
             public void onCardDisappeared(View view, int position) {
-                TextView text = view.findViewById(R.id.tvNameDetails);
-                Log.d(TAG, "onCardDisappeared: " + position + ", name: " + text.getText());
+                Log.d(TAG, "onCardDisappeared: " + position);
             }
         });
     }
@@ -201,9 +199,7 @@ public class SwipeFragment extends Fragment {
 
                 //initialize the first bottom sheet
                 if(restaurantViewModel.getTopPosition() == 0) {
-                    nameSheet.setText(restaurants.get(restaurantViewModel.getTopPosition()).getName());
-                    distanceSheet.setText(restaurants.get(restaurantViewModel.getTopPosition()).getDisplayDistance());
-                    ratingBarSheet.setRating(restaurants.get(restaurantViewModel.getTopPosition()).getRating());
+                    populateBottomSheet(0);
                 }
 
                 offset += 30;
@@ -218,10 +214,12 @@ public class SwipeFragment extends Fragment {
     }
 
     //helper method to populate bottom sheet
-    private void populateBottomSheet(String name, String displayDistance, float rating) {
-        nameSheet.setText(name);
-        distanceSheet.setText(displayDistance);
-        ratingBarSheet.setRating(rating);
+    private void populateBottomSheet(int position) {
+        nameSheet.setText(restaurants.get(position).getName());
+        distanceSheet.setText(restaurants.get(position).getDisplayDistance());
+        ratingBarSheet.setRating(restaurants.get(position).getRating());
+        reviewCount.setText(Integer.toString(restaurants.get(position).getReview_count()) + " reviews");
+        price.setText(restaurants.get(position).getPrice());
     }
 
     //helper method to set up automated swiping
@@ -280,8 +278,6 @@ public class SwipeFragment extends Fragment {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
-
-
     }
 
     //sets all preferences on visual and functional features of card stack

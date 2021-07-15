@@ -60,9 +60,9 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
             super(itemView);
 
             image = itemView.findViewById(R.id.item_image);
-            name = itemView.findViewById(R.id.tvNameDetails);
-            distance = itemView.findViewById(R.id.tvDistanceDetails);
-            rating = itemView.findViewById(R.id.rbRatingDetails);
+            name = itemView.findViewById(R.id.tvNameCard);
+            distance = itemView.findViewById(R.id.tvDistanceCard);
+            rating = itemView.findViewById(R.id.rbRatingCard);
         }
 
         //binding the data to the view holder

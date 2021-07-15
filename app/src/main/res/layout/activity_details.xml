@@ -113,4 +113,15 @@
             android:text="Other" />
     </com.google.android.material.tabs.TabLayout>
 
+    <TextView
+        android:id="@+id/tvPriceDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvReviewCountDetails"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="0dp"
+        android:textColor="#59969E"
+        tools:text="$$" />
+
 </RelativeLayout>
