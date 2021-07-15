@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -57,8 +58,13 @@ public class SwipeFragment extends Fragment {
     private ImageButton ibLike;
     private ImageButton ibDislike;
     private ImageButton ibRefresh;
+
+    //bottom sheet views
     private ImageButton ibUp;
     private ImageButton ibDown;
+    private TextView nameSheet;
+    private TextView distanceSheet;
+    private RatingBar ratingBarSheet;
 
     private List<Restaurant> restaurants;
     private RestaurantViewModel restaurantViewModel;
@@ -81,9 +87,15 @@ public class SwipeFragment extends Fragment {
         ibLike = view.findViewById(R.id.ibLike);
         ibDislike = view.findViewById(R.id.ibDislike);
         ibRefresh = view.findViewById(R.id.ibRefresh);
+
+        //bottom sheet
         ibUp = view.findViewById(R.id.ibUp);
         ibDown = view.findViewById(R.id.ibDown);
+        nameSheet = view.findViewById(R.id.tvNameSheet);
+        distanceSheet = view.findViewById(R.id.tvDistanceSheet);
+        ratingBarSheet = view.findViewById(R.id.ratingBarSheet);
 
+        //setting the bottom sheet behavior
         LinearLayout linearLayout = view.findViewById(R.id.design_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
@@ -150,8 +162,13 @@ public class SwipeFragment extends Fragment {
             //called when a new card appears
             @Override
             public void onCardAppeared(View view, int position) {
-                TextView text = view.findViewById(R.id.tvNameDetails);
-                Log.d(TAG, "onCardAppeared: " + position + ", name: " + text.getText());
+                //populating bottom sheet
+                TextView name = view.findViewById(R.id.tvNameDetails);
+                TextView distance = view.findViewById(R.id.tvDistanceDetails);
+                RatingBar rating = view.findViewById(R.id.rbRatingDetails);
+                populateBottomSheet(name.getText().toString(), distance.getText().toString(), rating.getRating());
+                nameSheet.setText(name.getText().toString());
+                Log.d(TAG, "onCardAppeared: " + position + ", name: " + name.getText());
             }
 
             //called when a card disappears
@@ -191,12 +208,9 @@ public class SwipeFragment extends Fragment {
                     return;
                 }
                 restaurants.addAll(searchResult.restaurants);
-
                 //saving location since adapter will override value of topPosition
                 int saved_location = layoutManager.getTopPosition();
-
                 adapter.notifyDataSetChanged();
-
                 //setting the position to where user was previously
                 cardStackView.scrollToPosition(saved_location);
             }
@@ -226,6 +240,14 @@ public class SwipeFragment extends Fragment {
                 }
                 restaurants.addAll(searchResult.restaurants);
                 adapter.notifyItemRangeInserted(offset, 5);
+
+                //initialize the first bottom sheet
+                if(offset == 0) {
+                    nameSheet.setText(restaurants.get(restaurantViewModel.getTopPosition()).getName());
+                    distanceSheet.setText(restaurants.get(restaurantViewModel.getTopPosition()).getDisplayDistance());
+                    ratingBarSheet.setRating(restaurants.get(restaurantViewModel.getTopPosition()).getRating());
+                }
+
                 offset += 5;
             }
 
@@ -235,6 +257,13 @@ public class SwipeFragment extends Fragment {
             }
         });
 
+    }
+
+    //helper method to populate bottom sheet
+    private void populateBottomSheet(String name, String displayDistance, float rating) {
+        nameSheet.setText(name);
+        distanceSheet.setText(displayDistance);
+        ratingBarSheet.setRating(rating);
     }
 
     //helper method to set up automated swiping
@@ -268,12 +297,18 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cardStackView.scrollToPosition(0);
+
+                //reset bottom sheet to match first restaurant
+                nameSheet.setText(restaurants.get(0).getName());
+                distanceSheet.setText(restaurants.get(0).getDisplayDistance());
+                ratingBarSheet.setRating(restaurants.get(0).getRating());
             }
         });
     }
 
     //helper method to set up the info sheet pop up
     private void setBottomSheet() {
+
         ibUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
