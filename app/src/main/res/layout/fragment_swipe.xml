@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#DFDEDE"
+        android:background="#FFFFFF"
         android:backgroundTintMode="multiply"
-        android:foregroundTint="#959595"
-        android:foregroundTintMode="add"
         tools:context=".fragments.SwipeFragment">
 
 
@@ -21,6 +18,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/ibDislike"
             android:layout_marginBottom="0dp"
+            android:backgroundTint="#FFFFFF"
             android:padding="8dp" />
 
         <ImageButton
@@ -28,26 +26,26 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
             android:layout_toStartOf="@+id/ibRefresh"
             android:backgroundTint="#00FFFFFF"
-            android:scaleX="1.4"
-            android:scaleY="1.4"
-            android:src="@drawable/ic_thumbs_down_red" />
+            android:scaleX="3"
+            android:scaleY="3"
+            android:src="@drawable/ic_cross_circle_red" />
 
         <ImageButton
             android:id="@+id/ibLike"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="20dp"
             android:layout_marginBottom="10dp"
             android:layout_toEndOf="@+id/ibRefresh"
             android:backgroundTint="#00FFFFFF"
-            android:scaleX="1.4"
-            android:scaleY="1.4"
-            android:src="@drawable/ic_thumbs_up_green" />
+            android:scaleX="3"
+            android:scaleY="3"
+            android:src="@drawable/ic_check_circle_green" />
 
         <ImageButton
             android:id="@+id/ibRefresh"
@@ -57,19 +55,21 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-60dp"
             android:backgroundTint="#00FFFFFF"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
             android:src="@drawable/ic_refresh" />
 
         <ImageButton
             android:id="@+id/ibUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/ibLike"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/card_stack_view"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="-20dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
             android:backgroundTint="#00FFFFFF"
-            android:scaleX="2.5"
-            android:scaleY="2.5"
+            android:scaleX="3"
+            android:scaleY="3"
             android:src="@drawable/ic_up_arrow_circle" />
     </RelativeLayout>
 

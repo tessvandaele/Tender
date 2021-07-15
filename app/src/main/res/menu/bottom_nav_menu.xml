@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/navigation_swipe"
-        android:icon="@drawable/ic_swipe_grey"
+        android:icon="@drawable/ic_knife_fork_grey"
         android:title="Swipe"
         app:showAsAction="always" />
     <item

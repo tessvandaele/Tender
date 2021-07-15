@@ -22,41 +22,122 @@
         app:cardCornerRadius="5dp"
         app:cardElevation="20dp">
 
-        <ImageButton
-            android:id="@+id/ibDown"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="right|top"
-            android:layout_margin="5dp"
-            android:backgroundTint="#00FFFFFF"
-            android:scaleX="2.5"
-            android:scaleY="2.5"
-            app:srcCompat="@drawable/ic_down_arrow_circle"
-            app:tint="#03A9F4" />
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:layout_height="match_parent">
 
+            <ImageButton
+                android:id="@+id/ibDown"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="right|top"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleX="2.5"
+                android:scaleY="2.5"
+                app:srcCompat="@drawable/ic_down_arrow_circle"
+                app:tint="#66C0CC" />
 
             <TextView
                 android:id="@+id/tvNameSheet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#686868"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="0dp"
+                android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                tools:text="Name" />
+                tools:text="Kerbey Lane Cafe" />
 
-            <TextView
-                android:id="@+id/tvInfoSheet"
+            <ImageView
+                android:id="@+id/locationIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="More information about the restaurant!" />
-        </LinearLayout>
+                android:layout_below="@+id/ratingBarSheet"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:scaleX=".8"
+                android:scaleY=".8"
+                app:srcCompat="@drawable/ic_location_grey" />
+
+            <TextView
+                android:id="@+id/tvDistanceSheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/locationIcon"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/locationIcon"
+                tools:text="5.8 miles away" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/tvDistanceSheet"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="0dp"
+                android:background="?android:attr/listDivider" />
+
+            <RatingBar
+                android:id="@+id/ratingBarSheet"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvNameSheet"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:numStars="5"
+                android:progressTint="#66C0CC"
+                android:rating="4.2" />
+
+            <TextView
+                android:id="@+id/tvReviewCountSheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ratingBarSheet"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/ratingBarSheet"
+                tools:text="324 Reviews" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider3"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabHours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hours" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tabMenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Menu" />
+            </com.google.android.material.tabs.TabLayout>
+
+        </RelativeLayout>
 
 
     </androidx.cardview.widget.CardView>

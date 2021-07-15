@@ -38,6 +38,7 @@
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/ivImage"
         android:numStars="5"
+        android:progressTint="#66C0CC"
         android:rating="4.5" />
 
     <TextView
@@ -65,8 +66,39 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/divider"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="5dp"
         android:backgroundTint="#00FFFFFF"
-        app:srcCompat="@drawable/ic_trash_grey" />
+        app:srcCompat="@drawable/ic_trash" />
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ratingBar"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/ivImage"
+        tools:text="57 Main Avenue, San Fransisco" />
+
+    <TextView
+        android:id="@+id/tvCategories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAddress"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/ivImage"
+        android:textColor="#AEAEAE"
+        tools:text="American" />
+
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvDistance"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:textColor="#66C0CC"
+        tools:text="$$" />
 
 </RelativeLayout>
