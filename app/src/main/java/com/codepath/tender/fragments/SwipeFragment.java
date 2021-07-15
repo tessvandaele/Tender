@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,7 @@ import com.codepath.tender.models.YelpSearchResult;
 import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.models.Restaurant;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -48,12 +50,15 @@ public class SwipeFragment extends Fragment {
 
     private CardStackLayoutManager layoutManager;
     private CardStackAdapter adapter;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     //declaring views
     private CardStackView cardStackView;
     private ImageButton ibLike;
     private ImageButton ibDislike;
     private ImageButton ibRefresh;
+    private ImageButton ibUp;
+    private ImageButton ibDown;
 
     private List<Restaurant> restaurants;
     private RestaurantViewModel restaurantViewModel;
@@ -76,6 +81,11 @@ public class SwipeFragment extends Fragment {
         ibLike = view.findViewById(R.id.ibLike);
         ibDislike = view.findViewById(R.id.ibDislike);
         ibRefresh = view.findViewById(R.id.ibRefresh);
+        ibUp = view.findViewById(R.id.ibUp);
+        ibDown = view.findViewById(R.id.ibDown);
+
+        LinearLayout linearLayout = view.findViewById(R.id.design_bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
         initializeLayoutManager();
         setLayoutManagerProperties();
@@ -89,6 +99,8 @@ public class SwipeFragment extends Fragment {
 
         setAutomatedSwiping();
         retrieveOldData();
+
+        setBottomSheet();
     }
 
     //saving state of fragment to view model
@@ -258,6 +270,25 @@ public class SwipeFragment extends Fragment {
                 cardStackView.scrollToPosition(0);
             }
         });
+    }
+
+    //helper method to set up the info sheet pop up
+    private void setBottomSheet() {
+        ibUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+
+        ibDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+
     }
 
     //sets all preferences on visual and functional features of card stack
