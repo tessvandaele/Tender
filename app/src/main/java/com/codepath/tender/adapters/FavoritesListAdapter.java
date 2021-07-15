@@ -71,6 +71,8 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
         private RatingBar ratingBar;
         private TextView distance;
         private ImageButton delete;
+        private TextView reviewCount;
+        private TextView price;
 
         //vew holder constructor
         public FavoritesViewHolder(@NonNull View itemView) {
@@ -80,7 +82,8 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
             ratingBar = itemView.findViewById(R.id.ratingBar);
             distance = itemView.findViewById(R.id.tvDistance);
             delete = itemView.findViewById(R.id.ibDelete);
-
+            reviewCount = itemView.findViewById(R.id.tvReviewCount);
+            price = itemView.findViewById(R.id.tvPrice);
             itemView.setOnClickListener(this);
         }
 
@@ -89,6 +92,8 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
             name.setText(restaurant.getName());
             distance.setText(restaurant.getDisplayDistance());
             ratingBar.setRating(restaurant.getRating());
+            reviewCount.setText(Integer.toString(restaurant.getReview_count()));
+            price.setText(restaurant.getPrice());
             Glide.with(itemView)
                     .load(restaurant.getImage_url())
                     .centerCrop()

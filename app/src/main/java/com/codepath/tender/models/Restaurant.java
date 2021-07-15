@@ -15,20 +15,15 @@ public class Restaurant {
 
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = "name")
     private String name;
     private String image_url;
     private float distance;
     private float rating;
+    private String phone;
+    private String price;
+    private int review_count;
 
     public Restaurant() {}
-
-    public Restaurant(@NonNull String name) {
-        this.name = name;
-        this.image_url = "";
-        this.distance = 0;
-        this.rating = 0;
-    }
 
     public String getName(){return this.name;}
 
@@ -42,6 +37,18 @@ public class Restaurant {
 
     public float getRating() {
         return rating;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public int getReview_count() {
+        return review_count;
     }
 
     public void setName(@NonNull String name) {
@@ -58,6 +65,18 @@ public class Restaurant {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public void setReview_count(int rating_count) {
+        this.review_count = rating_count;
     }
 
     //helper method that returns a display string of the distance in miles

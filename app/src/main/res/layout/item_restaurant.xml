@@ -101,4 +101,15 @@
         android:textColor="#66C0CC"
         tools:text="$$" />
 
+    <TextView
+        android:id="@+id/tvReviewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ratingBar"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/ratingBar"
+        android:textSize="10sp"
+        tools:text="236 Reviews" />
+
 </RelativeLayout>
