@@ -115,7 +115,7 @@ public class SwipeFragment extends Fragment {
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
 
-        //setAutomatedSwiping();
+        setAutomatedSwiping();
         fetchRestaurants();
 
         //setBottomSheet();
@@ -191,8 +191,11 @@ public class SwipeFragment extends Fragment {
                 restaurants.addAll(searchResult.restaurants);
                 adapter.notifyItemRangeInserted(offset, 30);
 
-                restaurants.get(0).setRestaurantProperties();
-                model.insert(restaurants.get(0));
+                //insert all of the restaurants into the Parse database
+                for(int i = 0; i < restaurants.size(); i++){
+                    restaurants.get(i).setRestaurantProperties();
+                    model.insert(restaurants.get(i));
+                }
 
 
                 //TODO: Initialize bottom sheet of first card
