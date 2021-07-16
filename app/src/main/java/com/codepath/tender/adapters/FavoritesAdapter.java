@@ -1,9 +1,11 @@
 package com.codepath.tender.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.tender.DetailsActivity;
 import com.codepath.tender.R;
 import com.codepath.tender.models.Restaurant;
 
@@ -48,30 +51,36 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        //private ImageView image;
         private TextView name;
-        //private TextView distance;
-        //private RatingBar rating;
+        private ImageView image;
+        private RatingBar ratingBar;
+        private TextView distance;
+        private TextView reviewCount;
+        private TextView price;
 
         //vew holder constructor
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            //image = itemView.findViewById(R.id.item_image);
             name = itemView.findViewById(R.id.tvName);
-            //distance = itemView.findViewById(R.id.tvDistanceCard);
-            //rating = itemView.findViewById(R.id.rbRatingCard);
+            image = itemView.findViewById(R.id.ivImage);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            distance = itemView.findViewById(R.id.tvDistance);
+
+            reviewCount = itemView.findViewById(R.id.tvReviewCount);
+            price = itemView.findViewById(R.id.tvPrice);
         }
 
         //binding the data to the view holder
         public void bind(Restaurant restaurant) {
-//            Glide.with(context)
-//                    .load(restaurant.getImage_url())
-//                    .into(image);
-
             name.setText(restaurant.getName());
-//            distance.setText(restaurant.getDisplayDistance());
-//            rating.setRating((float) restaurant.getRating());
+            distance.setText(restaurant.getDisplayDistance());
+            ratingBar.setRating((float) restaurant.getRating());
+            reviewCount.setText(Integer.toString(restaurant.getReview_count()));
+            price.setText(restaurant.getPrice());
+            Glide.with(itemView)
+                    .load(restaurant.getImage_url())
+                    .centerCrop()
+                    .into(image);
         }
     }
 }

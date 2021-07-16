@@ -27,8 +27,6 @@ public class Restaurant extends ParseObject {
 
     public Restaurant() {}
 
-    public String getObject_id() { return getString("objectId"); }
-
     public String getName(){return getString(NAME_KEY);}
 
     public String getImage_url() {
@@ -36,7 +34,7 @@ public class Restaurant extends ParseObject {
     }
 
     public double getDistance() {
-        return (float) getNumber(DISTANCE_KEY);
+        return getDouble(DISTANCE_KEY);
     }
 
     public double getRating() {
@@ -101,7 +99,7 @@ public class Restaurant extends ParseObject {
     public String getDisplayDistance() {
         float milesPerMeter = 0.000621371f;
         DecimalFormat df = new DecimalFormat("#.#");
-        float distanceInMiles = (float) (milesPerMeter * distance);
+        float distanceInMiles = (float) (milesPerMeter * getDistance());
         return df.format(distanceInMiles) + " mi";
 
     }
