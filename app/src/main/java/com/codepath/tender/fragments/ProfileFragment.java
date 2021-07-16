@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -16,6 +17,7 @@ import com.parse.ParseUser;
 public class ProfileFragment extends Fragment {
 
     private ImageButton ibLogout;
+    private TextView tvUsername;
 
     //empty constructor
     public ProfileFragment() {}
@@ -30,6 +32,9 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         ibLogout = view.findViewById(R.id.ibLogout);
+        tvUsername = view.findViewById(R.id.tvProfileUsername);
+
+        tvUsername.setText(ParseUser.getCurrentUser().getUsername().toString());
 
         //setting up log out button to allow user to log out
         ibLogout.setOnClickListener(new View.OnClickListener() {
