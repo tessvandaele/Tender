@@ -121,7 +121,7 @@ public class SwipeFragment extends Fragment {
         setAutomatedSwiping();
         fetchRestaurants();
 
-        //setBottomSheet();
+        setBottomSheet();
     }
 
     private void initializeLayoutManager() {
@@ -188,7 +188,7 @@ public class SwipeFragment extends Fragment {
                 .build();
         yelpService = retrofit.create(YelpService.class);
 
-        yelpService.getRestaurants("Bearer " + API_KEY, "Chicago", 5, offset).enqueue(new Callback<YelpSearchResult>() {
+        yelpService.getRestaurants("Bearer " + API_KEY, "Chicago", 30, offset).enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
                 YelpSearchResult searchResult = response.body();
@@ -197,7 +197,7 @@ public class SwipeFragment extends Fragment {
                     return;
                 }
                 restaurants.addAll(searchResult.restaurants);
-                adapter.notifyItemRangeInserted(offset, 5);
+                adapter.notifyItemRangeInserted(offset, 30);
 
                 //insert all of the restaurants into the Parse database
                 for(int i = 0; i < restaurants.size(); i++){
@@ -205,10 +205,12 @@ public class SwipeFragment extends Fragment {
                     model.insertRestaurant(restaurants.get(i));
                 }
 
+                //populate the first bottom sheet (not recognized by cardAppeared())
+                if(layoutManager.getTopPosition() == 0) {
+                    populateBottomSheet(0);
+                }
 
-                //TODO: Initialize bottom sheet of first card
-
-                offset += 5;
+                offset += 30;
             }
 
             @Override
