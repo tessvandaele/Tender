@@ -9,6 +9,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.tender.models.Restaurant;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -18,8 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
     private RatingBar rating;
     private TextView review_count;
     private TextView price;
-
-    private Restaurant restaurant;
+    private String restaurant_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +39,24 @@ public class DetailsActivity extends AppCompatActivity {
         review_count = findViewById(R.id.tvReviewCountDetails);
         price = findViewById(R.id.tvPriceDetails);
 
-        //restaurant = (Restaurant) Parcels.unwrap(getIntent().getParcelableExtra(Restaurant.class.getSimpleName()));
+        restaurant_name = getIntent().getStringExtra("name");
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Restaurant");
+        query.whereEqualTo("name", restaurant_name);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                Restaurant restaurant = (Restaurant) object;
+                name.setText(restaurant.getName());
+                distance.setText(restaurant.getDisplayDistance());
+                rating.setRating((float) restaurant.getRating());
+                review_count.setText(restaurant.getReview_count() + " reviews");
+                price.setText(restaurant.getPrice());
 
-        name.setText(restaurant.getName());
-        distance.setText(restaurant.getDisplayDistance());
-        rating.setRating((float) restaurant.getRating());
-        review_count.setText(restaurant.getReview_count() + " reviews");
-        price.setText(restaurant.getPrice());
-
-        Glide.with(this)
-                .load(restaurant.getImage_url())
-                .centerCrop()
-                .into(image);
+                Glide.with(DetailsActivity.this)
+                        .load(restaurant.getImage_url())
+                        .centerCrop()
+                        .into(image);
+            }
+        });
     }
 }

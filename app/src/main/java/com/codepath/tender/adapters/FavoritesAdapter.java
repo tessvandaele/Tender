@@ -56,7 +56,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         return restaurants.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView name;
         private ImageView image;
@@ -76,6 +76,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             delete = itemView.findViewById(R.id.ibDelete);
             reviewCount = itemView.findViewById(R.id.tvReviewCount);
             price = itemView.findViewById(R.id.tvPrice);
+            itemView.setOnClickListener(this);
         }
 
         //binding the data to the view holder
@@ -89,6 +90,27 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                     .load(restaurant.getImage_url())
                     .centerCrop()
                     .into(image);
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClicked(restaurant.getObjectId());
+                }
+            });
+        }
+
+        //start intent for details activity
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            //check that position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                //create intent for new activity
+                Intent intent = new Intent(context, DetailsActivity.class);
+                //serialize the movie
+                intent.putExtra("name", name.getText().toString());
+                //start the activity
+                context.startActivity(intent);
+            }
         }
     }
 }
