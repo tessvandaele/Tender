@@ -11,9 +11,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.YelpSearchResult;
 import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
@@ -68,6 +70,8 @@ public class SwipeFragment extends Fragment {
 
     private List<Restaurant> restaurants;
 
+    private RestaurantViewModel model;
+
     //empty constructor
     public SwipeFragment() {}
 
@@ -96,6 +100,8 @@ public class SwipeFragment extends Fragment {
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
 
+        model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+
         //setting the bottom sheet behavior
         LinearLayout linearLayout = view.findViewById(R.id.design_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
@@ -109,10 +115,10 @@ public class SwipeFragment extends Fragment {
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
 
-        setAutomatedSwiping();
+        //setAutomatedSwiping();
         fetchRestaurants();
 
-        setBottomSheet();
+        //setBottomSheet();
     }
 
     private void initializeLayoutManager() {
@@ -183,7 +189,11 @@ public class SwipeFragment extends Fragment {
                     return;
                 }
                 restaurants.addAll(searchResult.restaurants);
-                adapter.notifyItemRangeInserted(offset, 5);
+                adapter.notifyItemRangeInserted(offset, 30);
+
+                restaurants.get(0).setRestaurantProperties();
+                model.insert(restaurants.get(0));
+
 
                 //TODO: Initialize bottom sheet of first card
 
@@ -202,7 +212,7 @@ public class SwipeFragment extends Fragment {
     private void populateBottomSheet(int position) {
         nameSheet.setText(restaurants.get(position).getName());
         distanceSheet.setText(restaurants.get(position).getDisplayDistance());
-        ratingBarSheet.setRating(restaurants.get(position).getRating());
+        ratingBarSheet.setRating((float) restaurants.get(position).getRating());
         reviewCount.setText(Integer.toString(restaurants.get(position).getReview_count()) + " reviews");
         price.setText(restaurants.get(position).getPrice());
     }
@@ -242,7 +252,7 @@ public class SwipeFragment extends Fragment {
                 //reset bottom sheet to match first restaurant
                 nameSheet.setText(restaurants.get(0).getName());
                 distanceSheet.setText(restaurants.get(0).getDisplayDistance());
-                ratingBarSheet.setRating(restaurants.get(0).getRating());
+                ratingBarSheet.setRating((float) restaurants.get(0).getRating());
             }
         });
     }

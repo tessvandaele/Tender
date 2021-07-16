@@ -1,10 +1,14 @@
 package com.codepath.tender;
 
 import android.app.Application;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 
 import com.codepath.tender.models.Restaurant;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -12,28 +16,18 @@ import java.util.List;
 
 class RestaurantRepository {
 
-    private RestaurantDAO mRestaurantDao;
-    private LiveData<List<Restaurant>> mRestaurants;
-
-    RestaurantRepository(Application application) {
-        RestaurantRoomDatabase db = RestaurantRoomDatabase.getDatabase(application);
-        mRestaurantDao = db.restaurantDAO();
-        mRestaurants = mRestaurantDao.getAlphabetizedWords();
-    }
-
-    LiveData<List<Restaurant>> getAllRestaurants() {
-        return mRestaurants;
-    }
+    public RestaurantRepository() {}
 
     void insert(Restaurant restaurant) {
-        RestaurantRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mRestaurantDao.insert(restaurant);
-        });
-    }
-
-    void delete(String name) {
-        RestaurantRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mRestaurantDao.delete(name);
+        //saving to backend
+        restaurant.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e != null) {
+                    Log.e("SwipeFragment", "Error saving post", e);
+                    return;
+                }
+            }
         });
     }
 }

@@ -20,8 +20,6 @@ import com.codepath.tender.DetailsActivity;
 import com.codepath.tender.R;
 import com.codepath.tender.models.Restaurant;
 
-import org.parceler.Parcels;
-
 public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListAdapter.FavoritesViewHolder> {
 
     OnClickListenerDelete listener;
@@ -91,7 +89,7 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
         public void bind(Restaurant restaurant) {
             name.setText(restaurant.getName());
             distance.setText(restaurant.getDisplayDistance());
-            ratingBar.setRating(restaurant.getRating());
+            ratingBar.setRating((float) restaurant.getRating());
             reviewCount.setText(Integer.toString(restaurant.getReview_count()));
             price.setText(restaurant.getPrice());
             Glide.with(itemView)
@@ -116,7 +114,7 @@ public class FavoritesListAdapter extends ListAdapter<Restaurant, FavoritesListA
                 //create intent for new activity
                 Intent intent = new Intent(context, DetailsActivity.class);
                 //serialize the movie
-                intent.putExtra(Restaurant.class.getSimpleName(), Parcels.wrap(restaurant));
+                //intent.putExtra(Restaurant.class.getSimpleName(), Parcels.wrap(restaurant));
                 //start the activity
                 context.startActivity(intent);
             }

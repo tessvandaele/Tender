@@ -1,24 +1,23 @@
 package com.codepath.tender.models;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
-
-import org.parceler.Parcel;
-
 import java.text.DecimalFormat;
 
-@ParseClassName("Post")
+@ParseClassName("Restaurant")
 public class Restaurant extends ParseObject {
 
     public static final String NAME_KEY = "name";
     public static final String IMAGE_KEY = "image_url";
     public static final String DISTANCE_KEY = "distance";
     public static final String RATING_KEY = "rating";
+
+    private String name;
+    private String image_url;
+    private double distance;
+    private double rating;
 
     public Restaurant() {}
 
@@ -28,12 +27,12 @@ public class Restaurant extends ParseObject {
         return getString(IMAGE_KEY);
     }
 
-    public float getDistance() {
-        return getLong(DISTANCE_KEY);
+    public double getDistance() {
+        return (float) getNumber(DISTANCE_KEY);
     }
 
-    public float getRating() {
-        return getLong(RATING_KEY);
+    public double getRating() {
+        return getDouble(RATING_KEY);
     }
 
     public String getPhone() {
@@ -48,6 +47,13 @@ public class Restaurant extends ParseObject {
         return 0;
     }
 
+    public void setRestaurantProperties() {
+        put(NAME_KEY, this.name);
+        put(IMAGE_KEY, this.image_url);
+        put(DISTANCE_KEY, this.distance);
+        put(RATING_KEY, this.rating);
+    }
+
     public void setName(@NonNull String name) {
         put(NAME_KEY, name);
     }
@@ -56,11 +62,11 @@ public class Restaurant extends ParseObject {
         put(IMAGE_KEY, image_url);
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(double distance) {
         put(DISTANCE_KEY, distance);
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         put(RATING_KEY, rating);
     }
 

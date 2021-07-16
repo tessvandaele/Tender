@@ -13,24 +13,16 @@ import java.util.List;
 
 public class RestaurantViewModel extends AndroidViewModel {
 
-    private RestaurantRepository repository;
-    private final LiveData<List<Restaurant>> restaurants;
+    RestaurantRepository repository;
     private int topPosition;
     private int offset;
 
     public RestaurantViewModel (Application application) {
         super(application);
-        repository = new RestaurantRepository(application);
-        restaurants = repository.getAllRestaurants();
+        repository = new RestaurantRepository();
     }
-
-    public LiveData<List<Restaurant>> getAllRestaurants() { return restaurants; }
 
     public void insert(Restaurant restaurant) { repository.insert(restaurant); }
-
-    public void delete(String name) {
-        repository.delete(name);
-    }
 
     public void setOffset(int offset) {
         this.offset = offset;

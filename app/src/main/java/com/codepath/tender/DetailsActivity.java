@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.codepath.tender.models.Restaurant;
 
-import org.parceler.Parcels;
-
 public class DetailsActivity extends AppCompatActivity {
 
     private ImageView image;
@@ -35,11 +33,11 @@ public class DetailsActivity extends AppCompatActivity {
         review_count = findViewById(R.id.tvReviewCountDetails);
         price = findViewById(R.id.tvPriceDetails);
 
-        restaurant = (Restaurant) Parcels.unwrap(getIntent().getParcelableExtra(Restaurant.class.getSimpleName()));
+        //restaurant = (Restaurant) Parcels.unwrap(getIntent().getParcelableExtra(Restaurant.class.getSimpleName()));
 
         name.setText(restaurant.getName());
         distance.setText(restaurant.getDisplayDistance());
-        rating.setRating(restaurant.getRating());
+        rating.setRating((float) restaurant.getRating());
         review_count.setText(restaurant.getReview_count() + " reviews");
         price.setText(restaurant.getPrice());
 

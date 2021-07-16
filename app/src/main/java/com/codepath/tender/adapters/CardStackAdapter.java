@@ -73,7 +73,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
             name.setText(restaurant.getName());
             distance.setText(restaurant.getDisplayDistance());
-            rating.setRating(restaurant.getRating());
+            rating.setRating((float) restaurant.getRating());
         }
     }
 }
