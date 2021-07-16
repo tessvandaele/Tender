@@ -11,11 +11,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
 import com.codepath.tender.R;
-import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.YelpSearchResult;
 import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
@@ -69,7 +67,6 @@ public class SwipeFragment extends Fragment {
     private TextView price;
 
     private List<Restaurant> restaurants;
-    private RestaurantViewModel restaurantViewModel;
 
     //empty constructor
     public SwipeFragment() {}
@@ -111,20 +108,11 @@ public class SwipeFragment extends Fragment {
         cardStackView.setLayoutManager(layoutManager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
-        restaurantViewModel = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
         setAutomatedSwiping();
         fetchRestaurants();
 
         setBottomSheet();
-    }
-
-    //saving state of fragment to view model
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        restaurantViewModel.setTopPosition(layoutManager.getTopPosition());
-        restaurantViewModel.setOffset(offset);
     }
 
     private void initializeLayoutManager() {
@@ -147,7 +135,7 @@ public class SwipeFragment extends Fragment {
 
                 //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
-                    restaurantViewModel.insert(restaurants.get(layoutManager.getTopPosition()-1));
+                   //ADD restaurant to favorites
                 }
             }
 
@@ -197,10 +185,7 @@ public class SwipeFragment extends Fragment {
                 restaurants.addAll(searchResult.restaurants);
                 adapter.notifyItemRangeInserted(offset, 5);
 
-                //initialize the first bottom sheet
-                if(restaurantViewModel.getTopPosition() == 0) {
-                    populateBottomSheet(0);
-                }
+                //TODO: Initialize bottom sheet of first card
 
                 offset += 30;
             }
@@ -287,47 +272,5 @@ public class SwipeFragment extends Fragment {
         layoutManager.setMaxDegree(20.0f); //sets how much the cards rotate when swiped
         layoutManager.setDirections(Direction.HORIZONTAL); //allows user to swipe horizontally only (user can still drag vertically)
         layoutManager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual); //sets swiping method
-    }
-
-    //retrieves the data that user had already loaded in last fragment access
-    //currently makes a new request to API (will be adjusted to use database instead)
-    private void retrieveOldData() {
-        //setting the stored value of offset and current position in stack
-        offset = restaurantViewModel.getOffset();
-        layoutManager.setTopPosition(restaurantViewModel.getTopPosition());
-
-        //calls a normal fetch of data (user has not yet swiped through any cards)
-        if(restaurantViewModel.getTopPosition() == 0) {
-            fetchRestaurants();
-            return;
-        }
-
-        //API call to retrieve cards that user had previously loaded
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        yelpService = retrofit.create(YelpService.class);
-        yelpService.getRestaurants("Bearer " + API_KEY, "New York", offset, 0).enqueue(new Callback<YelpSearchResult>() {
-            @Override
-            public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
-                YelpSearchResult searchResult = response.body();
-                if(searchResult == null){
-                    Log.e(TAG, "No restaurants retrieved");
-                    return;
-                }
-                restaurants.addAll(searchResult.restaurants);
-                //saving location since adapter will override value of topPosition
-                int saved_location = layoutManager.getTopPosition();
-                adapter.notifyDataSetChanged();
-                //setting the position to where user was previously
-                cardStackView.scrollToPosition(saved_location);
-            }
-
-            @Override
-            public void onFailure(Call<YelpSearchResult> call, Throwable t) {
-                Log.d(TAG, "onFailure " + t);
-            }
-        });
     }
 }

@@ -30,26 +30,10 @@ public class FavoritesFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         RecyclerView recyclerView = view.findViewById(R.id.rvRestaurants);
 
-        RestaurantViewModel model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+//        final FavoritesListAdapter adapter = new FavoritesListAdapter(new FavoritesListAdapter.RestaurantDiff(), listener);
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //setting up the Items Adapter which handles the View Holder
-        FavoritesListAdapter.OnClickListenerDelete listener = new FavoritesListAdapter.OnClickListenerDelete() {
-            @Override
-            public void onItemClicked(String name) {
-                //delete item from list
-                model.delete(name);
-            }
-        };
-
-
-        final FavoritesListAdapter adapter = new FavoritesListAdapter(new FavoritesListAdapter.RestaurantDiff(), listener);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        model.getAllRestaurants().observe(getViewLifecycleOwner(), restaurants -> {
-            // Update the cached copy of the words in the adapter.
-            adapter.submitList(restaurants);
-        });
 
     }
 }
