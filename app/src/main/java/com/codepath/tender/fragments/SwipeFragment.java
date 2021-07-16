@@ -21,6 +21,8 @@ import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
@@ -142,7 +144,12 @@ public class SwipeFragment extends Fragment {
 
                 //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
-                    model.insertFavorite(restaurants.get(layoutManager.getTopPosition()).getObjectId(), ParseUser.getCurrentUser().getObjectId());
+                    int position = layoutManager.getTopPosition() - 1;
+                    try {
+                        model.insertFavorite(model.getRestaurantIdByName(restaurants.get(position).getName()), ParseUser.getCurrentUser().getObjectId());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

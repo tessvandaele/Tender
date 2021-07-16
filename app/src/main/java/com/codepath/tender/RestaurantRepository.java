@@ -13,8 +13,10 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.parse.ParseObject.saveAllInBackground;
@@ -45,6 +47,14 @@ class RestaurantRepository {
                 }
             }
         });
+    }
+
+    String getRestaurantIdByName (String name) throws ParseException {
+        List<ParseObject> ids = new ArrayList<>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Restaurant");
+        query.whereEqualTo("name", name);
+
+        return query.getFirst().getObjectId();
     }
 
     void insertFavorite(String restaurant_id, String user_id) {

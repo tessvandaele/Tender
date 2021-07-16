@@ -27,6 +27,8 @@ public class Restaurant extends ParseObject {
 
     public Restaurant() {}
 
+    public String getObject_id() { return getString("objectId"); }
+
     public String getName(){return getString(NAME_KEY);}
 
     public String getImage_url() {

@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 
 import com.codepath.tender.models.Favorite;
 import com.codepath.tender.models.Restaurant;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class RestaurantViewModel extends AndroidViewModel {
     public void insertRestaurant(Restaurant restaurant) { repository.insertRestaurant(restaurant); }
 
     public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
+
+    public String getRestaurantIdByName(String name) throws ParseException { return repository.getRestaurantIdByName(name); }
 
     public void setOffset(int offset) {
         this.offset = offset;
