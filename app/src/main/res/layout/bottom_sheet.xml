@@ -38,7 +38,7 @@
                 android:scaleX="2.5"
                 android:scaleY="2.5"
                 app:srcCompat="@drawable/ic_down_arrow_circle"
-                app:tint="#66C0CC" />
+                app:tint="@color/main_color" />
 
             <TextView
                 android:id="@+id/tvNameSheet"
@@ -96,7 +96,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:numStars="5"
-                android:progressTint="#66C0CC"
+                android:progressTint="@color/main_color"
                 android:rating="4.2" />
 
             <TextView
@@ -177,7 +177,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginEnd="22dp"
                 android:layout_marginBottom="95dp"
-                android:textColor="#66C0CC"
+                android:textColor="@color/main_color"
                 tools:text="$$" />
 
         </RelativeLayout>
