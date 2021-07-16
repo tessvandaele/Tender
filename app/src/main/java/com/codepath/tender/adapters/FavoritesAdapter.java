@@ -25,10 +25,17 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     //list of restaurants
     private List<Restaurant> restaurants;
     private Context context;
+    private OnClickListenerDelete listener;
 
-    public FavoritesAdapter(Context context, List<Restaurant> restaurants) {
+    //interface to retrieve data from MainActivity class on which item to delete
+    public interface OnClickListenerDelete {
+        void onItemClicked(String id);
+    }
+
+    public FavoritesAdapter(Context context, List<Restaurant> restaurants, OnClickListenerDelete listener) {
         this.context = context;
         this.restaurants = restaurants;
+        this.listener = listener;
     }
 
     //inflating the item_card layout as the view for the view holder
@@ -57,6 +64,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         private TextView distance;
         private TextView reviewCount;
         private TextView price;
+        private ImageButton delete;
 
         //vew holder constructor
         public ViewHolder(@NonNull View itemView) {
@@ -65,7 +73,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             image = itemView.findViewById(R.id.ivImage);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             distance = itemView.findViewById(R.id.tvDistance);
-
+            delete = itemView.findViewById(R.id.ibDelete);
             reviewCount = itemView.findViewById(R.id.tvReviewCount);
             price = itemView.findViewById(R.id.tvPrice);
         }

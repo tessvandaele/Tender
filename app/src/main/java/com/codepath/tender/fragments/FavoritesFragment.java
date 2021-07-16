@@ -14,7 +14,9 @@ import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.adapters.FavoritesAdapter;
 import com.codepath.tender.models.Restaurant;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -47,11 +49,39 @@ public class FavoritesFragment extends Fragment {
 
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
+        //setting up the Items Adapter which handles the View Holder
+        FavoritesAdapter.OnClickListenerDelete listener = new FavoritesAdapter.OnClickListenerDelete() {
+            @Override
+            public void onItemClicked(String id) {
+                //delete item from list
+                ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Favorite");
+                query.whereEqualTo("userId", ParseUser.getCurrentUser().getObjectId());
+                query.whereEqualTo("restaurantId", id);
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                restaurants.clear();
+                                setFavorites();
+                            }
+                        });
+                    }
+                });
+            }
+        };
+
         //set up adapter
-        adapter = new FavoritesAdapter(getContext(), restaurants);
+        adapter = new FavoritesAdapter(getContext(), restaurants, listener);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        setFavorites();
+
+    }
+
+    public void setFavorites() {
         //parse for favorites restaurant objects
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Favorite");
         query.whereEqualTo("userId", ParseUser.getCurrentUser().getObjectId());
