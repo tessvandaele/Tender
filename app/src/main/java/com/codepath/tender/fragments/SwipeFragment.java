@@ -21,6 +21,7 @@ import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.parse.ParseUser;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -141,7 +142,7 @@ public class SwipeFragment extends Fragment {
 
                 //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
-                   //ADD restaurant to favorites
+                    model.insertFavorite(restaurants.get(layoutManager.getTopPosition()).getObjectId(), ParseUser.getCurrentUser().getObjectId());
                 }
             }
 
@@ -180,7 +181,7 @@ public class SwipeFragment extends Fragment {
                 .build();
         yelpService = retrofit.create(YelpService.class);
 
-        yelpService.getRestaurants("Bearer " + API_KEY, "Chicago", 30, offset).enqueue(new Callback<YelpSearchResult>() {
+        yelpService.getRestaurants("Bearer " + API_KEY, "Chicago", 5, offset).enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
                 YelpSearchResult searchResult = response.body();
@@ -189,18 +190,18 @@ public class SwipeFragment extends Fragment {
                     return;
                 }
                 restaurants.addAll(searchResult.restaurants);
-                adapter.notifyItemRangeInserted(offset, 30);
+                adapter.notifyItemRangeInserted(offset, 5);
 
                 //insert all of the restaurants into the Parse database
                 for(int i = 0; i < restaurants.size(); i++){
                     restaurants.get(i).setRestaurantProperties();
-                    model.insert(restaurants.get(i));
+                    model.insertRestaurant(restaurants.get(i));
                 }
 
 
                 //TODO: Initialize bottom sheet of first card
 
-                offset += 30;
+                offset += 5;
             }
 
             @Override

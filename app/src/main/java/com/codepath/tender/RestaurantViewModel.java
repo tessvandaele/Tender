@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.codepath.tender.models.Favorite;
 import com.codepath.tender.models.Restaurant;
 
 import java.util.List;
@@ -22,7 +23,9 @@ public class RestaurantViewModel extends AndroidViewModel {
         repository = new RestaurantRepository();
     }
 
-    public void insert(Restaurant restaurant) { repository.insert(restaurant); }
+    public void insertRestaurant(Restaurant restaurant) { repository.insertRestaurant(restaurant); }
+
+    public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
 
     public void setOffset(int offset) {
         this.offset = offset;
