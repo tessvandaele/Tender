@@ -26,12 +26,22 @@ class RestaurantRepository {
     public RestaurantRepository() {}
 
     void insertRestaurant(Restaurant restaurant) {
-        restaurant.saveInBackground(new SaveCallback() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Restaurant");
+        query.whereEqualTo("name", restaurant.getName());
+
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(ParseException e) {
-                if(e != null) {
-                    Log.e("SwipeFragment", "Error saving restaurant", e);
-                    return;
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(objects.size() == 0) { //restaurant does not already exist
+                    restaurant.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e != null) {
+                                Log.e("SwipeFragment", "Error saving restaurant", e);
+                                return;
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -41,12 +51,24 @@ class RestaurantRepository {
         ParseObject favorite = new ParseObject("Favorite");
         favorite.put(Favorite.RESTAURANT_ID_KEY, restaurant_id);
         favorite.put(Favorite.USER_ID_KEY, user_id);
-        favorite.saveInBackground(new SaveCallback() {
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Favorite");
+        query.whereEqualTo("userId", user_id);
+        query.whereEqualTo("restaurantId", restaurant_id);
+
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(ParseException e) {
-                if(e != null) {
-                    Log.e("SwipeFragment", "Error saving restaurant", e);
-                    return;
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(objects.size() == 0) { //favorite does not already exist
+                    favorite.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e != null) {
+                                Log.e("SwipeFragment", "Error saving restaurant", e);
+                                return;
+                            }
+                        }
+                    });
                 }
             }
         });
