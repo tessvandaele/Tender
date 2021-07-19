@@ -1,10 +1,12 @@
 package com.codepath.tender;
 
+import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.models.YelpSearchResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /* interface declaring API call to fetch YelpSearchResult object */
@@ -18,4 +20,8 @@ public interface YelpService {
             @Query("limit") int limit, //limit number of restaurants fetched
             @Query("offset") int offset); //offset for where to start retrieval
 
+    @GET("businesses/{id}")
+    Call<Restaurant> getRestaurantDetails(
+            @Header("Authorization") String authHeader,
+            @Path("id") String restaurant_id);
 }

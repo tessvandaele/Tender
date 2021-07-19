@@ -1,6 +1,7 @@
 package com.codepath.tender.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
+import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.FavoritesAdapter;
 import com.codepath.tender.models.Restaurant;
+import com.codepath.tender.models.YelpSearchResult;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -25,16 +28,28 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 /* user can view a list of favorite restaurants, navigate to a details page, and delete a favorite */
 
 public class FavoritesFragment extends Fragment {
+
+    private static final String BASE_URL = "https://api.yelp.com/v3/";
+    private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
 
     private RecyclerView recyclerView;
     private FavoritesAdapter adapter;
     private RestaurantViewModel model;
     private FavoritesAdapter.OnClickListenerDelete listener;
 
-    ArrayList<Restaurant> restaurants;
+    private YelpService yelpService;
+    private Retrofit retrofit;
+
+    ArrayList<Restaurant> favorites;
 
     //empty constructor
     public FavoritesFragment() {
@@ -49,7 +64,7 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.rvRestaurants);
-        restaurants = new ArrayList<>();
+        favorites = new ArrayList<>();
 
         //creating a view model in which data will be saved across screen changes
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
@@ -58,7 +73,7 @@ public class FavoritesFragment extends Fragment {
         setDeleteListener();
 
         //adapter and layout manager set up
-        adapter = new FavoritesAdapter(getContext(), restaurants, listener);
+        adapter = new FavoritesAdapter(getContext(), favorites, listener);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -73,16 +88,33 @@ public class FavoritesFragment extends Fragment {
         query.findInBackground(new FindCallback<ParseObject>() { //parse for favorites of user
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
+                //populating favorites list with favorite restaurants
                 for (ParseObject object : objects) {
                     String id = object.getString("restaurantId");
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Restaurant");
-                    query.getInBackground(id, (result, exception) -> { //parse for restaurants in favorites
-                        if (exception == null) {
-                            restaurants.add((Restaurant)result);
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
+                    getRestaurant(id);
                 }
+            }
+        });
+    }
+
+    //run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
+    private void getRestaurant(String id) {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        yelpService = retrofit.create(YelpService.class);
+
+        yelpService.getRestaurantDetails("Bearer " + API_KEY, id).enqueue(new Callback<Restaurant>() {
+            @Override
+            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
+                favorites.add(response.body());
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<Restaurant> call, Throwable t) {
+                Log.d("Favorites fragment", "Could not retrieve restaurant");
             }
         });
     }
@@ -105,7 +137,7 @@ public class FavoritesFragment extends Fragment {
                                 @Override
                                 public void done(ParseException e) {
                                     if(e == null) {
-                                        restaurants.clear();
+                                        favorites.clear();
                                         setFavorites();
                                     }
                                 }
