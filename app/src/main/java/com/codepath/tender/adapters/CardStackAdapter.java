@@ -68,6 +68,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         public void bind(Restaurant restaurant) {
             Glide.with(context)
                     .load(restaurant.getImage_url())
+                    .placeholder(R.drawable.image_placeholder)
                     .into(image);
 
             name.setText(restaurant.getName());
