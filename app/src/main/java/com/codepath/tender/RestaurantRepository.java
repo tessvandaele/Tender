@@ -27,36 +27,6 @@ class RestaurantRepository {
 
     public RestaurantRepository() {}
 
-    void insertRestaurant(Restaurant restaurant) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Restaurant");
-        query.whereEqualTo("name", restaurant.getName());
-
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if(objects.size() == 0) { //restaurant does not already exist
-                    restaurant.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if(e != null) {
-                                Log.e("SwipeFragment", "Error saving restaurant", e);
-                                return;
-                            }
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    String getRestaurantIdByName (String name) throws ParseException {
-        List<ParseObject> ids = new ArrayList<>();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Restaurant");
-        query.whereEqualTo("name", name);
-
-        return query.getFirst().getObjectId();
-    }
-
     void insertFavorite(String restaurant_id, String user_id) {
         ParseObject favorite = new ParseObject("Favorite");
         favorite.put(Favorite.RESTAURANT_ID_KEY, restaurant_id);

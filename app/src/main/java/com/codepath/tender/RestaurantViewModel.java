@@ -25,11 +25,7 @@ public class RestaurantViewModel extends AndroidViewModel {
         repository = new RestaurantRepository();
     }
 
-    public void insertRestaurant(Restaurant restaurant) { repository.insertRestaurant(restaurant); }
-
     public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
-
-    public String getRestaurantIdByName(String name) throws ParseException { return repository.getRestaurantIdByName(name); }
 
     public void setOffset(int offset) {
         this.offset = offset;

@@ -88,7 +88,6 @@ public class SwipeFragment extends Fragment {
     //construct view hierarchy
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
         restaurants = new ArrayList<>();
         cardStackView = view.findViewById(R.id.card_stack_view);
         ibLike = view.findViewById(R.id.ibLike);
@@ -129,15 +128,11 @@ public class SwipeFragment extends Fragment {
         layoutManager = new CardStackLayoutManager(getContext(), new CardStackListener() {
             //called when a card is dragged from original position
             @Override
-            public void onCardDragging(Direction direction, float ratio) {
-                Log.d(TAG, "onCardDragging: d = " + direction.name() + ", ratio = " + ratio);
-            }
+            public void onCardDragging(Direction direction, float ratio) {}
 
             //called when a card is swiped off the deck
             @Override
             public void onCardSwiped(Direction direction) {
-                Log.d(TAG, "onCardSwiped: p = " + layoutManager.getTopPosition() + " d = " + direction.name());
-
                 //check if more cards need to be loaded
                 if(offset - layoutManager.getTopPosition() < 2) {
                     fetchRestaurants();
@@ -146,11 +141,7 @@ public class SwipeFragment extends Fragment {
                 //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
                     int position = layoutManager.getTopPosition() - 1;
-                    try {
-                        model.insertFavorite(model.getRestaurantIdByName(restaurants.get(position).getName()), ParseUser.getCurrentUser().getObjectId());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    model.insertFavorite(restaurants.get(position).getId(), ParseUser.getCurrentUser().getObjectId());
                 }
             }
 
@@ -198,14 +189,10 @@ public class SwipeFragment extends Fragment {
                     return;
                 }
                 //add restaurants to restaurant list and notify adapter
+                int position = layoutManager.getTopPosition();
                 restaurants.addAll(searchResult.restaurants);
-                adapter.notifyItemRangeInserted(offset, 30);
-
-                //insert all of the restaurants into the Parse database
-                for(int i = 0; i < restaurants.size(); i++){
-                    restaurants.get(i).setRestaurantProperties();
-                    model.insertRestaurant(restaurants.get(i));
-                }
+                adapter.notifyDataSetChanged();
+                layoutManager.scrollToPosition(position);
 
                 //populate the first bottom sheet (not recognized by cardAppeared())
                 if(layoutManager.getTopPosition() == 0) {

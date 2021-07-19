@@ -17,6 +17,7 @@ public class Restaurant extends ParseObject {
     public static final String PRICE_KEY = "price";
     public static final String PHONE_KEY = "phone";
 
+    private String id;
     private String name;
     private String image_url;
     private double distance;
@@ -27,30 +28,32 @@ public class Restaurant extends ParseObject {
 
     public Restaurant() {}
 
-    public String getName(){return getString(NAME_KEY);}
+    public String getId() { return this.id; }
+
+    public String getName() {return this.name;}
 
     public String getImage_url() {
-        return getString(IMAGE_KEY);
+        return this.image_url;
     }
 
     public double getDistance() {
-        return getDouble(DISTANCE_KEY);
+        return this.distance;
     }
 
     public double getRating() {
-        return getDouble(RATING_KEY);
+        return this.rating;
     }
 
     public int getReview_count() {
-        return getInt(REVIEW_COUNT_KEY);
+        return this.review_count;
     }
 
     public String getPrice() {
-        return getString(PRICE_KEY);
+        return this.price;
     }
 
     public String getPhone() {
-        return getString(PHONE_KEY);
+        return this.phone;
     }
 
     public void setRestaurantProperties() {
@@ -61,6 +64,10 @@ public class Restaurant extends ParseObject {
         setReview_count(this.review_count);
         setPrice(this.price);
         setPhone(this.phone);
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(@NonNull String name) {
