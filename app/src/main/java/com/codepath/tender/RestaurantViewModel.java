@@ -10,6 +10,7 @@ import com.codepath.tender.models.Restaurant;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /* View model that provides data to the UI and survives configuration changes between fragments/activities */
@@ -19,10 +20,12 @@ public class RestaurantViewModel extends AndroidViewModel {
     RestaurantRepository repository;
     private int topPosition;
     private int offset;
+    private ArrayList<Restaurant> restaurants;
 
     public RestaurantViewModel (Application application) {
         super(application);
         repository = new RestaurantRepository();
+        restaurants = new ArrayList<>();
     }
 
     public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
@@ -41,5 +44,13 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public int getTopPosition() {
         return topPosition;
+    }
+
+    public void saveRestaurants(ArrayList<Restaurant> restaurants) {
+        this.restaurants = restaurants;
+    }
+
+    public ArrayList<Restaurant> getSavedRestaurants() {
+        return this.restaurants;
     }
 }

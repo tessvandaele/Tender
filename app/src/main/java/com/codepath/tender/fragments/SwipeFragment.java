@@ -72,7 +72,7 @@ public class SwipeFragment extends Fragment {
     private TextView reviewCount;
     private TextView price;
 
-    private List<Restaurant> restaurants;
+    private ArrayList<Restaurant> restaurants;
 
     private RestaurantViewModel model;
 
@@ -111,6 +111,10 @@ public class SwipeFragment extends Fragment {
 
         initializeLayoutManager();
         setLayoutManagerProperties();
+
+        restaurants = model.getSavedRestaurants();
+        offset = model.getOffset();
+        layoutManager.setTopPosition(model.getTopPosition());
 
         adapter = new CardStackAdapter(getContext(), restaurants);
 
@@ -208,6 +212,15 @@ public class SwipeFragment extends Fragment {
             }
         });
 
+    }
+
+    //saving state of fragment to view model
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        model.setTopPosition(layoutManager.getTopPosition());
+        model.setOffset(offset);
+        model.saveRestaurants(restaurants);
     }
 
     //populate bottom sheet
