@@ -25,6 +25,8 @@ public class Restaurant extends ParseObject {
     private int review_count;
     private String price;
     private String phone;
+    private Coordinates coordinates;
+    private Location location;
 
     public Restaurant() {}
 
