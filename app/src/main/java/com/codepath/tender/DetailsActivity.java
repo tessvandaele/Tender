@@ -3,6 +3,7 @@ package com.codepath.tender;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -14,9 +15,18 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 /* user can view a detailed screen of restaurant information */
 
 public class DetailsActivity extends AppCompatActivity {
+
+    private static final String BASE_URL = "https://api.yelp.com/v3/";
+    private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
 
     //defining views
     private ImageView image;
@@ -25,7 +35,10 @@ public class DetailsActivity extends AppCompatActivity {
     private RatingBar rating;
     private TextView review_count;
     private TextView price;
-    private String restaurant_name;
+
+    private String restaurant_id;
+    private YelpService yelpService;
+    private Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +57,31 @@ public class DetailsActivity extends AppCompatActivity {
 
     //retrieves the correct restaurant based on restaurant name
     public void bindData() {
-        restaurant_name = getIntent().getStringExtra("name");
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Restaurant");
-        query.whereEqualTo("name", restaurant_name);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
+        restaurant_id = getIntent().getStringExtra("restaurant_id");
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        yelpService = retrofit.create(YelpService.class);
+
+        yelpService.getRestaurantDetails("Bearer " + API_KEY, restaurant_id).enqueue(new Callback<Restaurant>() {
             @Override
-            public void done(ParseObject object, ParseException e) {
-                Restaurant restaurant = (Restaurant) object;
+            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
+                Restaurant restaurant = response.body();
                 name.setText(restaurant.getName());
                 distance.setText(restaurant.getDisplayDistance());
                 rating.setRating((float) restaurant.getRating());
-                review_count.setText(restaurant.getReview_count() + " reviews");
+                review_count.setText(Integer.toString(restaurant.getReview_count()));
                 price.setText(restaurant.getPrice());
-
                 Glide.with(DetailsActivity.this)
                         .load(restaurant.getImage_url())
                         .centerCrop()
                         .into(image);
+            }
+
+            @Override
+            public void onFailure(Call<Restaurant> call, Throwable t) {
+                Log.d("Favorites fragment", "Could not retrieve restaurant");
             }
         });
     }

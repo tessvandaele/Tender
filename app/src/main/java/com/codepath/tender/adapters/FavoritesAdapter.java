@@ -24,7 +24,7 @@ import java.util.List;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
-    private List<Restaurant> restaurants;
+    private List<Restaurant> favorites;
     private Context context;
 
     private OnClickListenerDelete listener;
@@ -34,9 +34,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         void onItemClicked(String id);
     }
 
-    public FavoritesAdapter(Context context, List<Restaurant> restaurants, OnClickListenerDelete listener) {
+    public FavoritesAdapter(Context context, List<Restaurant> favorites, OnClickListenerDelete listener) {
         this.context = context;
-        this.restaurants = restaurants;
+        this.favorites = favorites;
         this.listener = listener;
     }
 
@@ -50,12 +50,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(restaurants.get(position));
+        holder.bind(favorites.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return restaurants.size();
+        return favorites.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -111,7 +111,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             //check that position is valid
             if (position != RecyclerView.NO_POSITION) {
                 Intent intent = new Intent(context, DetailsActivity.class);
-                intent.putExtra("name", name.getText().toString());
+                intent.putExtra("restaurant_id", favorites.get(position).getId());
                 context.startActivity(intent);
             }
         }
