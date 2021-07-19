@@ -9,11 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+/* user can sign up for a new tender account */
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -32,7 +33,7 @@ public class SignupActivity extends AppCompatActivity {
         btnCreateAccount = findViewById(R.id.btnCreateAccount);
         ibBack = findViewById(R.id.ibBack);
 
-        //set up create account button
+        //create account button creates a new user in Parse
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,8 +53,6 @@ public class SignupActivity extends AppCompatActivity {
                             return;
                         }
 
-                        Toast.makeText(SignupActivity.this, "success", Toast.LENGTH_SHORT).show();
-
                         //create intent back to log in screen so user can log in with new account
                         Intent i = new Intent(SignupActivity.this, LoginActivity.class);
                         startActivity(i);
@@ -63,7 +62,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        //setting up back button
+        //back button for return navigation
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

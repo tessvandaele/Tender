@@ -14,8 +14,11 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+/* user can view a detailed screen of restaurant information */
+
 public class DetailsActivity extends AppCompatActivity {
 
+    //defining views
     private ImageView image;
     private TextView name;
     private TextView distance;
@@ -36,6 +39,11 @@ public class DetailsActivity extends AppCompatActivity {
         review_count = findViewById(R.id.tvReviewCountDetails);
         price = findViewById(R.id.tvPriceDetails);
 
+        bindData();
+    }
+
+    //retrieves the correct restaurant based on restaurant name
+    public void bindData() {
         restaurant_name = getIntent().getStringExtra("name");
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Restaurant");
         query.whereEqualTo("name", restaurant_name);

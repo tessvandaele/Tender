@@ -22,7 +22,6 @@ import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
@@ -40,6 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+/* user can swipe through a deck of restaurants and swipe based on preference */
 
 public class SwipeFragment extends Fragment {
 
@@ -180,7 +181,7 @@ public class SwipeFragment extends Fragment {
         });
     }
 
-    //helper method to run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
+    //run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
     private void fetchRestaurants() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -196,6 +197,7 @@ public class SwipeFragment extends Fragment {
                     Log.e(TAG, "No restaurants retrieved");
                     return;
                 }
+                //add restaurants to restaurant list and notify adapter
                 restaurants.addAll(searchResult.restaurants);
                 adapter.notifyItemRangeInserted(offset, 30);
 
@@ -221,16 +223,16 @@ public class SwipeFragment extends Fragment {
 
     }
 
-    //helper method to populate bottom sheet
+    //populate bottom sheet
     private void populateBottomSheet(int position) {
         nameSheet.setText(restaurants.get(position).getName());
         distanceSheet.setText(restaurants.get(position).getDisplayDistance());
         ratingBarSheet.setRating((float) restaurants.get(position).getRating());
-        reviewCount.setText(Integer.toString(restaurants.get(position).getReview_count()) + " reviews");
+        reviewCount.setText(restaurants.get(position).getReview_count() + " reviews");
         price.setText(restaurants.get(position).getPrice());
     }
 
-    //helper method to set up automated swiping
+    //set up automated swiping
     private void setAutomatedSwiping() {
         //automatically swipe right
         ibLike.setOnClickListener(new View.OnClickListener() {
@@ -270,9 +272,8 @@ public class SwipeFragment extends Fragment {
         });
     }
 
-    //helper method to set up the info sheet pop up
+    //set up the bottom info sheet pop up
     private void setBottomSheet() {
-
         ibUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -14,6 +14,8 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+/* user can login to their tender account */
+
 public class LoginActivity extends AppCompatActivity {
 
     //defining views
@@ -49,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //set up sign up button
+        //set up sign up button to create intent to sign up activity
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

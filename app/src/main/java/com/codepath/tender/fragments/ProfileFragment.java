@@ -14,6 +14,8 @@ import com.codepath.tender.LoginActivity;
 import com.codepath.tender.R;
 import com.parse.ParseUser;
 
+/* user can logout of account and view profile */
+
 public class ProfileFragment extends Fragment {
 
     private ImageButton ibLogout;
@@ -22,7 +24,7 @@ public class ProfileFragment extends Fragment {
     //empty constructor
     public ProfileFragment() {}
 
-    //set up to view object hierarchy
+    //inflate layout
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_profile, container, false);
@@ -30,11 +32,10 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
         ibLogout = view.findViewById(R.id.ibLogout);
         tvUsername = view.findViewById(R.id.tvProfileUsername);
 
-        tvUsername.setText(ParseUser.getCurrentUser().getUsername().toString());
+        tvUsername.setText(ParseUser.getCurrentUser().getUsername());
 
         //setting up log out button to allow user to log out
         ibLogout.setOnClickListener(new View.OnClickListener() {
@@ -48,6 +49,5 @@ public class ProfileFragment extends Fragment {
                 startActivity(i);
             }
         });
-
     }
 }

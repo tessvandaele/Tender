@@ -21,7 +21,6 @@ import java.util.List;
 
 public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.ViewHolder> {
 
-    //list of restaurants
     private List<Restaurant> restaurants;
     private Context context;
 
@@ -55,7 +54,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         private TextView distance;
         private RatingBar rating;
 
-        //vew holder constructor
+        //view holder constructor
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -73,7 +72,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
 
             name.setText(restaurant.getName());
             distance.setText(restaurant.getDisplayDistance());
-            rating.setRating((float) restaurant.getRating());
+            rating.setRating((float)restaurant.getRating());
         }
     }
 }

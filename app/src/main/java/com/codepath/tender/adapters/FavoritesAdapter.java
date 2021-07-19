@@ -20,14 +20,16 @@ import com.codepath.tender.models.Restaurant;
 
 import java.util.List;
 
+/* adapter for the favorites list of restaurants */
+
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
-    //list of restaurants
     private List<Restaurant> restaurants;
     private Context context;
+
     private OnClickListenerDelete listener;
 
-    //interface to retrieve data from MainActivity class on which item to delete
+    //interface to send positional data to favorites fragment
     public interface OnClickListenerDelete {
         void onItemClicked(String id);
     }
@@ -38,7 +40,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         this.listener = listener;
     }
 
-    //inflating the item_card layout as the view for the view holder
+    //inflating the item_restaurant layout as the view for the view holder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -76,6 +78,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             delete = itemView.findViewById(R.id.ibDelete);
             reviewCount = itemView.findViewById(R.id.tvReviewCount);
             price = itemView.findViewById(R.id.tvPrice);
+
+            //setting click listener on view holder
             itemView.setOnClickListener(this);
         }
 
@@ -90,6 +94,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                     .load(restaurant.getImage_url())
                     .centerCrop()
                     .into(image);
+
+            //setting delete icon to call interface method defined in favorites fragment
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,11 +110,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             int position = getAdapterPosition();
             //check that position is valid
             if (position != RecyclerView.NO_POSITION) {
-                //create intent for new activity
                 Intent intent = new Intent(context, DetailsActivity.class);
-                //serialize the movie
                 intent.putExtra("name", name.getText().toString());
-                //start the activity
                 context.startActivity(intent);
             }
         }
