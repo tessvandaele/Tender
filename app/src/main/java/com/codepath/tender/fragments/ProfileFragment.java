@@ -10,14 +10,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +34,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.parse.ParseUser;;import java.lang.reflect.Array;
+import com.parse.ParseUser;
 
 /* user can logout of account and view profile */
 
@@ -48,8 +46,6 @@ public class ProfileFragment extends Fragment {
     private SeekBar barRadius;
     private TextView tvRadius;
     private ChipGroup priceChips;
-
-    private int radius;
 
     private boolean[] prices;
 
@@ -97,8 +93,9 @@ public class ProfileFragment extends Fragment {
         barRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                radius = progress;
                 tvRadius.setText(progress + " mi");
+                ParseUser.getCurrentUser().put("radius", progress);
+                ParseUser.getCurrentUser().saveInBackground();
             }
 
             @Override
@@ -127,13 +124,11 @@ public class ProfileFragment extends Fragment {
                         if(buttonView.getText().equals("$$$")) prices[2] = false;
                         if(buttonView.getText().equals("$$$$")) prices[3] = false;
                     }
-                    Log.d("done", "done");
+                    ParseUser.getCurrentUser().put("prices", getPriceString());
+                    ParseUser.getCurrentUser().saveInBackground();
                 }
             });
         }
-
-
-
     }
 
     @SuppressLint("MissingPermission")
@@ -149,8 +144,9 @@ public class ProfileFragment extends Fragment {
                         if (location == null) {
                             requestNewLocationData();
                         } else {
-                            ParseUser.getCurrentUser().put("latitude", location.getLatitude());
-                            ParseUser.getCurrentUser().put("longitude", location.getLongitude());
+                            ParseUser.getCurrentUser().put("latitude", (double)location.getLatitude());
+                            ParseUser.getCurrentUser().put("longitude", (double)location.getLongitude());
+                            ParseUser.getCurrentUser().saveInBackground();
                             tvLocation.setText(location.getLatitude() + " | " + location.getLongitude());
                         }
                     }
@@ -230,5 +226,15 @@ public class ProfileFragment extends Fragment {
         if (checkPermissions()) {
             getLastLocation();
         }
+    }
+
+    public String getPriceString() {
+        String result = "";
+        for(int i = 0; i<4; i++){
+            if(prices[i] == true) {
+                result = result + i + ", ";
+            }
+        }
+        return result;
     }
 }
