@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
+
 import java.text.DecimalFormat;
 
 @ParseClassName("Restaurant")
@@ -106,10 +108,28 @@ public class Restaurant extends ParseObject {
 
     //helper method that returns a display string of the distance in miles
     public String getDisplayDistance() {
-        float milesPerMeter = 0.000621371f;
+        double lon1 = Math.toRadians(ParseUser.getCurrentUser().getDouble("longitude"));
+        double lon2 = Math.toRadians(coordinates.getLongitude());
+        double lat1 = Math.toRadians(ParseUser.getCurrentUser().getDouble("latitude"));
+        double lat2 = Math.toRadians(coordinates.getLatitude());
+
+        // Haversine formula
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2),2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        // Radius of earth
+        double r = 3956;
+
+        c *= r;
+
         DecimalFormat df = new DecimalFormat("#.#");
-        float distanceInMiles = (float) (milesPerMeter * getDistance());
-        return df.format(distanceInMiles) + " mi";
+        // calculate the result
+        return df.format(c) + " miles away";
 
     }
 }

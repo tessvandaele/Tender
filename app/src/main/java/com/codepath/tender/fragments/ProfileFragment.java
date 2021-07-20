@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +26,13 @@ import androidx.fragment.app.Fragment;
 import com.codepath.tender.LoginActivity;
 import com.codepath.tender.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.parse.ParseUser;
+import com.parse.ParseUser;;
 
 /* user can logout of account and view profile */
 
@@ -38,10 +43,8 @@ public class ProfileFragment extends Fragment {
     private Switch locationSwitch;
     private TextView tvLocation;
 
-    private float latitude;
-    private float longitude;
-
-    private FusedLocationProviderClient locationClient;
+    private FusedLocationProviderClient mFusedLocationClient;
+    final static int PERMISSION_ID = 44;
 
     //empty constructor
     public ProfileFragment() {}
@@ -59,8 +62,6 @@ public class ProfileFragment extends Fragment {
         locationSwitch = view.findViewById(R.id.switchLocation);
         tvLocation = view.findViewById(R.id.tvLocation);
 
-        locationClient = LocationServices.getFusedLocationProviderClient(getContext());
-
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
 
         //setting up log out button to allow user to log out
@@ -76,55 +77,114 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+
         locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) { //request user location
-                    //check if permission is granted
-                    getCurrentLocation();
+                    //get location
+                    getLastLocation();
                 } else {
                     //disable user location
+
                 }
             }
         });
     }
 
-    //called when permission request ends
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == 100 && grantResults.length > 0 && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-            //permission granted
-            getCurrentLocation();
-        } else {
-            Toast.makeText(getContext(), "Could not get location", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //gets current location of the user
-    private void getCurrentLocation() {
-        LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        //check whether user permission has been granted
-        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //check that location services are enables
-            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                    || manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                locationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        // check if permissions are given
+        if (checkPermissions()) {
+            // check if location is enabled
+            if (isLocationEnabled()) {
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         Location location = task.getResult();
-                        if(location != null) {
-                            latitude = (float) location.getLatitude();
-                            longitude = (float) location.getLongitude();
-
-                            tvLocation.setText(latitude + " | " + longitude);
+                        if (location == null) {
+                            requestNewLocationData();
+                        } else {
+                            ParseUser.getCurrentUser().put("latitude", location.getLatitude());
+                            ParseUser.getCurrentUser().put("longitude", location.getLongitude());
+                            tvLocation.setText(location.getLatitude() + " | " + location.getLongitude());
                         }
                     }
                 });
+            } else {
+                Toast.makeText(getContext(), "Please turn on your location...", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
             }
         } else {
-            //request location permission
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+            // if permissions aren't available,
+            // request for permissions
+            requestPermissions();
         }
+    }
 
+    // method to check for permissions
+    private boolean checkPermissions() {
+        return getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    // method to request for permissions
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+    }
+
+    // method to check if location is enabled
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private LocationCallback mLocationCallback = new LocationCallback() {
+
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location mLastLocation = locationResult.getLastLocation();
+            tvLocation.setText(mLastLocation.getLatitude() + " | " + mLastLocation.getLongitude());
+        }
+    };
+
+    @SuppressLint("MissingPermission")
+    private void requestNewLocationData() {
+
+        // Initializing LocationRequest
+        // object with appropriate methods
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(5);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        // setting LocationRequest
+        // on FusedLocationClient
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+    }
+
+    // If everything is alright then
+    @Override
+    public void
+    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (checkPermissions()) {
+            getLastLocation();
+        }
     }
 }
