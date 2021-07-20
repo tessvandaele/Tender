@@ -21,7 +21,6 @@ import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
@@ -32,7 +31,6 @@ import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -184,9 +182,10 @@ public class SwipeFragment extends Fragment {
                 .build();
         yelpService = retrofit.create(YelpService.class);
 
-        yelpService.getRestaurants("Bearer " + API_KEY, (double)ParseUser.getCurrentUser().get("latitude"),
-                                (double)ParseUser.getCurrentUser().get("longitude"), 30, offset,
-                                (int)ParseUser.getCurrentUser().get("radius"), ParseUser.getCurrentUser().get("prices").toString())
+        yelpService.getRestaurants("Bearer " + API_KEY,
+                ParseUser.getCurrentUser().getDouble("latitude"),
+                ParseUser.getCurrentUser().getDouble("longitude"),
+                30, offset, ParseUser.getCurrentUser().getInt("radius") * 1609, ParseUser.getCurrentUser().get("prices").toString())
                     .enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
@@ -265,12 +264,9 @@ public class SwipeFragment extends Fragment {
         ibRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardStackView.scrollToPosition(0);
-
-                //reset bottom sheet to match first restaurant
-                nameSheet.setText(restaurants.get(0).getName());
-                distanceSheet.setText(restaurants.get(0).getDisplayDistance());
-                ratingBarSheet.setRating((float) restaurants.get(0).getRating());
+                restaurants.clear();
+                offset = 0;
+                fetchRestaurants();
             }
         });
     }
