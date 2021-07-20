@@ -184,7 +184,10 @@ public class SwipeFragment extends Fragment {
                 .build();
         yelpService = retrofit.create(YelpService.class);
 
-        yelpService.getRestaurants("Bearer " + API_KEY, "Seattle", 30, offset).enqueue(new Callback<YelpSearchResult>() {
+        yelpService.getRestaurants("Bearer " + API_KEY, (double)ParseUser.getCurrentUser().get("latitude"),
+                                (double)ParseUser.getCurrentUser().get("longitude"), 30, offset,
+                                (int)ParseUser.getCurrentUser().get("radius"), ParseUser.getCurrentUser().get("prices").toString())
+                    .enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
                 YelpSearchResult searchResult = response.body();

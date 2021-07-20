@@ -16,9 +16,12 @@ public interface YelpService {
     @GET("businesses/search")
     Call<YelpSearchResult> getRestaurants(
             @Header("Authorization") String authHeader, //authorization using API key
-            @Query("location") String location, //location parameter
+            @Query("latitude") double latitude, //latitude parameter
+            @Query("longitude") double longitude, //longitude parameter
             @Query("limit") int limit, //limit number of restaurants fetched
-            @Query("offset") int offset); //offset for where to start retrieval
+            @Query("offset") int offset, //offset for where to start retrieval
+            @Query("radius") int radius,
+            @Query("price") String prices);
 
     @GET("businesses/{id}")
     Call<Restaurant> getRestaurantDetails(
