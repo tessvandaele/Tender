@@ -36,6 +36,9 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.parse.ParseUser;
 
+import java.util.Arrays;
+import java.util.List;
+
 /* user can logout of account and view profile */
 
 public class ProfileFragment extends Fragment {
@@ -73,6 +76,15 @@ public class ProfileFragment extends Fragment {
         priceChips = view.findViewById(R.id.priceChips);
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
+        barRadius.setProgress(ParseUser.getCurrentUser().getInt("radius"));
+        List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString("prices").split(", "));
+
+        //initialize price chips
+        for(int i = 0; i<user_prices.size(); i++){
+            int price = Integer.parseInt(user_prices.get(i));
+            Chip chip = (Chip) priceChips.getChildAt(price-1);
+            chip.setChecked(true);
+        }
 
         //setting up log out button to allow user to log out
         ibLogout.setOnClickListener(new View.OnClickListener() {
@@ -232,9 +244,9 @@ public class ProfileFragment extends Fragment {
         String result = "";
         for(int i = 0; i<4; i++){
             if(prices[i] == true) {
-                result = result + i + ", ";
+                result = result + (i+1) + ", ";
             }
         }
-        return result;
+        return result.substring(0, result.length()-2);
     }
 }

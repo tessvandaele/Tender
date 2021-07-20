@@ -77,8 +77,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:max="100"
-        android:progress="40"
+        android:max="25"
+        android:progress="10"
         android:progressTint="@color/main_color"
         android:secondaryProgressTint="@color/main_color"
         android:thumbTint="@color/main_color" />
@@ -91,9 +91,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="22dp"
-        android:text="40 mi"
-        android:textColor="@android:color/darker_gray"
-        tools:text="40 mi" />
+        android:text="10 mi"
+        android:textColor="@android:color/darker_gray" />
 
     <View
         android:id="@+id/divider4"
@@ -130,7 +129,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:checked="true"
             android:text="$"
             android:textAlignment="center"
             app:checkedIconEnabled="false" />
@@ -140,7 +138,6 @@
             style="@style/CustomChipChoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:text="$$"
             android:textAlignment="center" />
 
