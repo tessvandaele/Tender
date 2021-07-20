@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.tender.models.Restaurant;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,9 +28,9 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageView image;
     private TextView name;
     private TextView distance;
-    private RatingBar rating;
-    private TextView review_count;
+    private TextView rating;
     private TextView price;
+    private TextView location;
 
     private String restaurant_id;
     private YelpService yelpService;
@@ -47,9 +43,9 @@ public class DetailsActivity extends AppCompatActivity {
 
         image = findViewById(R.id.ivImageDetails);
         name = findViewById(R.id.tvNameDetails);
+        location = findViewById(R.id.tvAddressDetails);
+        rating = findViewById(R.id.tvRatingDetails);
         distance = findViewById(R.id.tvDistanceDetails);
-        rating = findViewById(R.id.rbRatingDetails);
-        review_count = findViewById(R.id.tvReviewCountDetails);
         price = findViewById(R.id.tvPriceDetails);
 
         bindData();
@@ -69,9 +65,12 @@ public class DetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
                 Restaurant restaurant = response.body();
                 name.setText(restaurant.getName());
+                rating.setText(Double.toString(restaurant.getRating()));
                 distance.setText(restaurant.getDisplayDistance());
-                rating.setRating((float) restaurant.getRating());
-                review_count.setText(Integer.toString(restaurant.getReview_count()));
+                location.setText(restaurant.getLocation().getDisplay_address()[0] + ", " + restaurant.getLocation().getDisplay_address()[1]);
+                if(restaurant.getLocation().getDisplay_address().length > 2) {
+                    location.setText(restaurant.getLocation().getDisplay_address()[0] + ", " + restaurant.getLocation().getDisplay_address()[1] + ", " + restaurant.getLocation().getDisplay_address()[2]);
+                }
                 price.setText(restaurant.getPrice());
                 Glide.with(DetailsActivity.this)
                         .load(restaurant.getImage_url())

@@ -60,14 +60,12 @@ public class Restaurant extends ParseObject {
         return this.phone;
     }
 
-    public void setRestaurantProperties() {
-        setName(this.name);
-        setImage_url(this.image_url);
-        setDistance(this.distance);
-        setRating(this.rating);
-        setReview_count(this.review_count);
-        setPrice(this.price);
-        setPhone(this.phone);
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 
     public void setId(String id) {
@@ -129,7 +127,7 @@ public class Restaurant extends ParseObject {
 
         DecimalFormat df = new DecimalFormat("#.#");
         // calculate the result
-        return df.format(c) + " miles away";
+        return df.format(c) + " mi";
 
     }
 }

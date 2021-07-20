@@ -1,127 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailsActivity">
+    android:fillViewport="true"
+    android:foregroundTint="@color/main_color">
 
-    <ImageView
-        android:id="@+id/ivImageDetails"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_margin="10dp"
-        tools:layout_editor_absoluteX="126dp"
-        tools:layout_editor_absoluteY="58dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_height="match_parent"
+        tools:context=".DetailsActivity">
 
-    <TextView
-        android:id="@+id/tvNameDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ivImageDetails"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="#403C3C"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        tools:text="Kerbey Lane Cafe" />
+        <ImageView
+            android:id="@+id/ivImageDetails"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            tools:layout_editor_absoluteX="126dp"
+            tools:layout_editor_absoluteY="58dp"
+            tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/tvDistanceDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/locationIconDetails"
-        android:layout_marginStart="2dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/locationIconDetails"
-        android:textColor="#605E5E"
-        android:textSize="16sp"
-        tools:text="5.8 miles away" />
-
-    <RatingBar
-        android:id="@+id/rbRatingDetails"
-        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvDistanceDetails"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:numStars="5"
-        android:progressTint="#59969E"
-        android:secondaryProgressTint="#59969E"
-        android:stepSize="0.1" />
-
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/rbRatingDetails"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="?android:attr/listDivider" />
-
-    <ImageView
-        android:id="@+id/locationIconDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvNameDetails"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="0dp"
-        app:srcCompat="@drawable/ic_location_grey" />
-
-    <TextView
-        android:id="@+id/tvReviewCountDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/rbRatingDetails"
-        android:layout_marginStart="2dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/rbRatingDetails"
-        tools:text="327 Reviews" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayoutDetails"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider2"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="0dp">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabInfo"
+        <TextView
+            android:id="@+id/tvNameDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Info" />
+            android:layout_below="@id/ivImageDetails"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:textColor="#403C3C"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="Kerbey Lane Cafe" />
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabReviews"
+        <TextView
+            android:id="@+id/tvAddressDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reviews" />
+            android:layout_below="@+id/tvNameDetails"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            tools:text="10 Main Ave, Seattle" />
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabOther"
+        <TextView
+            android:id="@+id/tvPriceDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Other" />
-    </com.google.android.material.tabs.TabLayout>
+            android:layout_alignBottom="@id/tvNameDetails"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="0dp"
+            android:textColor="@color/main_color"
+            tools:text="$$" />
 
-    <TextView
-        android:id="@+id/tvPriceDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tvReviewCountDetails"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="0dp"
-        android:textColor="#59969E"
-        tools:text="$$" />
+        <ImageView
+            android:id="@+id/ivLocationIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvAddressDetails"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            app:srcCompat="@drawable/ic_location_grey" />
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/ivClockIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvAddressDetails"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toStartOf="@+id/ivLocationIcon"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            app:srcCompat="@drawable/ic_clock" />
+
+        <ImageView
+            android:id="@+id/ivStarIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvAddressDetails"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toEndOf="@+id/ivLocationIcon"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            app:srcCompat="@drawable/ic_star_light_grey" />
+
+        <TextView
+            android:id="@+id/tvDistanceDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivLocationIcon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp"
+            tools:text="1.7 mi" />
+
+        <TextView
+            android:id="@+id/tvRatingDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivStarIcon"
+            android:layout_alignEnd="@+id/ivStarIcon"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="2dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp"
+            tools:text="4.7" />
+
+    </RelativeLayout>
+</ScrollView>

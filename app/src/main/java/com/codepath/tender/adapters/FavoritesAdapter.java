@@ -67,6 +67,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         private TextView reviewCount;
         private TextView price;
         private ImageButton delete;
+        private TextView address1;
+        private TextView address2;
 
         //vew holder constructor
         public ViewHolder(@NonNull View itemView) {
@@ -78,6 +80,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             delete = itemView.findViewById(R.id.ibDelete);
             reviewCount = itemView.findViewById(R.id.tvReviewCount);
             price = itemView.findViewById(R.id.tvPrice);
+            address1 = itemView.findViewById(R.id.tvAddress1);
+            address2 = itemView.findViewById(R.id.tvAddress2);
 
             //setting click listener on view holder
             itemView.setOnClickListener(this);
@@ -90,6 +94,15 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             ratingBar.setRating((float) restaurant.getRating());
             reviewCount.setText(Integer.toString(restaurant.getReview_count()));
             price.setText(restaurant.getPrice());
+
+            if(restaurant.getLocation().getDisplay_address().length > 2) {
+                address1.setText(restaurant.getLocation().getDisplay_address()[0] + ", " + restaurant.getLocation().getDisplay_address()[1]);
+                address2.setText(restaurant.getLocation().getDisplay_address()[2]);
+            } else {
+                address1.setText(restaurant.getLocation().getDisplay_address()[0]);
+                address2.setText(restaurant.getLocation().getDisplay_address()[1]);
+            }
+
             Glide.with(itemView)
                     .load(restaurant.getImage_url())
                     .centerCrop()
