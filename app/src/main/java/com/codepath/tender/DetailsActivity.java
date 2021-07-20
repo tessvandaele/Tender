@@ -23,6 +23,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "https://api.yelp.com/v3/";
     private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
+    private static  final String RESTAURANT_INTENT_KEY = "restaurant_id";
 
     //defining views
     private ImageView image;
@@ -53,7 +54,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     //retrieves the correct restaurant based on restaurant name
     public void bindData() {
-        restaurant_id = getIntent().getStringExtra("restaurant_id");
+        restaurant_id = getIntent().getStringExtra(RESTAURANT_INTENT_KEY);
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

@@ -46,6 +46,11 @@ public class SwipeFragment extends Fragment {
     private static final String BASE_URL = "https://api.yelp.com/v3/";
     private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
 
+    private static final String LATITUDE_KEY = "latitude";
+    private static final String LONGITUDE_KEY = "longitude";
+    private static final String RADIUS_KEY = "radius";
+    private static final String PRICES_KEY = "prices";
+
     //library used for easier API requests and querying
     private Retrofit retrofit;
     private YelpService yelpService;
@@ -149,28 +154,19 @@ public class SwipeFragment extends Fragment {
 
             //called when a card is rewinded/brought back using .rewind()
             @Override
-            public void onCardRewound() {
-                Log.d(TAG, "onCardRewound: " + layoutManager.getTopPosition());
-            }
+            public void onCardRewound() { }
 
             //called when a card is dragged and then released back to original position
             @Override
-            public void onCardCanceled() {
-                Log.d(TAG, "onCardCanceled: " + layoutManager.getTopPosition());
-            }
+            public void onCardCanceled() { }
 
             //called when a new card appears
             @Override
-            public void onCardAppeared(View view, int position) {
-                populateBottomSheet(position);
-                Log.d(TAG, "onCardAppeared: " + position);
-            }
+            public void onCardAppeared(View view, int position) { populateBottomSheet(position); }
 
             //called when a card disappears
             @Override
-            public void onCardDisappeared(View view, int position) {
-                Log.d(TAG, "onCardDisappeared: " + position);
-            }
+            public void onCardDisappeared(View view, int position) { }
         });
     }
 
@@ -183,9 +179,9 @@ public class SwipeFragment extends Fragment {
         yelpService = retrofit.create(YelpService.class);
 
         yelpService.getRestaurants("Bearer " + API_KEY,
-                ParseUser.getCurrentUser().getDouble("latitude"),
-                ParseUser.getCurrentUser().getDouble("longitude"),
-                30, offset, ParseUser.getCurrentUser().getInt("radius") * 1609, ParseUser.getCurrentUser().get("prices").toString())
+                ParseUser.getCurrentUser().getDouble(LATITUDE_KEY),
+                ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY),
+                30, offset, ParseUser.getCurrentUser().getInt(RADIUS_KEY) * 1609, ParseUser.getCurrentUser().get(PRICES_KEY).toString())
                     .enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {

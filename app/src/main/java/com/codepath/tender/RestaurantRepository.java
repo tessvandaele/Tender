@@ -25,16 +25,20 @@ import static com.parse.ParseObject.saveAllInBackground;
 
 class RestaurantRepository {
 
+    private static  final String FAVORITE_TABLE_KEY = "Favorite";
+    private static  final String RESTAURANT_ID_KEY = "restaurantId";
+    private static  final String USER_ID_KEY = "userId";
+
     public RestaurantRepository() {}
 
     void insertFavorite(String restaurant_id, String user_id) {
-        ParseObject favorite = new ParseObject("Favorite");
+        ParseObject favorite = new ParseObject(FAVORITE_TABLE_KEY);
         favorite.put(Favorite.RESTAURANT_ID_KEY, restaurant_id);
         favorite.put(Favorite.USER_ID_KEY, user_id);
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Favorite");
-        query.whereEqualTo("userId", user_id);
-        query.whereEqualTo("restaurantId", restaurant_id);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(FAVORITE_TABLE_KEY);
+        query.whereEqualTo(USER_ID_KEY, user_id);
+        query.whereEqualTo(RESTAURANT_ID_KEY, restaurant_id);
 
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override

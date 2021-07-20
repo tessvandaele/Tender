@@ -24,6 +24,8 @@ import java.util.List;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
+    private final static String RESTAURANT_INTENT_KEY = "restaurant_id";
+
     private List<Restaurant> favorites;
     private Context context;
 
@@ -124,7 +126,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             //check that position is valid
             if (position != RecyclerView.NO_POSITION) {
                 Intent intent = new Intent(context, DetailsActivity.class);
-                intent.putExtra("restaurant_id", favorites.get(position).getId());
+                intent.putExtra(RESTAURANT_INTENT_KEY, favorites.get(position).getId());
                 context.startActivity(intent);
             }
         }

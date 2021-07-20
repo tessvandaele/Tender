@@ -40,6 +40,9 @@ public class FavoritesFragment extends Fragment {
 
     private static final String BASE_URL = "https://api.yelp.com/v3/";
     private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
+    private static  final String FAVORITE_TABLE_KEY = "Favorite";
+    private static  final String RESTAURANT_ID_KEY = "restaurantId";
+    private static  final String USER_ID_KEY = "userId";
 
     private RecyclerView recyclerView;
     private FavoritesAdapter adapter;
@@ -83,14 +86,14 @@ public class FavoritesFragment extends Fragment {
     //helper methods to retrieve favorites list for current user and populate adapter
     public void setFavorites() {
         //parse for favorites restaurant objects
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Favorite");
-        query.whereEqualTo("userId", ParseUser.getCurrentUser().getObjectId());
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(FAVORITE_TABLE_KEY);
+        query.whereEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId());
         query.findInBackground(new FindCallback<ParseObject>() { //parse for favorites of user
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 //populating favorites list with favorite restaurants
                 for (ParseObject object : objects) {
-                    String id = object.getString("restaurantId");
+                    String id = object.getString(RESTAURANT_ID_KEY);
                     getRestaurant(id);
                 }
             }
@@ -125,9 +128,9 @@ public class FavoritesFragment extends Fragment {
             @Override
             public void onItemClicked(String id) {
                 //retrieve correct favorite
-                ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Favorite");
-                query.whereEqualTo("userId", ParseUser.getCurrentUser().getObjectId()); //user id matches current user
-                query.whereEqualTo("restaurantId", id); //restaurant id matches id from view holder
+                ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(FAVORITE_TABLE_KEY);
+                query.whereEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId()); //user id matches current user
+                query.whereEqualTo(RESTAURANT_ID_KEY, id); //restaurant id matches id from view holder
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {

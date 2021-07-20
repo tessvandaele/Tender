@@ -43,6 +43,11 @@ import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
+    private static final String LATITUDE_KEY = "latitude";
+    private static final String LONGITUDE_KEY = "longitude";
+    private static final String RADIUS_KEY = "radius";
+    private static final String PRICES_KEY = "prices";
+
     private ImageButton ibLogout;
     private TextView tvUsername;
     private TextView tvLocation;
@@ -76,8 +81,8 @@ public class ProfileFragment extends Fragment {
         priceChips = view.findViewById(R.id.priceChips);
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
-        barRadius.setProgress(ParseUser.getCurrentUser().getInt("radius"));
-        List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString("prices").split(", "));
+        barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
+        List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString(PRICES_KEY).split(", "));
 
         //initialize price chips
         for(int i = 0; i<user_prices.size(); i++){
@@ -106,7 +111,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvRadius.setText(progress + " mi");
-                ParseUser.getCurrentUser().put("radius", progress);
+                ParseUser.getCurrentUser().put(RADIUS_KEY, progress);
                 ParseUser.getCurrentUser().saveInBackground();
             }
 
@@ -136,7 +141,7 @@ public class ProfileFragment extends Fragment {
                         if(buttonView.getText().equals("$$$")) prices[2] = false;
                         if(buttonView.getText().equals("$$$$")) prices[3] = false;
                     }
-                    ParseUser.getCurrentUser().put("prices", getPriceString());
+                    ParseUser.getCurrentUser().put(PRICES_KEY, getPriceString());
                     ParseUser.getCurrentUser().saveInBackground();
                 }
             });
@@ -156,8 +161,8 @@ public class ProfileFragment extends Fragment {
                         if (location == null) {
                             requestNewLocationData();
                         } else {
-                            ParseUser.getCurrentUser().put("latitude", (double)location.getLatitude());
-                            ParseUser.getCurrentUser().put("longitude", (double)location.getLongitude());
+                            ParseUser.getCurrentUser().put(LATITUDE_KEY, location.getLatitude());
+                            ParseUser.getCurrentUser().put(LONGITUDE_KEY, location.getLongitude());
                             ParseUser.getCurrentUser().saveInBackground();
                             tvLocation.setText(location.getLatitude() + " | " + location.getLongitude());
                         }
@@ -177,7 +182,8 @@ public class ProfileFragment extends Fragment {
 
     // method to check for permissions
     private boolean checkPermissions() {
-        return getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        return getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     // method to request for permissions
@@ -198,6 +204,9 @@ public class ProfileFragment extends Fragment {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
+            ParseUser.getCurrentUser().put(LATITUDE_KEY, mLastLocation.getLatitude());
+            ParseUser.getCurrentUser().put(LONGITUDE_KEY, mLastLocation.getLongitude());
+            ParseUser.getCurrentUser().saveInBackground();
             tvLocation.setText(mLastLocation.getLatitude() + " | " + mLastLocation.getLongitude());
         }
     };
