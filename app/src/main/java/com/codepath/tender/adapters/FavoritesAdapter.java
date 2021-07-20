@@ -99,7 +99,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemClicked(restaurant.getObjectId());
+                    listener.onItemClicked(restaurant.getId());
                 }
             });
         }
