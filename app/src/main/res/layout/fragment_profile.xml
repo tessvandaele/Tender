@@ -28,7 +28,7 @@
         android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         app:srcCompat="@drawable/profile_sample"
         tools:src="@tools:sample/avatars" />
 
@@ -41,17 +41,6 @@
         android:layout_marginTop="0dp"
         tools:text="tess_vandaele" />
 
-    <Switch
-        android:id="@+id/switchLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvLocation"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        android:text="Location" />
-
     <TextView
         android:id="@+id/tvLocation"
         android:layout_width="wrap_content"
@@ -60,5 +49,117 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         tools:text="1907.56 | 3056.23" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvLocation"
+        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/max_distance_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider2"
+        android:layout_marginStart="20dp"
+        android:text="Maximum Distance" />
+
+    <SeekBar
+        android:id="@+id/barRadius"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/max_distance_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:max="100"
+        android:progress="40"
+        android:progressTint="@color/main_color"
+        android:secondaryProgressTint="@color/main_color"
+        android:thumbTint="@color/main_color" />
+
+    <TextView
+        android:id="@+id/tvRadius"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider2"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="22dp"
+        android:text="40 mi"
+        android:textColor="@android:color/darker_gray"
+        tools:text="40 mi" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/barRadius"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/price_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider4"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Prices" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/priceChips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/price_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPrice1"
+            style="@style/CustomChipChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:checked="true"
+            android:text="$"
+            android:textAlignment="center"
+            app:checkedIconEnabled="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPrice2"
+            style="@style/CustomChipChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="$$"
+            android:textAlignment="center" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPrice3"
+            style="@style/CustomChipChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="$$$"
+            android:textAlignment="center" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPrice4"
+            style="@style/CustomChipChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$$$$"
+            android:textAlignment="center" />
+    </com.google.android.material.chip.ChipGroup>
 
 </RelativeLayout>

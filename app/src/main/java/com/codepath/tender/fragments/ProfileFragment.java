@@ -10,11 +10,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +34,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.parse.ParseUser;;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.parse.ParseUser;;import java.lang.reflect.Array;
 
 /* user can logout of account and view profile */
 
@@ -40,8 +44,14 @@ public class ProfileFragment extends Fragment {
 
     private ImageButton ibLogout;
     private TextView tvUsername;
-    private Switch locationSwitch;
     private TextView tvLocation;
+    private SeekBar barRadius;
+    private TextView tvRadius;
+    private ChipGroup priceChips;
+
+    private int radius;
+
+    private boolean[] prices;
 
     private FusedLocationProviderClient mFusedLocationClient;
     final static int PERMISSION_ID = 44;
@@ -57,10 +67,14 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        prices = new boolean[]{true, true, false, false};
+
         ibLogout = view.findViewById(R.id.ibLogout);
         tvUsername = view.findViewById(R.id.tvProfileUsername);
-        locationSwitch = view.findViewById(R.id.switchLocation);
         tvLocation = view.findViewById(R.id.tvLocation);
+        barRadius = view.findViewById(R.id.barRadius);
+        tvRadius = view.findViewById(R.id.tvRadius);
+        priceChips = view.findViewById(R.id.priceChips);
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
 
@@ -78,18 +92,48 @@ public class ProfileFragment extends Fragment {
         });
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+        getLastLocation();
 
-        locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) { //request user location
-                    //get location
-                    getLastLocation();
-                } else {
-                    //disable user location
-
-                }
+        barRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                radius = progress;
+                tvRadius.setText(progress + " mi");
             }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+
+        for (int i = 0; i<priceChips.getChildCount(); i++) {
+            Chip chip = (Chip)priceChips.getChildAt(i);
+
+
+            // Set the chip checked change listener
+            chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked) {
+                        if(buttonView.getText().equals("$")) prices[0] = true;
+                        if(buttonView.getText().equals("$$")) prices[1] = true;
+                        if(buttonView.getText().equals("$$$")) prices[2] = true;
+                        if(buttonView.getText().equals("$$$$")) prices[3] = true;
+                    } else {
+                        if(buttonView.getText().equals("$")) prices[0] = false;
+                        if(buttonView.getText().equals("$$")) prices[1] = false;
+                        if(buttonView.getText().equals("$$$")) prices[2] = false;
+                        if(buttonView.getText().equals("$$$$")) prices[3] = false;
+                    }
+                    Log.d("done", "done");
+                }
+            });
+        }
+
+
+
     }
 
     @SuppressLint("MissingPermission")
