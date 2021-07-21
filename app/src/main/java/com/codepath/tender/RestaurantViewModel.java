@@ -22,6 +22,8 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     private MutableLiveData<Integer> radius;
     private MutableLiveData<String> prices;
+    private MutableLiveData<Double> latitude;
+    private MutableLiveData<Double> longitude;
 
 
     public RestaurantViewModel (Application application) {
@@ -32,7 +34,9 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
 
-    public void setFetchListener(RestaurantRepository.FetchRestaurantsListener listener) { repository.setFetchListener(listener); }
+    public void setFetchRestaurantListener(RestaurantRepository.FetchRestaurantsListener listener) { repository.setFetchRestaurantListener(listener); }
+
+    public void setFetchFavoritesListener(RestaurantRepository.FetchFavoritesListener listener) { repository.setFetchFavoritesListener(listener); }
 
     public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices) { repository.fetchRestaurants(latitude, longitude, limit, offset, radius, prices); }
 
@@ -49,7 +53,6 @@ public class RestaurantViewModel extends AndroidViewModel {
     public void setRadius(int radius) {
         if(this.radius == null) {
             this.radius = new MutableLiveData<>();
-            this.radius.setValue(10);
         }
         this.radius.setValue(radius);
     }
@@ -57,7 +60,6 @@ public class RestaurantViewModel extends AndroidViewModel {
     public void setPrices(String prices) {
         if(this.prices == null) {
             this.prices = new MutableLiveData<>();
-            this.prices.setValue(ParseUser.getCurrentUser().getString("prices"));
         }
         this.prices.setValue(prices);
     }

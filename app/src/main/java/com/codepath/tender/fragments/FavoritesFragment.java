@@ -81,7 +81,7 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        model.setFetchListener(new RestaurantRepository.FetchRestaurantsListener() {
+        model.setFetchFavoritesListener(new RestaurantRepository.FetchFavoritesListener() {
             @Override
             public void onFinishFetch(List<Restaurant> restaurants) {
                 favorites.clear();

@@ -37,12 +37,18 @@ public class RestaurantRepository {
 
     private Retrofit retrofit;
     private YelpService yelpService;
-    private FetchRestaurantsListener listener;
+    private FetchRestaurantsListener restaurantsListener;
+    private FetchFavoritesListener favoritesListener;
 
     private ArrayList<Restaurant> favorites;
 
-    //interface to refresh swipe adapter when data is updated
+    //interface to refresh swipe adapter when user preferences are updated
     public interface FetchRestaurantsListener {
+        void onFinishFetch(List<Restaurant> restaurants);
+    }
+
+    //interface to refresh swipe adapter when data is updated
+    public interface FetchFavoritesListener {
         void onFinishFetch(List<Restaurant> restaurants);
     }
 
@@ -94,7 +100,7 @@ public class RestaurantRepository {
                     return;
                 }
                 //sends the list of restaurants to the swipe fragment through a listener
-                listener.onFinishFetch(searchResult.restaurants);
+                restaurantsListener.onFinishFetch(searchResult.restaurants);
             }
             @Override
             public void onFailure(Call<YelpSearchResult> call, Throwable t) {
@@ -103,9 +109,14 @@ public class RestaurantRepository {
         });
     }
 
-    //method to initialize the fetch listener
-    public void setFetchListener(FetchRestaurantsListener listener) {
-        this.listener = listener;
+    //method to initialize the fetch restaurant listener
+    public void setFetchRestaurantListener(FetchRestaurantsListener listener) {
+        this.restaurantsListener = listener;
+    }
+
+    //method to initialize the fetch favorites listener
+    public void setFetchFavoritesListener(FetchFavoritesListener listener) {
+        this.favoritesListener = listener;
     }
 
     //returns a list of the current user's favorite restaurants
@@ -132,7 +143,7 @@ public class RestaurantRepository {
             @Override
             public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
                 favorites.add(response.body());
-                listener.onFinishFetch(favorites);
+                favoritesListener.onFinishFetch(favorites);
             }
 
             @Override

@@ -232,7 +232,7 @@ public class SwipeFragment extends Fragment {
 
     //implements the fetch listener interface
     private void setFetchListener() {
-        model.setFetchListener(new RestaurantRepository.FetchRestaurantsListener() {
+        model.setFetchRestaurantListener(new RestaurantRepository.FetchRestaurantsListener() {
             @Override
             public void onFinishFetch(List<Restaurant> restaurants) {
                 model.addAllRestaurants(restaurants);
