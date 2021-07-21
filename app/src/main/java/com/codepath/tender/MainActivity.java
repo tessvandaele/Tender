@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         //set default fragment selection
         bottomNavigationView.setSelectedItemId(R.id.navigation_swipe);
 
-        //observer on radius data to refresh the restaurant deck when user changes radius
+        //observer on radius data to refresh the restaurant deck when user changes radius preference
         model.getRadius().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -78,7 +78,24 @@ public class MainActivity extends AppCompatActivity {
                 double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
                 int limit = 30;
                 int radius = model.getRadius().getValue() * 1609;
-                String prices = ParseUser.getCurrentUser().get(PRICES_KEY).toString();
+                String prices = model.getPrices().getValue();
+                model.fetchRestaurants(latitude, longitude, limit, model.getOffset(), radius, prices);
+            }
+        });
+
+        //observer on price data to refresh the restaurant deck when user changes price preference
+        model.getPrices().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String string) {
+                //reset offset and restaurants list
+                model.setOffset(0);
+                model.clearRestaurants();
+                //fetch restaurants
+                double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
+                double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
+                int limit = 30;
+                int radius = model.getRadius().getValue() * 1609;
+                String prices = model.getPrices().getValue();
                 model.fetchRestaurants(latitude, longitude, limit, model.getOffset(), radius, prices);
             }
         });

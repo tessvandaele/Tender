@@ -237,7 +237,7 @@ public class SwipeFragment extends Fragment {
             public void onFinishFetch(List<Restaurant> restaurants) {
                 model.addAllRestaurants(restaurants);
                 adapter.notifyDataSetChanged();
-                layoutManager.setTopPosition(0);
+                layoutManager.scrollToPosition(0);
 
                 //populate the first bottom sheet (not recognized by cardAppeared())
                 if(layoutManager.getTopPosition() == 0) {

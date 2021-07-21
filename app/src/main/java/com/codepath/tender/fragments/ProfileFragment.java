@@ -75,7 +75,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        prices = new boolean[]{true, true, false, false};
+        prices = new boolean[] {false, false, false, false};
 
         ibLogout = view.findViewById(R.id.ibLogout);
         tvUsername = view.findViewById(R.id.tvProfileUsername);
@@ -85,6 +85,7 @@ public class ProfileFragment extends Fragment {
         priceChips = view.findViewById(R.id.priceChips);
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
+        tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)));
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString(PRICES_KEY).split(", "));
 
@@ -94,6 +95,7 @@ public class ProfileFragment extends Fragment {
         for(int i = 0; i<user_prices.size(); i++){
             int price = Integer.parseInt(user_prices.get(i));
             Chip chip = (Chip) priceChips.getChildAt(price-1);
+            prices[price-1] = true;
             chip.setChecked(true);
         }
 
@@ -148,6 +150,7 @@ public class ProfileFragment extends Fragment {
                         if(buttonView.getText().equals("$$$")) prices[2] = false;
                         if(buttonView.getText().equals("$$$$")) prices[3] = false;
                     }
+                    model.setPrices(getPriceString());
                     ParseUser.getCurrentUser().put(PRICES_KEY, getPriceString());
                     ParseUser.getCurrentUser().saveInBackground();
                 }

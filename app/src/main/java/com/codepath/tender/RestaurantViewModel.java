@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.codepath.tender.models.Restaurant;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class RestaurantViewModel extends AndroidViewModel {
     private int offset;
 
     private MutableLiveData<Integer> radius;
+    private MutableLiveData<String> prices;
 
 
     public RestaurantViewModel (Application application) {
@@ -50,6 +52,14 @@ public class RestaurantViewModel extends AndroidViewModel {
         this.radius.setValue(radius);
     }
 
+    public void setPrices(String prices) {
+        if(this.prices == null) {
+            this.prices = new MutableLiveData<>();
+            this.prices.setValue(ParseUser.getCurrentUser().getString("prices"));
+        }
+        this.prices.setValue(prices);
+    }
+
     public int getOffset() {
         return offset;
     }
@@ -64,6 +74,14 @@ public class RestaurantViewModel extends AndroidViewModel {
             radius.setValue(10);
         }
         return radius;
+    }
+
+    public MutableLiveData<String> getPrices() {
+        if(prices == null) {
+            this.prices = new MutableLiveData<>();
+            this.prices.setValue(ParseUser.getCurrentUser().getString("prices"));
+        }
+        return prices;
     }
 
     public void addAllRestaurants(List<Restaurant> restaurants) {
