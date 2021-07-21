@@ -64,6 +64,21 @@ public class RestaurantViewModel extends AndroidViewModel {
         this.prices.setValue(prices);
     }
 
+    public void setLatitude(Double latitude) {
+        if(this.latitude == null) {
+            this.latitude = new MutableLiveData<>();
+        }
+        this.latitude.setValue(latitude);
+    }
+
+    public void setLongitude(Double longitude) {
+        if(this.longitude == null) {
+            this.longitude = new MutableLiveData<>();
+        }
+        this.longitude.setValue(longitude);
+    }
+
+
     public int getOffset() {
         return offset;
     }
@@ -86,6 +101,22 @@ public class RestaurantViewModel extends AndroidViewModel {
             this.prices.setValue(ParseUser.getCurrentUser().getString("prices"));
         }
         return prices;
+    }
+
+    public MutableLiveData<Double> getLatitude() {
+        if(latitude == null) {
+            latitude = new MutableLiveData<>();
+            latitude.setValue(ParseUser.getCurrentUser().getDouble("latitude"));
+        }
+        return latitude;
+    }
+
+    public MutableLiveData<Double> getLongitude() {
+        if(longitude == null) {
+            longitude = new MutableLiveData<>();
+            longitude.setValue(ParseUser.getCurrentUser().getDouble("longitude"));
+        }
+        return longitude;
     }
 
     public void addAllRestaurants(List<Restaurant> restaurants) {

@@ -92,16 +92,7 @@ public class MainActivity extends AppCompatActivity {
         model.getRadius().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                //reset offset and restaurants list
-                model.setOffset(0);
-                model.clearRestaurants();
-                //fetch restaurants
-                double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
-                double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
-                int limit = 30;
-                int radius = model.getRadius().getValue() * 1609;
-                String prices = model.getPrices().getValue();
-                model.fetchRestaurants(latitude, longitude, limit, model.getOffset(), radius, prices);
+                refreshRestaurants();
             }
         });
 
@@ -109,20 +100,39 @@ public class MainActivity extends AppCompatActivity {
         model.getPrices().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String string) {
-                //reset offset and restaurants list
-                model.setOffset(0);
-                model.clearRestaurants();
-                //fetch restaurants
-                double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
-                double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
-                int limit = 30;
-                int radius = model.getRadius().getValue() * 1609;
-                String prices = model.getPrices().getValue();
-                model.fetchRestaurants(latitude, longitude, limit, model.getOffset(), radius, prices);
+                refreshRestaurants();
+            }
+        });
+
+        model.getLatitude().observe(this, new Observer<Double>() {
+            @Override
+            public void onChanged(Double aDouble) {
+                refreshRestaurants();
+            }
+        });
+
+        model.getLongitude().observe(this, new Observer<Double>() {
+            @Override
+            public void onChanged(Double aDouble) {
+                refreshRestaurants();
             }
         });
 
         getLastLocation();
+    }
+
+    //helper method for when the deck of restaurants needs to be refloaded
+    public void refreshRestaurants() {
+        //reset offset and restaurants list
+        model.setOffset(0);
+        model.clearRestaurants();
+        //fetch restaurants
+        double latitude = model.getLatitude().getValue();
+        double longitude = model.getLongitude().getValue();
+        int limit = 30;
+        int radius = model.getRadius().getValue() * 1609;
+        String prices = model.getPrices().getValue();
+        model.fetchRestaurants(latitude, longitude, limit, model.getOffset(), radius, prices);
     }
 
     @SuppressLint("MissingPermission")
@@ -138,6 +148,11 @@ public class MainActivity extends AppCompatActivity {
                         if (location == null) {
                             requestNewLocationData();
                         } else {
+                            //update view model
+                            model.setLatitude(location.getLatitude());
+                            model.setLongitude(location.getLongitude());
+
+                            //update parse database
                             ParseUser.getCurrentUser().put(LATITUDE_KEY, location.getLatitude());
                             ParseUser.getCurrentUser().put(LONGITUDE_KEY, location.getLongitude());
                             ParseUser.getCurrentUser().saveInBackground();
@@ -180,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
+            model.setLatitude(mLastLocation.getLatitude());
+            model.setLongitude(mLastLocation.getLongitude());
             ParseUser.getCurrentUser().put(LATITUDE_KEY, mLastLocation.getLatitude());
             ParseUser.getCurrentUser().put(LONGITUDE_KEY, mLastLocation.getLongitude());
             ParseUser.getCurrentUser().saveInBackground();
