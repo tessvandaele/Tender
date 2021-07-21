@@ -36,6 +36,8 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices) { repository.fetchRestaurants(latitude, longitude, limit, offset, radius, prices); }
 
+    public void getFavorites() { repository.getFavorites(); }
+
     public void setOffset(int offset) {
         this.offset = offset;
     }

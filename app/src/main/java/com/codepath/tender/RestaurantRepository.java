@@ -9,8 +9,11 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,12 +39,21 @@ public class RestaurantRepository {
     private YelpService yelpService;
     private FetchRestaurantsListener listener;
 
+    private ArrayList<Restaurant> favorites;
+
     //interface to refresh swipe adapter when data is updated
     public interface FetchRestaurantsListener {
         void onFinishFetch(List<Restaurant> restaurants);
     }
 
-    public RestaurantRepository() {}
+    public RestaurantRepository() {
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        yelpService = retrofit.create(YelpService.class);
+        favorites = new ArrayList<>();
+    }
 
     //inserting unique favorite for current user
     void insertFavorite(String restaurant_id, String user_id) {
@@ -73,12 +85,6 @@ public class RestaurantRepository {
 
     //run GET request to Yelp API and send resulting list to swipe fragment through listener
     public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices) {
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        yelpService = retrofit.create(YelpService.class);
-
         yelpService.getRestaurants("Bearer " + API_KEY, latitude, longitude, limit, offset, radius, prices).enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
@@ -100,5 +106,39 @@ public class RestaurantRepository {
     //method to initialize the fetch listener
     public void setFetchListener(FetchRestaurantsListener listener) {
         this.listener = listener;
+    }
+
+    //returns a list of the current user's favorite restaurants
+    public void getFavorites() {
+        favorites.clear();
+        //parse for favorites restaurant objects
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(FAVORITE_TABLE_KEY);
+        query.whereEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId());
+        query.findInBackground(new FindCallback<ParseObject>() { //parse for favorites of user
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                //populating favorites list with favorite restaurants
+                for (ParseObject object : objects) {
+                    String id = object.getString(RESTAURANT_ID_KEY);
+                    getRestaurant(id);
+                }
+            }
+        });
+    }
+
+    //run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
+    private void getRestaurant(String id) {
+        yelpService.getRestaurantDetails("Bearer " + API_KEY, id).enqueue(new Callback<Restaurant>() {
+            @Override
+            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
+                favorites.add(response.body());
+                listener.onFinishFetch(favorites);
+            }
+
+            @Override
+            public void onFailure(Call<Restaurant> call, Throwable t) {
+                Log.d("Favorites fragment", "Could not retrieve restaurant");
+            }
+        });
     }
 }

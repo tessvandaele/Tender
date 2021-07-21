@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantRepository;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.FavoritesAdapter;
@@ -80,46 +81,15 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        setFavorites();
-    }
-
-    //helper methods to retrieve favorites list for current user and populate adapter
-    public void setFavorites() {
-        //parse for favorites restaurant objects
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(FAVORITE_TABLE_KEY);
-        query.whereEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId());
-        query.findInBackground(new FindCallback<ParseObject>() { //parse for favorites of user
+        model.setFetchListener(new RestaurantRepository.FetchRestaurantsListener() {
             @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                //populating favorites list with favorite restaurants
-                for (ParseObject object : objects) {
-                    String id = object.getString(RESTAURANT_ID_KEY);
-                    getRestaurant(id);
-                }
-            }
-        });
-    }
-
-    //run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
-    private void getRestaurant(String id) {
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        yelpService = retrofit.create(YelpService.class);
-
-        yelpService.getRestaurantDetails("Bearer " + API_KEY, id).enqueue(new Callback<Restaurant>() {
-            @Override
-            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
-                favorites.add(response.body());
+            public void onFinishFetch(List<Restaurant> restaurants) {
+                favorites.clear();
+                favorites.addAll(restaurants);
                 adapter.notifyDataSetChanged();
             }
-
-            @Override
-            public void onFailure(Call<Restaurant> call, Throwable t) {
-                Log.d("Favorites fragment", "Could not retrieve restaurant");
-            }
         });
+        model.getFavorites();
     }
 
     //helper method to implement delete listener interface to delete a favorite from the list
@@ -141,7 +111,7 @@ public class FavoritesFragment extends Fragment {
                                 public void done(ParseException e) {
                                     if(e == null) {
                                         favorites.clear();
-                                        setFavorites();
+                                        model.getFavorites();
                                     }
                                 }
                             });
