@@ -45,8 +45,6 @@ import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
-    private static final String LATITUDE_KEY = "latitude";
-    private static final String LONGITUDE_KEY = "longitude";
     private static final String RADIUS_KEY = "radius";
     private static final String PRICES_KEY = "prices";
 
@@ -58,9 +56,6 @@ public class ProfileFragment extends Fragment {
     private ChipGroup priceChips;
 
     private boolean[] prices;
-
-    private FusedLocationProviderClient mFusedLocationClient;
-    final static int PERMISSION_ID = 44;
 
     private RestaurantViewModel model;
 
@@ -89,6 +84,8 @@ public class ProfileFragment extends Fragment {
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString(PRICES_KEY).split(", "));
 
+        tvLocation.setText(ParseUser.getCurrentUser().getDouble("latitude") + " | " + ParseUser.getCurrentUser().getDouble("longitude"));
+
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
         //initialize price chips
@@ -111,9 +108,6 @@ public class ProfileFragment extends Fragment {
                 startActivity(i);
             }
         });
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        getLastLocation();
 
         barRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -155,107 +149,6 @@ public class ProfileFragment extends Fragment {
                     ParseUser.getCurrentUser().saveInBackground();
                 }
             });
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void getLastLocation() {
-        // check if permissions are given
-        if (checkPermissions()) {
-            // check if location is enabled
-            if (isLocationEnabled()) {
-                mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Location> task) {
-                        Location location = task.getResult();
-                        if (location == null) {
-                            requestNewLocationData();
-                        } else {
-                            ParseUser.getCurrentUser().put(LATITUDE_KEY, location.getLatitude());
-                            ParseUser.getCurrentUser().put(LONGITUDE_KEY, location.getLongitude());
-                            ParseUser.getCurrentUser().saveInBackground();
-                            tvLocation.setText(location.getLatitude() + " | " + location.getLongitude());
-                        }
-                    }
-                });
-            } else {
-                Toast.makeText(getContext(), "Please turn on your location...", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-        } else {
-            // if permissions aren't available,
-            // request for permissions
-            requestPermissions();
-        }
-    }
-
-    // method to check for permissions
-    private boolean checkPermissions() {
-        return getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    // method to request for permissions
-    private void requestPermissions() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
-    }
-
-    // method to check if location is enabled
-    private boolean isLocationEnabled() {
-        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
-
-    private LocationCallback mLocationCallback = new LocationCallback() {
-
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            Location mLastLocation = locationResult.getLastLocation();
-            ParseUser.getCurrentUser().put(LATITUDE_KEY, mLastLocation.getLatitude());
-            ParseUser.getCurrentUser().put(LONGITUDE_KEY, mLastLocation.getLongitude());
-            ParseUser.getCurrentUser().saveInBackground();
-            tvLocation.setText(mLastLocation.getLatitude() + " | " + mLastLocation.getLongitude());
-        }
-    };
-
-    @SuppressLint("MissingPermission")
-    private void requestNewLocationData() {
-
-        // Initializing LocationRequest
-        // object with appropriate methods
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(5);
-        mLocationRequest.setFastestInterval(0);
-        mLocationRequest.setNumUpdates(1);
-
-        // setting LocationRequest
-        // on FusedLocationClient
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-    }
-
-    // If everything is alright then
-    @Override
-    public void
-    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation();
-            }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (checkPermissions()) {
-            getLastLocation();
         }
     }
 
