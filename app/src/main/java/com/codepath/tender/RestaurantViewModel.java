@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.codepath.tender.models.Favorite;
 import com.codepath.tender.models.Restaurant;
@@ -17,10 +18,14 @@ import java.util.List;
 
 public class RestaurantViewModel extends AndroidViewModel {
 
-    RestaurantRepository repository;
+
+    private RestaurantRepository repository;
+    private ArrayList<Restaurant> restaurants;
     private int topPosition;
     private int offset;
-    private ArrayList<Restaurant> restaurants;
+
+    private MutableLiveData<Integer> radius;
+
 
     public RestaurantViewModel (Application application) {
         super(application);
@@ -38,12 +43,28 @@ public class RestaurantViewModel extends AndroidViewModel {
         this.topPosition = topPosition;
     }
 
+    public void setRadius(int radius) {
+        if(this.radius == null) {
+            this.radius = new MutableLiveData<>();
+            this.radius.setValue(10);
+        }
+        this.radius.setValue(radius);
+    }
+
     public int getOffset() {
         return offset;
     }
 
     public int getTopPosition() {
         return topPosition;
+    }
+
+    public MutableLiveData<Integer> getRadius() {
+        if(radius == null) {
+            radius = new MutableLiveData<>();
+            radius.setValue(10);
+        }
+        return radius;
     }
 
     public void saveRestaurants(ArrayList<Restaurant> restaurants) {

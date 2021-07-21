@@ -22,9 +22,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.codepath.tender.LoginActivity;
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -60,6 +62,8 @@ public class ProfileFragment extends Fragment {
     private FusedLocationProviderClient mFusedLocationClient;
     final static int PERMISSION_ID = 44;
 
+    private RestaurantViewModel model;
+
     //empty constructor
     public ProfileFragment() {}
 
@@ -83,6 +87,8 @@ public class ProfileFragment extends Fragment {
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString(PRICES_KEY).split(", "));
+
+        model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
         //initialize price chips
         for(int i = 0; i<user_prices.size(); i++){
@@ -111,6 +117,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvRadius.setText(progress + " mi");
+                model.setRadius(progress);
                 ParseUser.getCurrentUser().put(RADIUS_KEY, progress);
                 ParseUser.getCurrentUser().saveInBackground();
             }

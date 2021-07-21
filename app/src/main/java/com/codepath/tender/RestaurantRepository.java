@@ -31,6 +31,7 @@ class RestaurantRepository {
 
     public RestaurantRepository() {}
 
+    //inserting unique favorite for current user
     void insertFavorite(String restaurant_id, String user_id) {
         ParseObject favorite = new ParseObject(FAVORITE_TABLE_KEY);
         favorite.put(Favorite.RESTAURANT_ID_KEY, restaurant_id);

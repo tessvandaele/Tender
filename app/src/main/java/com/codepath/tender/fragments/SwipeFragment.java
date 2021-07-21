@@ -9,8 +9,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
@@ -92,6 +95,8 @@ public class SwipeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         restaurants = new ArrayList<>();
+
+        //fragment views
         cardStackView = view.findViewById(R.id.card_stack_view);
         ibLike = view.findViewById(R.id.ibLike);
         ibDislike = view.findViewById(R.id.ibDislike);
@@ -106,6 +111,7 @@ public class SwipeFragment extends Fragment {
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
 
+        //view model
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
         //setting the bottom sheet behavior
@@ -119,15 +125,22 @@ public class SwipeFragment extends Fragment {
         offset = model.getOffset();
         layoutManager.setTopPosition(model.getTopPosition());
 
-        adapter = new CardStackAdapter(getContext(), restaurants);
+        model.getRadius().observe((LifecycleOwner) getContext(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                restaurants.clear();
+                fetchRestaurants();
+            }
+        });
 
+        adapter = new CardStackAdapter(getContext(), restaurants);
         cardStackView.setLayoutManager(layoutManager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
 
-        setAutomatedSwiping();
         fetchRestaurants();
 
+        setAutomatedSwiping();
         setBottomSheet();
     }
 
@@ -181,7 +194,7 @@ public class SwipeFragment extends Fragment {
         yelpService.getRestaurants("Bearer " + API_KEY,
                 ParseUser.getCurrentUser().getDouble(LATITUDE_KEY),
                 ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY),
-                30, offset, ParseUser.getCurrentUser().getInt(RADIUS_KEY) * 1609, ParseUser.getCurrentUser().get(PRICES_KEY).toString())
+                30, offset, model.getRadius().getValue() * 1609, ParseUser.getCurrentUser().get(PRICES_KEY).toString())
                     .enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
@@ -263,6 +276,7 @@ public class SwipeFragment extends Fragment {
                 restaurants.clear();
                 offset = 0;
                 fetchRestaurants();
+                layoutManager.scrollToPosition(0);
             }
         });
     }
