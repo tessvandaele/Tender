@@ -1,29 +1,40 @@
 package com.codepath.tender;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.codepath.tender.fragments.FavoritesFragment;
 import com.codepath.tender.fragments.ProfileFragment;
 import com.codepath.tender.fragments.SwipeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseUser;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 /* handles the bottom navigation menu */
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String LATITUDE_KEY = "latitude";
+    private static final String LONGITUDE_KEY = "longitude";
+    private static final String PRICES_KEY = "prices";
+
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private BottomNavigationView bottomNavigationView;
+    private RestaurantViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        model = new ViewModelProvider(this).get(RestaurantViewModel.class);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -54,6 +65,22 @@ public class MainActivity extends AppCompatActivity {
 
         //set default fragment selection
         bottomNavigationView.setSelectedItemId(R.id.navigation_swipe);
-    }
 
+        //observer on radius data to refresh the restaurant deck when user changes radius
+        model.getRadius().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                //reset offset and restaurants list
+                model.setOffset(0);
+                model.clearRestaurants();
+                //fetch restaurants
+                double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
+                double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
+                int limit = 30;
+                int radius = model.getRadius().getValue() * 1609;
+                String prices = ParseUser.getCurrentUser().get(PRICES_KEY).toString();
+                model.fetchRestaurants(latitude, longitude, limit, model.getOffset(), radius, prices);
+            }
+        });
+    }
 }

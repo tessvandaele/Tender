@@ -1,7 +1,6 @@
 package com.codepath.tender.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +8,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantRepository;
 import com.codepath.tender.RestaurantViewModel;
-import com.codepath.tender.models.YelpSearchResult;
-import com.codepath.tender.YelpService;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -34,29 +29,15 @@ import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.List;
 
 /* user can swipe through a deck of restaurants and swipe based on preference */
 
 public class SwipeFragment extends Fragment {
 
-    private static final String TAG = "SwipeFragment";
-    private static final String BASE_URL = "https://api.yelp.com/v3/";
-    private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
-
     private static final String LATITUDE_KEY = "latitude";
     private static final String LONGITUDE_KEY = "longitude";
     private static final String PRICES_KEY = "prices";
-
-    //library used for easier API requests and querying
-    private Retrofit retrofit;
-    private YelpService yelpService;
-    private int offset;
 
     private CardStackLayoutManager layoutManager;
     private CardStackAdapter adapter;
@@ -78,6 +59,7 @@ public class SwipeFragment extends Fragment {
     private TextView price;
 
     private RestaurantViewModel model;
+    private int offset;
 
     //empty constructor
     public SwipeFragment() {}
@@ -107,7 +89,7 @@ public class SwipeFragment extends Fragment {
         price = view.findViewById(R.id.tvPriceSheet);
 
         //view model
-        model = new ViewModelProvider(this).get(RestaurantViewModel.class);
+        model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
         //setting the bottom sheet behavior
         LinearLayout linearLayout = view.findViewById(R.id.design_bottom_sheet);
@@ -119,23 +101,12 @@ public class SwipeFragment extends Fragment {
         offset = model.getOffset();
         layoutManager.setTopPosition(model.getTopPosition());
 
-        //fetch new restaurants when user radius preferences change
-        model.getRadius().observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                model.clearRestaurants();
-                fetchRestaurants();
-            }
-        });
+        setFetchListener();
 
         adapter = new CardStackAdapter(getContext(), model.getRestaurants());
         cardStackView.setLayoutManager(layoutManager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
-
-//        if(model.getRestaurantCount() == 0) {
-//            fetchRestaurants();
-//        }
 
         setAutomatedSwiping();
         setBottomSheet();
@@ -152,7 +123,7 @@ public class SwipeFragment extends Fragment {
             public void onCardSwiped(Direction direction) {
                 //check if more cards need to be loaded
                 if(offset - layoutManager.getTopPosition() < 2) {
-                    fetchRestaurants();
+                    //add logic for loading more restaurants
                 }
 
                 //add restaurant to favorites list if user swiped right
@@ -178,51 +149,6 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onCardDisappeared(View view, int position) { }
         });
-    }
-
-    //run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
-    private void fetchRestaurants() {
-        retrofit = new Retrofit.Builder()
-                                .baseUrl(BASE_URL)
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .build();
-        yelpService = retrofit.create(YelpService.class);
-
-        double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
-        double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
-        int limit = 30;
-        int radius = model.getRadius().getValue() * 1609;
-        String prices = ParseUser.getCurrentUser().get(PRICES_KEY).toString();
-
-        yelpService.getRestaurants("Bearer " + API_KEY, latitude, longitude, limit, offset, radius, prices).enqueue(new Callback<YelpSearchResult>() {
-            @Override
-            public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
-                YelpSearchResult searchResult = response.body();
-                if(searchResult == null){
-                    Log.e(TAG, "No restaurants retrieved");
-                    return;
-                }
-                //add restaurants to restaurant list and notify adapter
-                int position = layoutManager.getTopPosition();
-                model.addAllRestaurants(searchResult.restaurants);
-                adapter.notifyDataSetChanged();
-                layoutManager.scrollToPosition(position);
-
-                //populate the first bottom sheet (not recognized by cardAppeared())
-                if(layoutManager.getTopPosition() == 0) {
-                    populateBottomSheet(0);
-                }
-
-                //increase offset
-                offset += 30;
-            }
-
-            @Override
-            public void onFailure(Call<YelpSearchResult> call, Throwable t) {
-                Log.d(TAG, "onFailure " + t);
-            }
-        });
-
     }
 
     //saving state of fragment to view model
@@ -302,5 +228,25 @@ public class SwipeFragment extends Fragment {
         layoutManager.setMaxDegree(20.0f); //sets how much the cards rotate when swiped
         layoutManager.setDirections(Direction.HORIZONTAL); //allows user to swipe horizontally only (user can still drag vertically)
         layoutManager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual); //sets swiping method
+    }
+
+    //implements the fetch listener interface
+    private void setFetchListener() {
+        model.setFetchListener(new RestaurantRepository.FetchRestaurantsListener() {
+            @Override
+            public void onFinishFetch(List<Restaurant> restaurants) {
+                model.addAllRestaurants(restaurants);
+                adapter.notifyDataSetChanged();
+                layoutManager.setTopPosition(0);
+
+                //populate the first bottom sheet (not recognized by cardAppeared())
+                if(layoutManager.getTopPosition() == 0) {
+                    populateBottomSheet(0);
+                }
+
+                //increase offset
+                offset += 30;
+            }
+        });
     }
 }

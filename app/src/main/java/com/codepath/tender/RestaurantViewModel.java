@@ -3,13 +3,9 @@ package com.codepath.tender;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.codepath.tender.models.Favorite;
 import com.codepath.tender.models.Restaurant;
-import com.parse.ParseException;
-import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +13,6 @@ import java.util.List;
 /* View model that provides data to the UI and survives configuration changes between fragments/activities */
 
 public class RestaurantViewModel extends AndroidViewModel {
-
 
     private RestaurantRepository repository;
     private ArrayList<Restaurant> restaurants;
@@ -34,6 +29,10 @@ public class RestaurantViewModel extends AndroidViewModel {
     }
 
     public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
+
+    public void setFetchListener(RestaurantRepository.FetchRestaurantsListener listener) { repository.setFetchListener(listener); }
+
+    public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices) { repository.fetchRestaurants(latitude, longitude, limit, offset, radius, prices); }
 
     public void setOffset(int offset) {
         this.offset = offset;
@@ -73,10 +72,6 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void clearRestaurants() {
         this.restaurants.clear();
-    }
-
-    public int getRestaurantCount() {
-        return this.restaurants.size();
     }
 
     public ArrayList<Restaurant> getRestaurants() {
