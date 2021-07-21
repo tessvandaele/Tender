@@ -51,7 +51,6 @@ public class SwipeFragment extends Fragment {
 
     private static final String LATITUDE_KEY = "latitude";
     private static final String LONGITUDE_KEY = "longitude";
-    private static final String RADIUS_KEY = "radius";
     private static final String PRICES_KEY = "prices";
 
     //library used for easier API requests and querying
@@ -78,8 +77,6 @@ public class SwipeFragment extends Fragment {
     private TextView reviewCount;
     private TextView price;
 
-    private ArrayList<Restaurant> restaurants;
-
     private RestaurantViewModel model;
 
     //empty constructor
@@ -94,8 +91,6 @@ public class SwipeFragment extends Fragment {
     //construct view hierarchy
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        restaurants = new ArrayList<>();
-
         //fragment views
         cardStackView = view.findViewById(R.id.card_stack_view);
         ibLike = view.findViewById(R.id.ibLike);
@@ -112,7 +107,7 @@ public class SwipeFragment extends Fragment {
         price = view.findViewById(R.id.tvPriceSheet);
 
         //view model
-        model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+        model = new ViewModelProvider(this).get(RestaurantViewModel.class);
 
         //setting the bottom sheet behavior
         LinearLayout linearLayout = view.findViewById(R.id.design_bottom_sheet);
@@ -121,24 +116,26 @@ public class SwipeFragment extends Fragment {
         initializeLayoutManager();
         setLayoutManagerProperties();
 
-        restaurants = model.getSavedRestaurants();
         offset = model.getOffset();
         layoutManager.setTopPosition(model.getTopPosition());
 
-        model.getRadius().observe((LifecycleOwner) getContext(), new Observer<Integer>() {
+        //fetch new restaurants when user radius preferences change
+        model.getRadius().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                restaurants.clear();
+                model.clearRestaurants();
                 fetchRestaurants();
             }
         });
 
-        adapter = new CardStackAdapter(getContext(), restaurants);
+        adapter = new CardStackAdapter(getContext(), model.getRestaurants());
         cardStackView.setLayoutManager(layoutManager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
 
-        fetchRestaurants();
+//        if(model.getRestaurantCount() == 0) {
+//            fetchRestaurants();
+//        }
 
         setAutomatedSwiping();
         setBottomSheet();
@@ -161,7 +158,7 @@ public class SwipeFragment extends Fragment {
                 //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
                     int position = layoutManager.getTopPosition() - 1;
-                    model.insertFavorite(restaurants.get(position).getId(), ParseUser.getCurrentUser().getObjectId());
+                    model.insertFavorite(model.getRestaurants().get(position).getId(), ParseUser.getCurrentUser().getObjectId());
                 }
             }
 
@@ -186,16 +183,18 @@ public class SwipeFragment extends Fragment {
     //run GET request to Yelp API and add resulting restaurant objects to the list of restaurants
     private void fetchRestaurants() {
         retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                                .baseUrl(BASE_URL)
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
         yelpService = retrofit.create(YelpService.class);
 
-        yelpService.getRestaurants("Bearer " + API_KEY,
-                ParseUser.getCurrentUser().getDouble(LATITUDE_KEY),
-                ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY),
-                30, offset, model.getRadius().getValue() * 1609, ParseUser.getCurrentUser().get(PRICES_KEY).toString())
-                    .enqueue(new Callback<YelpSearchResult>() {
+        double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
+        double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
+        int limit = 30;
+        int radius = model.getRadius().getValue() * 1609;
+        String prices = ParseUser.getCurrentUser().get(PRICES_KEY).toString();
+
+        yelpService.getRestaurants("Bearer " + API_KEY, latitude, longitude, limit, offset, radius, prices).enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
                 YelpSearchResult searchResult = response.body();
@@ -205,7 +204,7 @@ public class SwipeFragment extends Fragment {
                 }
                 //add restaurants to restaurant list and notify adapter
                 int position = layoutManager.getTopPosition();
-                restaurants.addAll(searchResult.restaurants);
+                model.addAllRestaurants(searchResult.restaurants);
                 adapter.notifyDataSetChanged();
                 layoutManager.scrollToPosition(position);
 
@@ -214,6 +213,7 @@ public class SwipeFragment extends Fragment {
                     populateBottomSheet(0);
                 }
 
+                //increase offset
                 offset += 30;
             }
 
@@ -231,11 +231,11 @@ public class SwipeFragment extends Fragment {
         super.onDestroyView();
         model.setTopPosition(layoutManager.getTopPosition());
         model.setOffset(offset);
-        model.saveRestaurants(restaurants);
     }
 
     //populate bottom sheet
     private void populateBottomSheet(int position) {
+        ArrayList<Restaurant> restaurants = model.getRestaurants();
         nameSheet.setText(restaurants.get(position).getName());
         distanceSheet.setText(restaurants.get(position).getDisplayDistance());
         ratingBarSheet.setRating((float) restaurants.get(position).getRating());
@@ -273,9 +273,6 @@ public class SwipeFragment extends Fragment {
         ibRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                restaurants.clear();
-                offset = 0;
-                fetchRestaurants();
                 layoutManager.scrollToPosition(0);
             }
         });

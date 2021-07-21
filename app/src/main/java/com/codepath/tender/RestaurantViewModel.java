@@ -67,11 +67,19 @@ public class RestaurantViewModel extends AndroidViewModel {
         return radius;
     }
 
-    public void saveRestaurants(ArrayList<Restaurant> restaurants) {
-        this.restaurants = restaurants;
+    public void addAllRestaurants(List<Restaurant> restaurants) {
+        this.restaurants.addAll(restaurants);
     }
 
-    public ArrayList<Restaurant> getSavedRestaurants() {
+    public void clearRestaurants() {
+        this.restaurants.clear();
+    }
+
+    public int getRestaurantCount() {
+        return this.restaurants.size();
+    }
+
+    public ArrayList<Restaurant> getRestaurants() {
         return this.restaurants;
     }
 }
