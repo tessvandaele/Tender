@@ -38,7 +38,11 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void setFetchFavoritesListener(RestaurantRepository.FetchFavoritesListener listener) { repository.setFetchFavoritesListener(listener); }
 
+    public void setDeleteFavoriteListener(RestaurantRepository.DeleteFavoriteListener listener) { repository.setDeleteFavoritesListener(listener); }
+
     public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices) { repository.fetchRestaurants(latitude, longitude, limit, offset, radius, prices); }
+
+    public void deleteFavorite(String id) { repository.deleteFavorite(id); }
 
     public void getFavorites() { repository.getFavorites(); }
 

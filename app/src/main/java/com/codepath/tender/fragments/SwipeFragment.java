@@ -35,10 +35,6 @@ import java.util.List;
 
 public class SwipeFragment extends Fragment {
 
-    private static final String LATITUDE_KEY = "latitude";
-    private static final String LONGITUDE_KEY = "longitude";
-    private static final String PRICES_KEY = "prices";
-
     private CardStackLayoutManager layoutManager;
     private CardStackAdapter adapter;
     private BottomSheetBehavior bottomSheetBehavior;

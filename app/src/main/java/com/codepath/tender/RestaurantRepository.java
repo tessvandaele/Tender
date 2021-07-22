@@ -5,14 +5,15 @@ import android.util.Log;
 import com.codepath.tender.models.Favorite;
 import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.models.YelpSearchResult;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
-import java.lang.reflect.Array;
+;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.parse.ParseObject.saveAllInBackground;
 
 /* Repository class provides a clean API for data access to the rest of the application */
 
@@ -39,6 +38,7 @@ public class RestaurantRepository {
     private YelpService yelpService;
     private FetchRestaurantsListener restaurantsListener;
     private FetchFavoritesListener favoritesListener;
+    private DeleteFavoriteListener deleteFavoriteListener;
 
     private ArrayList<Restaurant> favorites;
 
@@ -50,6 +50,11 @@ public class RestaurantRepository {
     //interface to refresh swipe adapter when data is updated
     public interface FetchFavoritesListener {
         void onFinishFetch(List<Restaurant> restaurants);
+    }
+
+    //interface to delete a user favorite from list
+    public interface DeleteFavoriteListener {
+        void onFinishDelete();
     }
 
     public RestaurantRepository() {
@@ -114,11 +119,6 @@ public class RestaurantRepository {
         this.restaurantsListener = listener;
     }
 
-    //method to initialize the fetch favorites listener
-    public void setFetchFavoritesListener(FetchFavoritesListener listener) {
-        this.favoritesListener = listener;
-    }
-
     //returns a list of the current user's favorite restaurants
     public void getFavorites() {
         favorites.clear();
@@ -151,5 +151,40 @@ public class RestaurantRepository {
                 Log.d("Favorites fragment", "Could not retrieve restaurant");
             }
         });
+    }
+
+    //queries the correct restaurant to delete and then deletes in background
+    public void deleteFavorite(String id) {
+        //retrieve correct favorite
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(FAVORITE_TABLE_KEY);
+        query.whereEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId()); //user id matches current user
+        query.whereEqualTo(RESTAURANT_ID_KEY, id); //restaurant id matches id from view holder
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if(e == null) {
+                    //deleting object if found
+                    object.deleteInBackground(new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e == null) {
+                                deleteFavoriteListener.onFinishDelete();
+                            }
+                        }
+                    });
+                }
+
+            }
+        });
+    }
+
+    //method to initialize the fetch favorites listener
+    public void setFetchFavoritesListener(FetchFavoritesListener listener) {
+        this.favoritesListener = listener;
+    }
+
+    //method to initialize the delete favorites listener
+    public void setDeleteFavoritesListener(DeleteFavoriteListener listener) {
+        this.deleteFavoriteListener = listener;
     }
 }
