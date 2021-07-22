@@ -82,21 +82,18 @@ public class ProfileFragment extends Fragment {
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)));
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
-        List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString(PRICES_KEY).split(", "));
-
         tvLocation.setText(ParseUser.getCurrentUser().getDouble("latitude") + " | " + ParseUser.getCurrentUser().getDouble("longitude"));
 
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
-        //initialize price chips
-        for(int i = 0; i<user_prices.size(); i++){
-            int price = Integer.parseInt(user_prices.get(i));
-            Chip chip = (Chip) priceChips.getChildAt(price-1);
-            prices[price-1] = true;
-            chip.setChecked(true);
-        }
+        setLogout();
+        setChips();
+        setStatusBarListener();
+        setChipListener();
+    }
 
-        //setting up log out button to allow user to log out
+    //sets up the log out button to allow user to log out
+    public void setLogout() {
         ibLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +105,22 @@ public class ProfileFragment extends Fragment {
                 startActivity(i);
             }
         });
+    }
 
+    //sets the price chips to the correct setting based on user preference
+    public void setChips() {
+        List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString(PRICES_KEY).split(", "));
+        //initialize price chips
+        for(int i = 0; i<user_prices.size(); i++){
+            int price = Integer.parseInt(user_prices.get(i));
+            Chip chip = (Chip) priceChips.getChildAt(price-1);
+            prices[price-1] = true;
+            chip.setChecked(true);
+        }
+    }
+
+    //sets up the status bar listener
+    public void setStatusBarListener() {
         barRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -124,7 +136,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+    }
 
+    //sets up the chip listener
+    public void setChipListener() {
         for (int i = 0; i<priceChips.getChildCount(); i++) {
             Chip chip = (Chip)priceChips.getChildAt(i);
 
@@ -152,6 +167,8 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    //converts boolean array to string of prices the user has selected
+    //ex: [true, false, true, true] -> "1, 3, 4"
     public String getPriceString() {
         String result = "";
         for(int i = 0; i<4; i++){
