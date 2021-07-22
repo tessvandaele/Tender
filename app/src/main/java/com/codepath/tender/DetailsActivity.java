@@ -1,15 +1,21 @@
 package com.codepath.tender;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
+import com.codepath.tender.adapters.ReviewAdapter;
 import com.codepath.tender.models.Restaurant;
+import com.codepath.tender.models.Review;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +31,8 @@ public class DetailsActivity extends AppCompatActivity {
     private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
     private static  final String RESTAURANT_INTENT_KEY = "restaurant_id";
 
+    ArrayList<Review> reviews;
+
     //defining views
     private ImageView image;
     private TextView name;
@@ -32,6 +40,10 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView rating;
     private TextView price;
     private TextView location;
+    private RecyclerView rvReviews;
+    private RecyclerViewHeader header;
+
+    private ReviewAdapter adapter;
 
     private String restaurant_id;
     private YelpService yelpService;
@@ -42,12 +54,22 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        reviews = new ArrayList<>();
+
         image = findViewById(R.id.ivImageDetails);
         name = findViewById(R.id.tvNameDetails);
         location = findViewById(R.id.tvAddressDetails);
         rating = findViewById(R.id.tvRatingDetails);
         distance = findViewById(R.id.tvDistanceDetails);
         price = findViewById(R.id.tvPriceDetails);
+        rvReviews = findViewById(R.id.rvReviews);
+        header = findViewById(R.id.header);
+
+        //recycler view set up
+        adapter = new ReviewAdapter(this, reviews);
+        rvReviews.setAdapter(adapter);
+        rvReviews.setLayoutManager(new LinearLayoutManager(this));
+        header.attachTo(rvReviews);
 
         bindData();
     }
