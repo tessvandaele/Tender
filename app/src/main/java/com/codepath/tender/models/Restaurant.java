@@ -22,6 +22,7 @@ public class Restaurant extends ParseObject {
     private String id;
     private String name;
     private String image_url;
+    private String url;
     private double distance;
     private double rating;
     private int review_count;
@@ -38,6 +39,10 @@ public class Restaurant extends ParseObject {
 
     public String getImage_url() {
         return this.image_url;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public double getDistance() {
@@ -80,6 +85,10 @@ public class Restaurant extends ParseObject {
     public void setImage_url(String image_url) {
         if(image_url == null) image_url = "";
         put(IMAGE_KEY, image_url);
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public void setDistance(double distance) {

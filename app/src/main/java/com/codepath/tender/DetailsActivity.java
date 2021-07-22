@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +45,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView rating;
     private TextView price;
     private TextView location;
+    private ImageButton all_reviews_link;
     private RecyclerView rvReviews;
     private RecyclerViewHeader header;
 
@@ -49,6 +54,8 @@ public class DetailsActivity extends AppCompatActivity {
     private String restaurant_id;
     private YelpService yelpService;
     private Retrofit retrofit;
+
+    private String yelp_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,7 @@ public class DetailsActivity extends AppCompatActivity {
         rating = findViewById(R.id.tvRatingDetails);
         distance = findViewById(R.id.tvDistanceDetails);
         price = findViewById(R.id.tvPriceDetails);
+        all_reviews_link = findViewById(R.id.btnAllReviewsLink);
         rvReviews = findViewById(R.id.rvReviews);
         header = findViewById(R.id.header);
 
@@ -72,6 +80,7 @@ public class DetailsActivity extends AppCompatActivity {
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         header.attachTo(rvReviews);
 
+        setupLinkButton();
         bindData();
     }
 
@@ -100,6 +109,7 @@ public class DetailsActivity extends AppCompatActivity {
                         .load(restaurant.getImage_url())
                         .centerCrop()
                         .into(image);
+                yelp_url = restaurant.getUrl();
             }
 
             @Override
@@ -124,6 +134,16 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<YelpReviewResult> call, Throwable t) {
 
+            }
+        });
+    }
+
+    public void setupLinkButton() {
+        all_reviews_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(yelp_url));
+                startActivity(browserIntent);
             }
         });
     }

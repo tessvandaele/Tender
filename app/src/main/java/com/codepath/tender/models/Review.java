@@ -8,6 +8,8 @@ public class Review {
     private int rating;
     private String time_created;
     private User user;
+    private String url;
+    
 
     public String getText() {
         return text;
@@ -25,6 +27,10 @@ public class Review {
         return user;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public void setText(String text) {
         this.text = text;
     }
@@ -39,5 +45,9 @@ public class Review {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

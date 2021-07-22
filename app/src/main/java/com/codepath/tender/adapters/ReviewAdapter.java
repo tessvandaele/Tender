@@ -1,9 +1,12 @@
 package com.codepath.tender.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -52,6 +55,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         private TextView created_at;
         private RatingBar user_rating;
         private TextView user_text;
+        private ImageButton review_link;
 
 
         //vew holder constructor
@@ -62,6 +66,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             created_at = itemView.findViewById(R.id.tvCreated_at);
             user_rating = itemView.findViewById(R.id.rbUserRating);
             user_text = itemView.findViewById(R.id.tvReviewText);
+            review_link = itemView.findViewById(R.id.btnReviewLink);
         }
 
         //binding the data to the view holder
@@ -76,6 +81,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                     .circleCrop()
                     .into(user_image);
 
+            review_link.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(review.getUrl()));
+                    context.startActivity(browserIntent);
+                }
+            });
 
         }
     }
