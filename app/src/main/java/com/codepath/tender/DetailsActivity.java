@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.tender.adapters.ReviewAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.models.Review;
+import com.codepath.tender.models.YelpReviewResult;
 
 import java.util.ArrayList;
 
@@ -104,6 +105,25 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Restaurant> call, Throwable t) {
                 Log.d("Favorites fragment", "Could not retrieve restaurant");
+            }
+        });
+
+        yelpService.getRestaurantReviews("Bearer " + API_KEY, restaurant_id).enqueue(new Callback<YelpReviewResult>() {
+            @Override
+            public void onResponse(Call<YelpReviewResult> call, Response<YelpReviewResult> response) {
+                YelpReviewResult searchResult = response.body();
+                if(searchResult == null){
+                    Log.e("View model", "No restaurants retrieved");
+                    return;
+                }
+                //sends the list of restaurants to the swipe fragment through a listener
+                reviews.addAll(searchResult.reviews);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<YelpReviewResult> call, Throwable t) {
+
             }
         });
     }

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.tender.R;
 import com.codepath.tender.models.Review;
 
@@ -22,12 +25,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     public ReviewAdapter(Context context, List<Review> reviews) {
         this.context = context;
         this.reviews = reviews;
-        reviews.add(new Review());
-        reviews.add(new Review());
-        reviews.add(new Review());
-        reviews.add(new Review());
-        reviews.add(new Review());
-        reviews.add(new Review());
     }
 
     //inflating the item_restaurant layout as the view for the view holder
@@ -50,17 +47,35 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView text;
+        private ImageView user_image;
+        private TextView user_name;
+        private TextView created_at;
+        private RatingBar user_rating;
+        private TextView user_text;
+
 
         //vew holder constructor
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            text = itemView.findViewById(R.id.tvReviewText);
+            user_image = itemView.findViewById(R.id.ivUserImage);
+            user_name = itemView.findViewById(R.id.tvUserName);
+            created_at = itemView.findViewById(R.id.tvCreated_at);
+            user_rating = itemView.findViewById(R.id.rbUserRating);
+            user_text = itemView.findViewById(R.id.tvReviewText);
         }
 
         //binding the data to the view holder
         public void bind(Review review) {
-            text.setText("Review!");
+            user_name.setText(review.getUser().getName());
+            created_at.setText(review.getTime_created());
+            user_rating.setRating(review.getRating());
+            user_text.setText(review.getText());
+
+            Glide.with(context)
+                    .load(review.getUser().getImage_url())
+                    .circleCrop()
+                    .into(user_image);
+
 
         }
     }

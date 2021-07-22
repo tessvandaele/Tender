@@ -1,6 +1,7 @@
 package com.codepath.tender;
 
 import com.codepath.tender.models.Restaurant;
+import com.codepath.tender.models.YelpReviewResult;
 import com.codepath.tender.models.YelpSearchResult;
 
 import retrofit2.Call;
@@ -25,6 +26,11 @@ public interface YelpService {
 
     @GET("businesses/{id}")
     Call<Restaurant> getRestaurantDetails(
+            @Header("Authorization") String authHeader,
+            @Path("id") String restaurant_id);
+
+    @GET("businesses/{id}/reviews")
+    Call<YelpReviewResult> getRestaurantReviews(
             @Header("Authorization") String authHeader,
             @Path("id") String restaurant_id);
 }
