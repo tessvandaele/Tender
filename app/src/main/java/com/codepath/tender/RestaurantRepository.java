@@ -2,8 +2,9 @@ package com.codepath.tender;
 
 import android.util.Log;
 
-import com.codepath.tender.models.Favorite;
 import com.codepath.tender.models.Restaurant;
+import com.codepath.tender.models.Review;
+import com.codepath.tender.models.YelpReviewResult;
 import com.codepath.tender.models.YelpSearchResult;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
@@ -38,6 +39,8 @@ public class RestaurantRepository {
     private FetchRestaurantsListener restaurantsListener;
     private FetchFavoritesListener favoritesListener;
     private DeleteFavoriteListener deleteFavoriteListener;
+    private RestaurantDetailsListener restaurantDetailsListener;
+    private ReviewsListener reviewsListener;
 
     private ArrayList<Restaurant> favorites;
 
@@ -54,6 +57,16 @@ public class RestaurantRepository {
     //interface to delete a user favorite from list
     public interface DeleteFavoriteListener {
         void onFinishDelete();
+    }
+
+    //interface to get detailed data of restaurant in detail activity
+    public interface RestaurantDetailsListener {
+        void onFinishDetailsFetch(Restaurant restaurant);
+    }
+
+    //interface to get reviews of restaurant in detail activity
+    public interface ReviewsListener {
+        void onFinishReviewsFetch(List<Review> reviews);
     }
 
     public RestaurantRepository() {
@@ -111,11 +124,6 @@ public class RestaurantRepository {
                 Log.d("View model", "onFailure " + t);
             }
         });
-    }
-
-    //method to initialize the fetch restaurant listener
-    public void setFetchRestaurantListener(FetchRestaurantsListener listener) {
-        this.restaurantsListener = listener;
     }
 
     //returns a list of the current user's favorite restaurants
@@ -177,6 +185,48 @@ public class RestaurantRepository {
         });
     }
 
+    //gets the detailed data of a restaurant given the restaurant yelp id
+    public void getRestaurantDetails(String restaurant_id) {
+        yelpService.getRestaurantDetails("Bearer " + API_KEY, restaurant_id).enqueue(new Callback<Restaurant>() {
+            @Override
+            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
+                Restaurant restaurant = response.body();
+                restaurantDetailsListener.onFinishDetailsFetch(restaurant);
+            }
+
+            @Override
+            public void onFailure(Call<Restaurant> call, Throwable t) {
+                Log.d("Favorites fragment", "Could not retrieve restaurant");
+            }
+        });
+    }
+
+    //gets the review of a restaurant given restaurant id
+    public void getRestaurantReviews(String restaurant_id) {
+        yelpService.getRestaurantReviews("Bearer " + API_KEY, restaurant_id).enqueue(new Callback<YelpReviewResult>() {
+            @Override
+            public void onResponse(Call<YelpReviewResult> call, Response<YelpReviewResult> response) {
+                YelpReviewResult searchResult = response.body();
+                if(searchResult == null){
+                    Log.e("View model", "No restaurants retrieved");
+                    return;
+                }
+                reviewsListener.onFinishReviewsFetch(searchResult.reviews);
+            }
+
+            @Override
+            public void onFailure(Call<YelpReviewResult> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    //method to initialize the fetch restaurant listener
+    public void setFetchRestaurantListener(FetchRestaurantsListener listener) {
+        this.restaurantsListener = listener;
+    }
+
     //method to initialize the fetch favorites listener
     public void setFetchFavoritesListener(FetchFavoritesListener listener) {
         this.favoritesListener = listener;
@@ -186,4 +236,16 @@ public class RestaurantRepository {
     public void setDeleteFavoritesListener(DeleteFavoriteListener listener) {
         this.deleteFavoriteListener = listener;
     }
+
+    //method to initialize the details listener
+    public void setRestaurantDetailsListener(RestaurantDetailsListener listener) {
+        this.restaurantDetailsListener = listener;
+    }
+
+    //method to initialize the reviews listener
+    public void setReviewsListener(ReviewsListener listener) {
+        this.reviewsListener = listener;
+    }
+
+
 }

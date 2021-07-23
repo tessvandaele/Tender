@@ -1,6 +1,7 @@
 package com.codepath.tender;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,18 +19,10 @@ import com.bumptech.glide.Glide;
 import com.codepath.tender.adapters.ReviewAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.models.Review;
-import com.codepath.tender.models.YelpReviewResult;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.codepath.tender.Constants.API_KEY;
-import static com.codepath.tender.Constants.BASE_URL;
 import static com.codepath.tender.Constants.RESTAURANT_INTENT_KEY;
 
 /* user can view a detailed screen of restaurant information */
@@ -50,9 +43,7 @@ public class DetailsActivity extends AppCompatActivity {
     private RecyclerViewHeader header;
 
     private ReviewAdapter adapter;
-
-    private YelpService yelpService;
-    private Retrofit retrofit;
+    private RestaurantViewModel model;
 
     private String restaurant_id;
     private String yelp_url;
@@ -68,6 +59,8 @@ public class DetailsActivity extends AppCompatActivity {
         mapService.createMap(savedInstanceState);
 
         reviews = new ArrayList<>();
+
+        model = new ViewModelProvider(this).get(RestaurantViewModel.class);
 
         image = findViewById(R.id.ivImageDetails);
         name = findViewById(R.id.tvNameDetails);
@@ -85,6 +78,7 @@ public class DetailsActivity extends AppCompatActivity {
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         header.attachTo(rvReviews);
 
+        setListeners();
         setupLinkButton();
         bindData();
     }
@@ -92,16 +86,14 @@ public class DetailsActivity extends AppCompatActivity {
     //retrieves the correct restaurant based on restaurant name
     public void bindData() {
         restaurant_id = getIntent().getStringExtra(RESTAURANT_INTENT_KEY);
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        yelpService = retrofit.create(YelpService.class);
+        model.getRestaurantDetails(restaurant_id);
+        model.getRestaurantReviews(restaurant_id);
+    }
 
-        yelpService.getRestaurantDetails("Bearer " + API_KEY, restaurant_id).enqueue(new Callback<Restaurant>() {
+    public void setListeners() {
+        model.setRestaurantDetailsListener(new RestaurantRepository.RestaurantDetailsListener() {
             @Override
-            public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
-                Restaurant restaurant = response.body();
+            public void onFinishDetailsFetch(Restaurant restaurant) {
                 name.setText(restaurant.getName());
                 rating.setText(Double.toString(restaurant.getRating()));
                 distance.setText(restaurant.getDisplayDistance());
@@ -118,29 +110,13 @@ public class DetailsActivity extends AppCompatActivity {
                 yelp_url = restaurant.getUrl();
                 mapService.setMarker(restaurant.getCoordinates().getLatitude(), restaurant.getCoordinates().getLongitude());
             }
-
-            @Override
-            public void onFailure(Call<Restaurant> call, Throwable t) {
-                Log.d("Favorites fragment", "Could not retrieve restaurant");
-            }
         });
 
-        yelpService.getRestaurantReviews("Bearer " + API_KEY, restaurant_id).enqueue(new Callback<YelpReviewResult>() {
+        model.setReviewsListener(new RestaurantRepository.ReviewsListener() {
             @Override
-            public void onResponse(Call<YelpReviewResult> call, Response<YelpReviewResult> response) {
-                YelpReviewResult searchResult = response.body();
-                if(searchResult == null){
-                    Log.e("View model", "No restaurants retrieved");
-                    return;
-                }
-                //sends the list of restaurants to the swipe fragment through a listener
-                reviews.addAll(searchResult.reviews);
+            public void onFinishReviewsFetch(List<Review> new_reviews) {
+                reviews.addAll(new_reviews);
                 adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<YelpReviewResult> call, Throwable t) {
-
             }
         });
     }

@@ -34,17 +34,25 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
 
+    public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices) { repository.fetchRestaurants(latitude, longitude, limit, offset, radius, prices); }
+
+    public void deleteFavorite(String id) { repository.deleteFavorite(id); }
+
+    public void getFavorites() { repository.getFavorites(); }
+
+    public void getRestaurantDetails(String restaurant_id) {repository.getRestaurantDetails(restaurant_id);}
+
+    public void getRestaurantReviews(String restaurant_id) {repository.getRestaurantReviews(restaurant_id);}
+
     public void setFetchRestaurantListener(RestaurantRepository.FetchRestaurantsListener listener) { repository.setFetchRestaurantListener(listener); }
 
     public void setFetchFavoritesListener(RestaurantRepository.FetchFavoritesListener listener) { repository.setFetchFavoritesListener(listener); }
 
     public void setDeleteFavoriteListener(RestaurantRepository.DeleteFavoriteListener listener) { repository.setDeleteFavoritesListener(listener); }
 
-    public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices) { repository.fetchRestaurants(latitude, longitude, limit, offset, radius, prices); }
+    public void setRestaurantDetailsListener(RestaurantRepository.RestaurantDetailsListener listener) { repository.setRestaurantDetailsListener(listener);}
 
-    public void deleteFavorite(String id) { repository.deleteFavorite(id); }
-
-    public void getFavorites() { repository.getFavorites(); }
+    public void setReviewsListener(RestaurantRepository.ReviewsListener listener) { repository.setReviewsListener(listener); }
 
     public void setOffset(int offset) {
         this.offset = offset;
