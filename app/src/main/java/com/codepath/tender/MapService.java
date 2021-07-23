@@ -167,6 +167,8 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
                     polyline.setClickable(true);
                     polylines_list.add(polyline);
                 }
+                polylines_list.get(0).setColor(ContextCompat.getColor(context, R.color.main_color));
+                polylines_list.get(0).setZIndex(1);
             }
         });
     }
