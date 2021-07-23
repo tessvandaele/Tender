@@ -8,16 +8,16 @@ import com.parse.ParseUser;
 
 import java.text.DecimalFormat;
 
+import static com.codepath.tender.Constants.DISTANCE_KEY;
+import static com.codepath.tender.Constants.IMAGE_KEY;
+import static com.codepath.tender.Constants.NAME_KEY;
+import static com.codepath.tender.Constants.PHONE_KEY;
+import static com.codepath.tender.Constants.PRICE_KEY;
+import static com.codepath.tender.Constants.RATING_KEY;
+import static com.codepath.tender.Constants.REVIEW_COUNT_KEY;
+
 @ParseClassName("Restaurant")
 public class Restaurant extends ParseObject {
-
-    public static final String NAME_KEY = "name";
-    public static final String IMAGE_KEY = "image_url";
-    public static final String DISTANCE_KEY = "distance";
-    public static final String RATING_KEY = "rating";
-    public static final String REVIEW_COUNT_KEY = "review_count";
-    public static final String PRICE_KEY = "price";
-    public static final String PHONE_KEY = "phone";
 
     private String id;
     private String name;

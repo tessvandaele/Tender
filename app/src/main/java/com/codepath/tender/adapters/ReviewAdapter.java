@@ -24,12 +24,11 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder>{
+import static com.codepath.tender.Constants.DAY_MILLIS;
+import static com.codepath.tender.Constants.HOUR_MILLIS;
+import static com.codepath.tender.Constants.MINUTE_MILLIS;
 
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
-    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder>{
 
     private List<Review> reviews;
     private Context context;

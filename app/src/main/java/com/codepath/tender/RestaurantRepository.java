@@ -23,16 +23,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.codepath.tender.Constants.API_KEY;
+import static com.codepath.tender.Constants.BASE_URL;
+import static com.codepath.tender.Constants.FAVORITE_TABLE_KEY;
+import static com.codepath.tender.Constants.RESTAURANT_ID_KEY;
+import static com.codepath.tender.Constants.USER_ID_KEY;
+
 /* Repository class provides a clean API for data access to the rest of the application */
 
 public class RestaurantRepository {
-
-    private static final String BASE_URL = "https://api.yelp.com/v3/";
-    private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
-
-    private static  final String FAVORITE_TABLE_KEY = "Favorite";
-    private static  final String RESTAURANT_ID_KEY = "restaurantId";
-    private static  final String USER_ID_KEY = "userId";
 
     private Retrofit retrofit;
     private YelpService yelpService;
@@ -69,8 +68,8 @@ public class RestaurantRepository {
     //inserting unique favorite for current user
     void insertFavorite(String restaurant_id, String user_id) {
         ParseObject favorite = new ParseObject(FAVORITE_TABLE_KEY);
-        favorite.put(Favorite.RESTAURANT_ID_KEY, restaurant_id);
-        favorite.put(Favorite.USER_ID_KEY, user_id);
+        favorite.put(RESTAURANT_ID_KEY, restaurant_id);
+        favorite.put(USER_ID_KEY, user_id);
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery(FAVORITE_TABLE_KEY);
         query.whereEqualTo(USER_ID_KEY, user_id);

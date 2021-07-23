@@ -41,12 +41,12 @@ import com.parse.ParseUser;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codepath.tender.Constants.PRICES_KEY;
+import static com.codepath.tender.Constants.RADIUS_KEY;
+
 /* user can logout of account and view profile */
 
 public class ProfileFragment extends Fragment {
-
-    private static final String RADIUS_KEY = "radius";
-    private static final String PRICES_KEY = "prices";
 
     private ImageButton ibLogout;
     private TextView tvUsername;

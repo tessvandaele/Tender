@@ -28,13 +28,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.codepath.tender.Constants.API_KEY;
+import static com.codepath.tender.Constants.BASE_URL;
+import static com.codepath.tender.Constants.RESTAURANT_INTENT_KEY;
+
 /* user can view a detailed screen of restaurant information */
 
 public class DetailsActivity extends AppCompatActivity {
-
-    private static final String BASE_URL = "https://api.yelp.com/v3/";
-    private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
-    private static final String RESTAURANT_INTENT_KEY = "restaurant_id";
 
     ArrayList<Review> reviews;
 

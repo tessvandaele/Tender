@@ -35,12 +35,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import static com.codepath.tender.Constants.LATITUDE_KEY;
+import static com.codepath.tender.Constants.LONGITUDE_KEY;
+
 /* handles the bottom navigation menu */
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String LATITUDE_KEY = "latitude";
-    private static final String LONGITUDE_KEY = "longitude";
 
     private FusedLocationProviderClient mFusedLocationClient;
     final static int PERMISSION_ID = 44;

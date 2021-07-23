@@ -20,11 +20,11 @@ import com.codepath.tender.models.Restaurant;
 
 import java.util.List;
 
+import static com.codepath.tender.Constants.RESTAURANT_INTENT_KEY;
+
 /* adapter for the favorites list of restaurants */
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
-
-    private final static String RESTAURANT_INTENT_KEY = "restaurant_id";
 
     private List<Restaurant> favorites;
     private Context context;

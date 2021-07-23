@@ -17,9 +17,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseUser;
 
-public class MapService implements OnMapReadyCallback {
+import static com.codepath.tender.Constants.MAPVIEW_BUNDLE_KEY;
 
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+public class MapService implements OnMapReadyCallback {
 
     private Context context;
     private MapView mapView;

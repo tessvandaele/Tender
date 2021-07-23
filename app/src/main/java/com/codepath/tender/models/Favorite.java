@@ -3,11 +3,11 @@ package com.codepath.tender.models;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import static com.codepath.tender.Constants.RESTAURANT_ID_KEY;
+import static com.codepath.tender.Constants.USER_ID_KEY;
+
 @ParseClassName("Favorite")
 public class Favorite extends ParseObject {
-
-    public static final String USER_ID_KEY = "userId";
-    public static final String RESTAURANT_ID_KEY = "restaurantId";
 
     public Favorite() {}
 
