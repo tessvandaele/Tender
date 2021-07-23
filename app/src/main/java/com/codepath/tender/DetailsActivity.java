@@ -64,6 +64,8 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        mapService = new MapService(DetailsActivity.this, findViewById(R.id.user_list_map));
+
         reviews = new ArrayList<>();
 
         image = findViewById(R.id.ivImageDetails);
@@ -85,7 +87,6 @@ public class DetailsActivity extends AppCompatActivity {
         setupLinkButton();
         bindData();
 
-        mapService = new MapService(DetailsActivity.this, findViewById(R.id.user_list_map));
         mapService.createMap(savedInstanceState);
     }
 
@@ -118,6 +119,7 @@ public class DetailsActivity extends AppCompatActivity {
                 yelp_url = restaurant.getUrl();
                 mapService.setLatitude(restaurant.getCoordinates().getLatitude());
                 mapService.setLongitude(restaurant.getCoordinates().getLongitude());
+                mapService.setMarker();
             }
 
             @Override
