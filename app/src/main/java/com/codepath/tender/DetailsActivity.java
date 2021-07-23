@@ -65,6 +65,7 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         mapService = new MapService(DetailsActivity.this, findViewById(R.id.user_list_map));
+        mapService.createMap(savedInstanceState);
 
         reviews = new ArrayList<>();
 
@@ -86,8 +87,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         setupLinkButton();
         bindData();
-
-        mapService.createMap(savedInstanceState);
     }
 
     //retrieves the correct restaurant based on restaurant name
@@ -117,9 +116,7 @@ public class DetailsActivity extends AppCompatActivity {
                         .into(image);
 
                 yelp_url = restaurant.getUrl();
-                mapService.setLatitude(restaurant.getCoordinates().getLatitude());
-                mapService.setLongitude(restaurant.getCoordinates().getLongitude());
-                mapService.setMarker();
+                mapService.setMarker(restaurant.getCoordinates().getLatitude(), restaurant.getCoordinates().getLongitude());
             }
 
             @Override

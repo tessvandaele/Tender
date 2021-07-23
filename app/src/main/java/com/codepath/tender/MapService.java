@@ -3,7 +3,6 @@ package com.codepath.tender;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
@@ -23,22 +22,12 @@ public class MapService implements OnMapReadyCallback {
 
     private Context context;
     private MapView mapView;
-    private double latitude;
-    private double longitude;
     private LatLngBounds boundaries;
     private GoogleMap map;
 
     public MapService(Context context, MapView mapView) {
         this.context = context;
         this.mapView = mapView;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 
     //initialize map view
@@ -74,7 +63,7 @@ public class MapService implements OnMapReadyCallback {
         setMapView();
     }
 
-    public void setMarker() {
+    public void setMarker(double latitude, double longitude) {
         map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("Marker"));
     }
 
