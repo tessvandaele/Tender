@@ -25,6 +25,7 @@ public class Constants {
     public static final String LATITUDE_KEY = "latitude";
     public static final String LONGITUDE_KEY = "longitude";
 
+    public static final String MAP_API_KEY = "AIzaSyD-vc5FGcrIbFelWmHlODET-P9_wWDngL0";
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     public static final int SECOND_MILLIS = 1000;
