@@ -34,7 +34,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "https://api.yelp.com/v3/";
     private static final String API_KEY = "GrsRS-QAb3mRuvqWsTPW5Bye4DAJ1TJY9v5addUNFFIhpb-iL8DwR0NJ_y-hOWIc94vW7wpIYZc3HRU7NQyAf0PQ0vsSddtF1qnNXlebmvey-5Vq6myMcfFgYJrtYHYx";
-    private static  final String RESTAURANT_INTENT_KEY = "restaurant_id";
+    private static final String RESTAURANT_INTENT_KEY = "restaurant_id";
 
     ArrayList<Review> reviews;
 
@@ -51,11 +51,13 @@ public class DetailsActivity extends AppCompatActivity {
 
     private ReviewAdapter adapter;
 
-    private String restaurant_id;
     private YelpService yelpService;
     private Retrofit retrofit;
 
+    private String restaurant_id;
     private String yelp_url;
+
+    private MapService mapService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,9 @@ public class DetailsActivity extends AppCompatActivity {
 
         setupLinkButton();
         bindData();
+
+        mapService = new MapService(DetailsActivity.this, findViewById(R.id.user_list_map));
+        mapService.createMap(savedInstanceState);
     }
 
     //retrieves the correct restaurant based on restaurant name
@@ -109,7 +114,10 @@ public class DetailsActivity extends AppCompatActivity {
                         .load(restaurant.getImage_url())
                         .centerCrop()
                         .into(image);
+
                 yelp_url = restaurant.getUrl();
+                mapService.setLatitude(restaurant.getCoordinates().getLatitude());
+                mapService.setLongitude(restaurant.getCoordinates().getLongitude());
             }
 
             @Override
@@ -147,4 +155,48 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapService.onSaveInstance(outState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapService.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapService.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapService.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapService.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapService.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapService.onLowMemory();
+    }
+
 }

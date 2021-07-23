@@ -236,7 +236,7 @@ public class SwipeFragment extends Fragment {
                 layoutManager.scrollToPosition(0);
 
                 //populate the first bottom sheet (not recognized by cardAppeared())
-                if(layoutManager.getTopPosition() == 0) {
+                if(layoutManager.getTopPosition() == 0 && restaurants.size() != 0) {
                     populateBottomSheet(0);
                 }
 
