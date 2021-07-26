@@ -49,6 +49,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
 
     private ArrayList<PolylineData> polylines_list;
 
+    //constructor
     public MapService(Context context, MapView mapView) {
         this.context = context;
         this.mapView = mapView;
@@ -95,6 +96,22 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
         setMapView();
     }
 
+    //sets the view boundaries of the map
+    public void setMapView() {
+        double user_latitude = ParseUser.getCurrentUser().getDouble("latitude");
+        double user_longitude = ParseUser.getCurrentUser().getDouble("longitude");
+
+        //creating a window around the current user location
+        double bottom_boundary = user_latitude - .005;
+        double left_boundary = user_longitude - .005;
+        double top_boundary = user_latitude + .005;
+        double right_boundary = user_longitude + .005;
+
+        boundaries = new LatLngBounds(new LatLng(bottom_boundary, left_boundary), new LatLng(top_boundary, right_boundary));
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(boundaries, 200, 200, 0));
+    }
+
+    //sets a marker at the restaurant position
     public void setMarker(double latitude, double longitude, String title) {
         marker = map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title));
         calculateDirections(marker);
@@ -102,8 +119,6 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
 
     //calculates the routes from the user location to the restaurant using google directions api
     private void calculateDirections(Marker marker){
-        Log.d(TAG, "calculateDirections: calculating directions.");
-
         //set destination
         com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
                 marker.getPosition().latitude,
@@ -121,12 +136,12 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
                         ParseUser.getCurrentUser().getDouble("longitude")
                 )
         );
-        Log.d(TAG, "calculateDirections: destination: " + destination.toString());
+
+        //call to google directions api
         directions.destination(destination).setCallback(new PendingResult.Callback<DirectionsResult>() {
             @Override
             public void onResult(DirectionsResult result) {
-                Log.d(TAG, "onResult: routes: " + result.routes[0].toString());
-                Log.d(TAG, "onResult: geocodedWayPoints: " + result.geocodedWaypoints[0].toString());
+                //add this route to the map
                 addPolylinesToMap(result);
             }
 
@@ -185,19 +200,52 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
         });
     }
 
-    //sets the view boundaries of the map
-    public void setMapView() {
-        double user_latitude = ParseUser.getCurrentUser().getDouble("latitude");
-        double user_longitude = ParseUser.getCurrentUser().getDouble("longitude");
+    //called when a polyline is clicked; changes its color to blue and shows trip duration
+    @Override
+    public void onPolylineClick(Polyline polyline) {
+        //find which polyline in our list is the one that was clicked
+        for(PolylineData polylineData: polylines_list){
+            if(polyline.getId().equals(polylineData.getPolyline().getId())){
+                //this polyline was clicked; set color to blue and index to 1
+                polylineData.getPolyline().setColor(ContextCompat.getColor(context, R.color.main_color));
+                polylineData.getPolyline().setZIndex(1);
 
-        //creating a window around the current user location
-        double bottom_boundary = user_latitude - .005;
-        double left_boundary = user_longitude - .005;
-        double top_boundary = user_latitude + .005;
-        double right_boundary = user_longitude + .005;
+                //set marker dialog to show distance in time
+                marker.setSnippet("" + polylineData.getLeg().duration);
 
-        boundaries = new LatLngBounds(new LatLng(bottom_boundary, left_boundary), new LatLng(top_boundary, right_boundary));
-        map.moveCamera(CameraUpdateFactory.newLatLngBounds(boundaries, 200, 200, 0));
+                //show info window above marker
+                marker.showInfoWindow();
+
+                //zoom view to correct boundary
+                zoomRoute(polyline.getPoints());
+            }
+            else{
+                //this polyline was not clicked; set color to grey and index to 0
+                polylineData.getPolyline().setColor(ContextCompat.getColor(context, R.color.grey));
+                polylineData.getPolyline().setZIndex(0);
+            }
+        }
+    }
+
+    //animates the camera view to zoom in on routes
+    public void zoomRoute(List<LatLng> lstLatLngRoute) {
+        //check whether map is not completely set
+        if (map == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
+
+        //set bounds to include all points in route
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        for (LatLng latLngPoint : lstLatLngRoute)
+            boundsBuilder.include(latLngPoint);
+
+        int routePadding = 80;
+        LatLngBounds latLngBounds = boundsBuilder.build();
+
+        //animate a zoom to the center of the view
+        map.animateCamera(
+                CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding),
+                600,
+                null
+        );
     }
 
     public void onResume() {
@@ -222,28 +270,5 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
 
     public void onLowMemory() {
         mapView.onLowMemory();
-    }
-
-    @Override
-    public void onPolylineClick(Polyline polyline) {
-        //find which polyline in our list is the one that was clicked
-        for(PolylineData polylineData: polylines_list){
-            if(polyline.getId().equals(polylineData.getPolyline().getId())){
-                //this polyline was clicked; set color to blue and index to 1
-                polylineData.getPolyline().setColor(ContextCompat.getColor(context, R.color.main_color));
-                polylineData.getPolyline().setZIndex(1);
-
-                //set marker dialog to show distance in time
-                marker.setSnippet("" + polylineData.getLeg().duration);
-
-                //show info window above marker
-                marker.showInfoWindow();
-            }
-            else{
-                //this polyline was not clicked; set color to grey and index to 0
-                polylineData.getPolyline().setColor(ContextCompat.getColor(context, R.color.grey));
-                polylineData.getPolyline().setZIndex(0);
-            }
-        }
     }
 }
