@@ -73,7 +73,7 @@ public class RestaurantRepository {
 
     //interface to get other users that have a restaurant favorited
     public interface OtherUsersListener {
-        void onFinishOtherUserFetch(User user);
+        void onFinishOtherUserFetch(ParseUser user);
     }
 
 
@@ -236,16 +236,27 @@ public class RestaurantRepository {
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
+                //iterate through each favorite and find user
                 for(ParseObject object : objects) {
-                    ParseQuery<ParseObject> new_query = new ParseQuery<ParseObject>("User");
-                    String username = object.get("userId").toString();
-                    new_query.whereEqualTo("objectId", username);
-                    new_query.getFirstInBackground(new GetCallback<ParseObject>() {
-                        @Override
-                        public void done(ParseObject object, ParseException e) {
-                            otherUsersListener.onFinishOtherUserFetch((User)object);
-                        }
-                    });
+                    getUsersFromIds(object.getString("userId"));
+                }
+            }
+        });
+    }
+
+    //returns parse user given user id
+    public void getUsersFromIds(String user_id) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery("_User");
+        query.whereEqualTo("objectId", user_id);
+        //don't include the current user
+        //query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
+        query.getFirstInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser object, ParseException e) {
+                if(e == null) {
+                    otherUsersListener.onFinishOtherUserFetch(object);
+                } else {
+                    Log.d("Repository", "Couldn't retrieve users");
                 }
             }
         });

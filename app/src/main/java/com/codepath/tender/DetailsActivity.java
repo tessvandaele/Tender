@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.tender.adapters.ReviewAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.models.Review;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import static com.codepath.tender.Constants.RESTAURANT_INTENT_KEY;
 public class DetailsActivity extends AppCompatActivity {
 
     ArrayList<Review> reviews;
+    ArrayList<String> favorite_usernames;
 
     //defining views
     private ImageView image;
@@ -92,6 +94,7 @@ public class DetailsActivity extends AppCompatActivity {
         restaurant_id = getIntent().getStringExtra(RESTAURANT_INTENT_KEY);
         model.getRestaurantDetails(restaurant_id);
         model.getRestaurantReviews(restaurant_id);
+        model.getOtherUsersWithFavorite(restaurant_id);
     }
 
     public void setListeners() {
@@ -121,6 +124,16 @@ public class DetailsActivity extends AppCompatActivity {
             public void onFinishReviewsFetch(List<Review> new_reviews) {
                 reviews.addAll(new_reviews);
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        model.setOtherUsersListener(new RestaurantRepository.OtherUsersListener() {
+            @Override
+            public void onFinishOtherUserFetch(ParseUser user) {
+                if(user != null && !user.getUsername().equals(ParseUser.getCurrentUser().getUsername())){
+                    favorite_usernames.add(user.getUsername());
+                }
+
             }
         });
     }
