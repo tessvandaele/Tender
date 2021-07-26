@@ -11,6 +11,7 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.codepath.tender.models.PolylineData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -44,8 +45,9 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
     private LatLngBounds boundaries;
     private GoogleMap map;
     private GeoApiContext geoApiContext;
+    private Marker marker;
 
-    private ArrayList<Polyline> polylines_list;
+    private ArrayList<PolylineData> polylines_list;
 
     public MapService(Context context, MapView mapView) {
         this.context = context;
@@ -93,8 +95,8 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
         setMapView();
     }
 
-    public void setMarker(double latitude, double longitude) {
-        Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("Marker"));
+    public void setMarker(double latitude, double longitude, String title) {
+        marker = map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title));
         calculateDirections(marker);
     }
 
@@ -142,11 +144,16 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "run: result routes: " + result.routes.length);
-                if(!polylines_list.isEmpty()) {
+                //clearing any past data
+                if(polylines_list.size() > 0){
+                    for(PolylineData polylineData: polylines_list){
+                        polylineData.getPolyline().remove();
+                    }
                     polylines_list.clear();
+                    polylines_list = new ArrayList<>();
                 }
 
+                double duration = 999999999;
                 //iterate through routes
                 for(DirectionsRoute route: result.routes){
                     //split up path into parts
@@ -165,10 +172,15 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
                     Polyline polyline = map.addPolyline(new PolylineOptions().addAll(newDecodedPath));
                     polyline.setColor(ContextCompat.getColor(context, R.color.grey));
                     polyline.setClickable(true);
-                    polylines_list.add(polyline);
+                    polylines_list.add(new PolylineData(polyline, route.legs[0]));
+
+                    // highlight the fastest route and adjust camera
+                    double tempDuration = route.legs[0].duration.inSeconds;
+                    if(tempDuration < duration){
+                        duration = tempDuration;
+                        onPolylineClick(polyline);
+                    }
                 }
-                polylines_list.get(0).setColor(ContextCompat.getColor(context, R.color.main_color));
-                polylines_list.get(0).setZIndex(1);
             }
         });
     }
@@ -214,14 +226,23 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
 
     @Override
     public void onPolylineClick(Polyline polyline) {
-        for(Polyline polylineData: polylines_list){
-            if(polyline.getId().equals(polylineData.getId())){
-                polylineData.setColor(ContextCompat.getColor(context, R.color.main_color));
-                polylineData.setZIndex(1);
+        //find which polyline in our list is the one that was clicked
+        for(PolylineData polylineData: polylines_list){
+            if(polyline.getId().equals(polylineData.getPolyline().getId())){
+                //this polyline was clicked; set color to blue and index to 1
+                polylineData.getPolyline().setColor(ContextCompat.getColor(context, R.color.main_color));
+                polylineData.getPolyline().setZIndex(1);
+
+                //set marker dialog to show distance in time
+                marker.setSnippet("" + polylineData.getLeg().duration);
+
+                //show info window above marker
+                marker.showInfoWindow();
             }
             else{
-                polylineData.setColor(ContextCompat.getColor(context, R.color.grey));
-                polylineData.setZIndex(0);
+                //this polyline was not clicked; set color to grey and index to 0
+                polylineData.getPolyline().setColor(ContextCompat.getColor(context, R.color.grey));
+                polylineData.getPolyline().setZIndex(0);
             }
         }
     }

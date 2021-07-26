@@ -108,7 +108,7 @@ public class DetailsActivity extends AppCompatActivity {
                         .into(image);
 
                 yelp_url = restaurant.getUrl();
-                mapService.setMarker(restaurant.getCoordinates().getLatitude(), restaurant.getCoordinates().getLongitude());
+                mapService.setMarker(restaurant.getCoordinates().getLatitude(), restaurant.getCoordinates().getLongitude(), restaurant.getName());
             }
         });
 
