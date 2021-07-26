@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.models.Review;
+import com.codepath.tender.models.User;
 import com.codepath.tender.models.YelpReviewResult;
 import com.codepath.tender.models.YelpSearchResult;
 import com.parse.DeleteCallback;
@@ -14,7 +15,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class RestaurantRepository {
     private DeleteFavoriteListener deleteFavoriteListener;
     private RestaurantDetailsListener restaurantDetailsListener;
     private ReviewsListener reviewsListener;
+    private OtherUsersListener otherUsersListener;
 
     private ArrayList<Restaurant> favorites;
 
@@ -51,7 +53,7 @@ public class RestaurantRepository {
 
     //interface to refresh swipe adapter when data is updated
     public interface FetchFavoritesListener {
-        void onFinishFetch(List<Restaurant> restaurants);
+        void onFinishFetch(Restaurant restaurants);
     }
 
     //interface to delete a user favorite from list
@@ -68,6 +70,12 @@ public class RestaurantRepository {
     public interface ReviewsListener {
         void onFinishReviewsFetch(List<Review> reviews);
     }
+
+    //interface to get other users that have a restaurant favorited
+    public interface OtherUsersListener {
+        void onFinishOtherUserFetch(User user);
+    }
+
 
     public RestaurantRepository() {
         retrofit = new Retrofit.Builder()
@@ -150,7 +158,7 @@ public class RestaurantRepository {
             @Override
             public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
                 favorites.add(response.body());
-                favoritesListener.onFinishFetch(favorites);
+                favoritesListener.onFinishFetch(response.body());
             }
 
             @Override
@@ -221,6 +229,29 @@ public class RestaurantRepository {
         });
     }
 
+    //gets the user id's of other users who have the restaurant in their favorites
+    public void getOtherUserFavorite(String restaurant_id) {
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(FAVORITE_TABLE_KEY);
+        query.whereEqualTo(RESTAURANT_ID_KEY, restaurant_id); //user id matches current user
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                for(ParseObject object : objects) {
+                    ParseQuery<ParseObject> new_query = new ParseQuery<ParseObject>("User");
+                    String username = object.get("userId").toString();
+                    new_query.whereEqualTo("objectId", username);
+                    new_query.getFirstInBackground(new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(ParseObject object, ParseException e) {
+                            otherUsersListener.onFinishOtherUserFetch((User)object);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
 
     //method to initialize the fetch restaurant listener
     public void setFetchRestaurantListener(FetchRestaurantsListener listener) {
@@ -246,6 +277,9 @@ public class RestaurantRepository {
     public void setReviewsListener(ReviewsListener listener) {
         this.reviewsListener = listener;
     }
+
+    //method to initialize the other user favorite listener
+    public void setOtherUsersListener(OtherUsersListener listener) { this.otherUsersListener = listener; }
 
 
 }

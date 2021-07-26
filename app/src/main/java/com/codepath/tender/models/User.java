@@ -1,23 +1,20 @@
 package com.codepath.tender.models;
 
-public class User {
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
 
-    private String name;
-    private String image_url;
+@ParseClassName("User")
+public class User extends ParseObject {
 
-    public String getName() {
-        return name;
+    private String username;
+
+    public User() {}
+
+    public String getUsername() {
+        return username;
     }
 
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

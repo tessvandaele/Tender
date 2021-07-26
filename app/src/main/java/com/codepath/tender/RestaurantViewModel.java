@@ -44,6 +44,8 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void getRestaurantReviews(String restaurant_id) {repository.getRestaurantReviews(restaurant_id);}
 
+    public void getOtherUsersWithFavorite(String restaurant_id) { repository.getOtherUserFavorite(restaurant_id);}
+
     public void setFetchRestaurantListener(RestaurantRepository.FetchRestaurantsListener listener) { repository.setFetchRestaurantListener(listener); }
 
     public void setFetchFavoritesListener(RestaurantRepository.FetchFavoritesListener listener) { repository.setFetchFavoritesListener(listener); }
@@ -54,13 +56,11 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void setReviewsListener(RestaurantRepository.ReviewsListener listener) { repository.setReviewsListener(listener); }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
+    public void setOtherUsersListener(RestaurantRepository.OtherUsersListener listener) { repository.setOtherUsersListener(listener);}
 
-    public void setTopPosition(int topPosition) {
-        this.topPosition = topPosition;
-    }
+    public void setOffset(int offset) { this.offset = offset; }
+
+    public void setTopPosition(int topPosition) { this.topPosition = topPosition; }
 
     public void setRadius(int radius) {
         if(this.radius == null) {

@@ -7,7 +7,7 @@ public class Review {
     private String text;
     private int rating;
     private String time_created;
-    private User user;
+    private ReviewUser user;
     private String url;
     
 
@@ -23,7 +23,7 @@ public class Review {
         return time_created;
     }
 
-    public User getUser() {
+    public ReviewUser getUser() {
         return user;
     }
 
@@ -43,7 +43,7 @@ public class Review {
         this.time_created = time_created;
     }
 
-    public void setUser(User user) {
+    public void setUser(ReviewUser user) {
         this.user = user;
     }
 

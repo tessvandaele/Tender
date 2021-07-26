@@ -64,9 +64,8 @@ public class FavoritesFragment extends Fragment {
     public void setFavoriteListener() {
         model.setFetchFavoritesListener(new RestaurantRepository.FetchFavoritesListener() {
             @Override
-            public void onFinishFetch(List<Restaurant> restaurants) {
-                favorites.clear();
-                favorites.addAll(restaurants);
+            public void onFinishFetch(Restaurant restaurant) {
+                favorites.add(restaurant);
                 adapter.notifyDataSetChanged();
             }
         });
