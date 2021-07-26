@@ -35,10 +35,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ivImageDetails"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
             android:fontFamily="sans-serif-condensed-light"
+            android:maxWidth="180dp"
             android:textColor="#403C3C"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -59,9 +60,10 @@
             android:id="@+id/tvPriceDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tvNameDetails"
+            android:layout_below="@+id/tvOtherUsers"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="0dp"
             android:textColor="@color/main_color"
             tools:text="$$" />
@@ -210,6 +212,16 @@
             android:layout_toStartOf="@+id/btnAllReviewsLink"
             android:text="see all reviews"
             android:textColor="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/tvOtherUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="307dp"
+            android:layout_marginEnd="10dp"
+            tools:text="Liked by ryan_fresh and 2 others" />
 
     </com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader>
 </RelativeLayout>

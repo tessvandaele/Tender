@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView rating;
     private TextView price;
     private TextView location;
+    private TextView other_users;
     private ImageButton all_reviews_link;
     private RecyclerView rvReviews;
     private RecyclerViewHeader header;
@@ -63,6 +67,7 @@ public class DetailsActivity extends AppCompatActivity {
         mapService.createMap(savedInstanceState);
 
         reviews = new ArrayList<>();
+        favorite_usernames = new ArrayList<>();
 
         model = new ViewModelProvider(this).get(RestaurantViewModel.class);
 
@@ -72,6 +77,7 @@ public class DetailsActivity extends AppCompatActivity {
         rating = findViewById(R.id.tvRatingDetails);
         distance = findViewById(R.id.tvDistanceDetails);
         price = findViewById(R.id.tvPriceDetails);
+        other_users = findViewById(R.id.tvOtherUsers);
         all_reviews_link = findViewById(R.id.btnAllReviewsLink);
         rvReviews = findViewById(R.id.rvReviews);
         header = findViewById(R.id.header);
@@ -132,6 +138,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void onFinishOtherUserFetch(ParseUser user) {
                 if(user != null && !user.getUsername().equals(ParseUser.getCurrentUser().getUsername())){
                     favorite_usernames.add(user.getUsername());
+                    setOtherUserText();
                 }
 
             }
@@ -156,6 +163,41 @@ public class DetailsActivity extends AppCompatActivity {
                 mapService.openGoogleMapsDialog();
             }
         });
+    }
+
+    //helper method to set text according to how many other users liked the restaurant
+    public void setOtherUserText() {
+        String liked_by = "Liked by ";
+
+        if(favorite_usernames.size() == 0 | favorite_usernames == null) {
+            //no other users; keep text empty
+        } else if(favorite_usernames.size() == 1) {
+            String username = favorite_usernames.get(0);
+            String final_string = liked_by + username;
+
+            //making certain parts of text bold
+            Spannable sb = new SpannableString(final_string);
+            sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 9, final_string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            other_users.setText(sb, TextView.BufferType.SPANNABLE);
+        } else if(favorite_usernames.size() == 2) {
+            String username = favorite_usernames.get(0);
+            String final_string = liked_by + username + " and 1 other";
+
+            //making certain parts of text bold
+            Spannable sb = new SpannableString(final_string);
+            sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 9, 9+username.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 14+username.length(), final_string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            other_users.setText(sb, TextView.BufferType.SPANNABLE);
+        } else {
+            String username = favorite_usernames.get(0);
+            String final_string = liked_by + username + " and " + (favorite_usernames.size()-1) + " others";
+
+            //making certain parts of text bold
+            Spannable sb = new SpannableString(final_string);
+            sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 9, 9+username.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 14+username.length(), final_string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            other_users.setText(sb, TextView.BufferType.SPANNABLE);
+        }
     }
 
 
