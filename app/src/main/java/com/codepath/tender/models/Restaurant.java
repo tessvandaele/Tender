@@ -8,14 +8,6 @@ import com.parse.ParseUser;
 
 import java.text.DecimalFormat;
 
-import static com.codepath.tender.Constants.DISTANCE_KEY;
-import static com.codepath.tender.Constants.IMAGE_KEY;
-import static com.codepath.tender.Constants.NAME_KEY;
-import static com.codepath.tender.Constants.PHONE_KEY;
-import static com.codepath.tender.Constants.PRICE_KEY;
-import static com.codepath.tender.Constants.RATING_KEY;
-import static com.codepath.tender.Constants.REVIEW_COUNT_KEY;
-
 @ParseClassName("Restaurant")
 public class Restaurant extends ParseObject {
 
@@ -30,6 +22,9 @@ public class Restaurant extends ParseObject {
     private String phone;
     private Coordinates coordinates;
     private Location location;
+
+    //for details api only
+    private String display_phone;
 
     public Restaurant() {}
 
@@ -73,18 +68,18 @@ public class Restaurant extends ParseObject {
         return location;
     }
 
+    public String getDisplay_phone() { return display_phone; }
+
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setName(@NonNull String name) {
-        if(name == null) name = "";
-        put(NAME_KEY, name);
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setImage_url(String image_url) {
-        if(image_url == null) image_url = "";
-        put(IMAGE_KEY, image_url);
+        this.image_url = image_url;
     }
 
     public void setUrl(String url) {
@@ -92,25 +87,35 @@ public class Restaurant extends ParseObject {
     }
 
     public void setDistance(double distance) {
-        put(DISTANCE_KEY, distance);
+        this.distance = distance;
     }
 
     public void setRating(double rating) {
-        put(RATING_KEY, rating);
+        this.rating = rating;
     }
 
-    public void setPhone(String phone) {
-        if(phone == null) phone = "";
-        put(PHONE_KEY, phone);
+    public void setReview_count(int review_count) {
+        this.review_count = review_count;
     }
 
     public void setPrice(String price) {
-        if(price == null) price = "";
-        put(PRICE_KEY, price);
+        this.price = price;
     }
 
-    public void setReview_count(int rating_count) {
-        put(REVIEW_COUNT_KEY, rating_count);
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setDisplay_phone(String display_phone) {
+        this.display_phone = display_phone;
     }
 
     //helper method that returns a display string of the distance in miles

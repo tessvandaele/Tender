@@ -1,6 +1,7 @@
 package com.codepath.tender.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,16 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.viewpager.widget.ViewPager;
 
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantRepository;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.adapters.CardStackAdapter;
+import com.codepath.tender.adapters.ViewPagerAdapter;
 import com.codepath.tender.models.Restaurant;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseUser;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
@@ -54,6 +58,9 @@ public class SwipeFragment extends Fragment {
     private TextView reviewCount;
     private TextView price;
 
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
     private RestaurantViewModel model;
     private int offset;
 
@@ -84,6 +91,9 @@ public class SwipeFragment extends Fragment {
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
 
+        tabLayout = view.findViewById(R.id.tabLayout);
+        viewPager = view.findViewById(R.id.viewPager);
+
         //view model
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
@@ -106,6 +116,7 @@ public class SwipeFragment extends Fragment {
 
         setAutomatedSwiping();
         setBottomSheet();
+        setTabLayout();
     }
 
     private void initializeLayoutManager() {
@@ -196,6 +207,7 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 layoutManager.scrollToPosition(0);
+                populateBottomSheet(0);
             }
         });
     }
@@ -205,6 +217,7 @@ public class SwipeFragment extends Fragment {
         ibUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                model.getRestaurantDetails(model.getRestaurants().get(layoutManager.getTopPosition()).getId());
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
@@ -213,6 +226,13 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+        model.setRestaurantDetailsListener(new RestaurantRepository.RestaurantDetailsListener() {
+            @Override
+            public void onFinishDetailsFetch(Restaurant restaurant) {
+                Log.d("Restaurant", restaurant.getName());
             }
         });
     }
@@ -242,6 +262,29 @@ public class SwipeFragment extends Fragment {
 
                 //increase offset
                 offset += 30;
+            }
+        });
+    }
+
+    private void setTabLayout() {
+        tabLayout.addTab(tabLayout.newTab().setText("Football"));
+        tabLayout.addTab(tabLayout.newTab().setText("Cricket"));
+        tabLayout.addTab(tabLayout.newTab().setText("NBA"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
+                tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
             }
         });
     }

@@ -110,32 +110,21 @@
                 tools:text="324 Reviews" />
 
             <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/divider3"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp">
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tabInformation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="info" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tabMenu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Menu" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tabGallery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gallery" />
+                android:background="@color/main_color"
+                android:layout_below="@+id/divider3">
             </com.google.android.material.tabs.TabLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tabLayout"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="100dp"
+                tools:layout_editor_absoluteX="8dp" />
 
             <TextView
                 android:id="@+id/tvPhone"
