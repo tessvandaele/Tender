@@ -10,6 +10,7 @@
 
     <color name="main_color">#66C0CC</color>
     <color name="grey">#d3d3d3</color>
-
+    <color name="dark_grey">#888888</color>
+    <color name="transparent">#00ffffff</color>
 </resources>
 

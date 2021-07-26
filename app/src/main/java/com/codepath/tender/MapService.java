@@ -1,8 +1,12 @@
 package com.codepath.tender;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -246,6 +250,46 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
                 600,
                 null
         );
+    }
+
+    public void openGoogleMapsDialog() {
+        //creating alert dialog
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        //prompting user whether to opem google maps
+        builder.setMessage("Open Google Maps?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() { //yes
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        //creating google maps route uri
+                        String latitude = String.valueOf(marker.getPosition().latitude);
+                        String longitude = String.valueOf(marker.getPosition().longitude);
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude);
+                        //passing in the uri to google maps
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        try{
+                            if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+                                context.startActivity(mapIntent);
+                            }
+                        }catch (NullPointerException e){
+                            Log.e(TAG, "onClick: NullPointerException: Couldn't open map." + e.getMessage() );
+                        }
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() { //no
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        //close dialog
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(context.getResources().getColor(R.color.transparent));
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setBackgroundColor(context.getResources().getColor(R.color.transparent));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.dark_grey));
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.dark_grey));
     }
 
     public void onResume() {

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageButton all_reviews_link;
     private RecyclerView rvReviews;
     private RecyclerViewHeader header;
+    private Button open_maps;
 
     private ReviewAdapter adapter;
     private RestaurantViewModel model;
@@ -71,6 +73,7 @@ public class DetailsActivity extends AppCompatActivity {
         all_reviews_link = findViewById(R.id.btnAllReviewsLink);
         rvReviews = findViewById(R.id.rvReviews);
         header = findViewById(R.id.header);
+        open_maps = findViewById(R.id.btnOpenMaps);
 
         //recycler view set up
         adapter = new ReviewAdapter(this, reviews);
@@ -79,7 +82,8 @@ public class DetailsActivity extends AppCompatActivity {
         header.attachTo(rvReviews);
 
         setListeners();
-        setupLinkButton();
+        setupReviewLinkButton();
+        setOpenMapsButton();
         bindData();
     }
 
@@ -121,12 +125,22 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
-    public void setupLinkButton() {
+    public void setupReviewLinkButton() {
         all_reviews_link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(yelp_url));
                 startActivity(browserIntent);
+            }
+        });
+    }
+
+    //redirects user to google maps for directions to restaurant location
+    public void setOpenMapsButton() {
+        open_maps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapService.openGoogleMapsDialog();
             }
         });
     }
