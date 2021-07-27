@@ -21,11 +21,17 @@ import android.widget.TextView;
 import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
 import com.codepath.tender.adapters.ReviewAdapter;
+import com.codepath.tender.models.Open;
 import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.models.Review;
 import com.parse.ParseUser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.codepath.tender.Constants.RESTAURANT_INTENT_KEY;
@@ -46,6 +52,9 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView location;
     private TextView other_users;
     private ImageButton all_reviews_link;
+    private TextView hours;
+
+
     private RecyclerView rvReviews;
     private RecyclerViewHeader header;
     private Button open_maps;
@@ -79,6 +88,7 @@ public class DetailsActivity extends AppCompatActivity {
         price = findViewById(R.id.tvPriceDetails);
         other_users = findViewById(R.id.tvOtherUsers);
         all_reviews_link = findViewById(R.id.btnAllReviewsLink);
+        hours = findViewById(R.id.tvHoursDetails);
         rvReviews = findViewById(R.id.rvReviews);
         header = findViewById(R.id.header);
         open_maps = findViewById(R.id.btnOpenMaps);
@@ -122,6 +132,11 @@ public class DetailsActivity extends AppCompatActivity {
 
                 yelp_url = restaurant.getUrl();
                 mapService.setMarker(restaurant.getCoordinates().getLatitude(), restaurant.getCoordinates().getLongitude(), restaurant.getName());
+                try {
+                    setTodaysHours(restaurant);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -198,6 +213,27 @@ public class DetailsActivity extends AppCompatActivity {
             sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 14+username.length(), final_string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             other_users.setText(sb, TextView.BufferType.SPANNABLE);
         }
+    }
+
+    public void setTodaysHours(Restaurant restaurant) throws ParseException {
+        //calculate todays week day as int: mon = 0, tue = 1, etc
+        int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-2;
+        if(today == -1) today = 6;
+        for(int i = 0; i<restaurant.getHours()[0].getOpen().length; i++){
+            Open open = restaurant.getHours()[0].getOpen()[i];
+            if(open.getDay() == today) {
+                hours.setText(getDisplayTime(open.getStart()) + " - " + getDisplayTime(open.getEnd()));
+            }
+        }
+    }
+
+    //coverts 4-digit military time to standard time with AM/PM
+    public String getDisplayTime(String time) throws ParseException {
+        DateFormat originalFormat = new SimpleDateFormat("HHmm");
+        DateFormat targetFormat = new SimpleDateFormat("hh:mm a");
+        Date date = originalFormat.parse(time);
+        String formattedDate = targetFormat.format(date);  // 20120821
+        return formattedDate;
     }
 
 
