@@ -17,7 +17,7 @@ public class MenuFragment extends Fragment {
 
     public MenuFragment() {}
 
-    public MenuFragment(Restaurant restaurant) {
+    public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
 

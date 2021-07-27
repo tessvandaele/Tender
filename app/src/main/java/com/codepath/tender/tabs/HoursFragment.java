@@ -32,8 +32,13 @@ public class HoursFragment extends Fragment {
 
     public HoursFragment() {}
 
-    public HoursFragment(Restaurant restaurant) {
+    public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+        try {
+            bindHours();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     //inflate layout
@@ -52,12 +57,6 @@ public class HoursFragment extends Fragment {
         friday = view.findViewById(R.id.tvFriday);
         saturday = view.findViewById(R.id.tvSaturday);
         sunday = view.findViewById(R.id.tvSunday);
-
-        try {
-            bindHours();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     //coverts 4-digit military time to standard time with AM/PM

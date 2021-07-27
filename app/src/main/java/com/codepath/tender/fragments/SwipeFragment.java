@@ -96,6 +96,13 @@ public class SwipeFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager);
 
+        //setting tab layout
+        tabLayout.addTab(tabLayout.newTab().setText("Info"));
+        tabLayout.addTab(tabLayout.newTab().setText("Hours"));
+        tabLayout.addTab(tabLayout.newTab().setText("Menu"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        setTabLayout();
+
         //view model
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
@@ -268,14 +275,9 @@ public class SwipeFragment extends Fragment {
     }
 
     //sets up the tab layout
-    private void setTabLayout(Restaurant restaurant) {
-        tabLayout.addTab(tabLayout.newTab().setText("Info"));
-        tabLayout.addTab(tabLayout.newTab().setText("Hours"));
-        tabLayout.addTab(tabLayout.newTab().setText("Menu"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+    private void setTabLayout() {
         viewPagerAdapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
                 tabLayout.getTabCount());
-        viewPagerAdapter.setRestaurant(restaurant);
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

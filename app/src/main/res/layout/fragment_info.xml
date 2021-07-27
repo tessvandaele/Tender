@@ -24,8 +24,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginBottom="0dp"
         android:layout_toEndOf="@+id/ivLocationInfo"
-        android:text="100 Main Street, Austin, TX"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        tools:text="100 Main Street, Austin, TX" />
 
     <TextView
         android:id="@+id/tvDistanceInfo"
@@ -35,8 +35,8 @@
         android:layout_alignStart="@+id/tvAddressInfo"
         android:layout_marginStart="0dp"
         android:layout_marginTop="5dp"
-        android:text="1.5 mi"
-        android:textColor="@color/dark_grey" />
+        android:textColor="@color/dark_grey"
+        tools:text="1.5 mi" />
 
     <View
         android:id="@+id/divider6"
@@ -67,8 +67,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginBottom="0dp"
         android:layout_toEndOf="@+id/ivPhoneInfo"
-        android:text="(512) 123 - 4567"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        tools:text="(512) 123 - 4567" />
 
     <View
         android:id="@+id/divider7"

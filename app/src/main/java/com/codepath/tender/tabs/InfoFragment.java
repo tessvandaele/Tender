@@ -23,8 +23,9 @@ public class InfoFragment extends Fragment {
 
     public InfoFragment() {}
 
-    public InfoFragment(Restaurant restaurant) {
+    public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+        bind();
     }
 
     //inflate layout
@@ -40,7 +41,9 @@ public class InfoFragment extends Fragment {
         distance = view.findViewById(R.id.tvDistanceInfo);
         display_phone = view.findViewById(R.id.tvPhoneInfo);
         website = view.findViewById(R.id.tvWebsiteInfo);
+    }
 
+    public void bind() {
         address.setText(getAddressString());
         distance.setText(restaurant.getDisplayDistance());
         display_phone.setText(restaurant.getDisplay_phone());

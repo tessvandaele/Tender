@@ -16,15 +16,24 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     int totalTabs;
     private Restaurant restaurant;
 
+    private InfoFragment infoFragment;
+    private HoursFragment hoursFragment;
+    private MenuFragment menuFragment;
+
     public ViewPagerAdapter(Context c, FragmentManager fm, int totalTabs) {
         super(fm);
         context = c;
         this.totalTabs = totalTabs;
-        this.restaurant = null;
+        infoFragment = new InfoFragment();
+        hoursFragment = new HoursFragment();
+        menuFragment = new MenuFragment();
     }
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+        infoFragment.setRestaurant(restaurant);
+        hoursFragment.setRestaurant(restaurant);
+        menuFragment.setRestaurant(restaurant);
     }
 
 
@@ -32,13 +41,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: //info fragment
-                return new InfoFragment(restaurant);
+                return infoFragment;
             case 1: //hours fragment
-                return new HoursFragment(restaurant);
+                return hoursFragment;
             case 2: //menu fragment
-                return new MenuFragment(restaurant);
+                return menuFragment;
             default:
-                return new InfoFragment(restaurant);
+                return infoFragment;
         }
     }
 
