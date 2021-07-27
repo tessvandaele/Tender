@@ -53,7 +53,6 @@ public class SwipeFragment extends Fragment {
     private ImageButton ibUp;
     private ImageButton ibDown;
     private TextView nameSheet;
-    private TextView distanceSheet;
     private RatingBar ratingBarSheet;
     private TextView reviewCount;
     private TextView price;
@@ -61,6 +60,7 @@ public class SwipeFragment extends Fragment {
     //tab layout in bottom sheet
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
 
     private RestaurantViewModel model;
     private int offset;
@@ -87,7 +87,6 @@ public class SwipeFragment extends Fragment {
         ibUp = view.findViewById(R.id.ibUp);
         ibDown = view.findViewById(R.id.ibDown);
         nameSheet = view.findViewById(R.id.tvNameSheet);
-        distanceSheet = view.findViewById(R.id.tvDistanceInfo);
         ratingBarSheet = view.findViewById(R.id.ratingBarSheet);
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
@@ -116,7 +115,6 @@ public class SwipeFragment extends Fragment {
 
         setAutomatedSwiping();
         setBottomSheet();
-        setTabLayout();
     }
 
     private void initializeLayoutManager() {
@@ -170,7 +168,6 @@ public class SwipeFragment extends Fragment {
     private void populateBottomSheet(int position) {
         ArrayList<Restaurant> restaurants = model.getRestaurants();
         nameSheet.setText(restaurants.get(position).getName());
-        distanceSheet.setText(restaurants.get(position).getDisplayDistance());
         ratingBarSheet.setRating((float) restaurants.get(position).getRating());
         reviewCount.setText(restaurants.get(position).getReview_count() + " reviews");
         price.setText(restaurants.get(position).getPrice());
@@ -218,6 +215,7 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 model.getRestaurantDetails(model.getRestaurants().get(layoutManager.getTopPosition()).getId());
+                setTabLayout();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
@@ -272,9 +270,10 @@ public class SwipeFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("Hours"));
         tabLayout.addTab(tabLayout.newTab().setText("Menu"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
+        viewPagerAdapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
                 tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
+        viewPagerAdapter.setRestaurant(model.getRestaurants().get(layoutManager.getTopPosition()));
+        viewPager.setAdapter(viewPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

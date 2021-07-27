@@ -9,10 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.tender.R;
+import com.codepath.tender.models.Restaurant;
 
 public class MenuFragment extends Fragment {
 
+    private Restaurant restaurant;
+
     public MenuFragment() {}
+
+    public MenuFragment(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
 
     //inflate layout
     @Override
