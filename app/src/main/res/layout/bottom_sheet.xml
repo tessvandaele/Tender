@@ -109,65 +109,38 @@
                 android:layout_toEndOf="@+id/ratingBarSheet"
                 tools:text="324 Reviews" />
 
+            <TextView
+                android:id="@+id/tvPriceSheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ibDown"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/main_color"
+                tools:text="$$" />
+
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/main_color"
-                android:layout_below="@+id/divider3">
-            </com.google.android.material.tabs.TabLayout>
+                android:layout_below="@+id/divider3"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="#0066C0CC"
+                app:tabSelectedTextColor="@color/main_color"
+                app:tabTextColor="@color/grey"></com.google.android.material.tabs.TabLayout>
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tabLayout"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="100dp"
+                android:layout_below="@+id/tabLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
                 tools:layout_editor_absoluteX="8dp" />
-
-            <TextView
-                android:id="@+id/tvPhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/imageView"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="0dp"
-                android:layout_toEndOf="@+id/imageView"
-                android:text="phone_number"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/divider3"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="70dp"
-                android:layout_marginBottom="0dp"
-                app:srcCompat="@drawable/ic_phone_grey" />
-
-            <TextView
-                android:id="@+id/tvHours"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
-                android:text="Hours:" />
-
-            <TextView
-                android:id="@+id/tvPriceSheet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="22dp"
-                android:layout_marginBottom="95dp"
-                android:textColor="@color/main_color"
-                tools:text="$$" />
 
         </RelativeLayout>
 

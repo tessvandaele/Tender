@@ -58,6 +58,7 @@ public class SwipeFragment extends Fragment {
     private TextView reviewCount;
     private TextView price;
 
+    //tab layout in bottom sheet
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -90,7 +91,6 @@ public class SwipeFragment extends Fragment {
         ratingBarSheet = view.findViewById(R.id.ratingBarSheet);
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
-
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager);
 
@@ -266,10 +266,11 @@ public class SwipeFragment extends Fragment {
         });
     }
 
+    //sets up the tab layout
     private void setTabLayout() {
-        tabLayout.addTab(tabLayout.newTab().setText("Football"));
-        tabLayout.addTab(tabLayout.newTab().setText("Cricket"));
-        tabLayout.addTab(tabLayout.newTab().setText("NBA"));
+        tabLayout.addTab(tabLayout.newTab().setText("Info"));
+        tabLayout.addTab(tabLayout.newTab().setText("Hours"));
+        tabLayout.addTab(tabLayout.newTab().setText("Menu"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
                 tabLayout.getTabCount());
