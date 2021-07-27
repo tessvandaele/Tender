@@ -1,14 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".tabs.InfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Info fragment" />
+    <ImageView
+        android:id="@+id/ivLocationInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_location_grey" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tvAddressInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ivLocationInfo"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/ivLocationInfo"
+        android:text="100 Main Street, Austin, TX"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvDistanceInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAddressInfo"
+        android:layout_alignStart="@+id/tvAddressInfo"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="5dp"
+        android:text="1.5 mi"
+        android:textColor="@color/dark_grey" />
+
+    <View
+        android:id="@+id/divider6"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvDistanceInfo"
+        android:layout_alignParentStart="true"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:background="?android:attr/listDivider" />
+
+    <ImageView
+        android:id="@+id/ivPhoneInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider6"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_phone_grey"
+        app:tint="@color/main_color" />
+
+    <TextView
+        android:id="@+id/tvPhoneInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ivPhoneInfo"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/ivPhoneInfo"
+        android:text="(512) 123 - 4567"
+        android:textColor="@color/black" />
+
+    <View
+        android:id="@+id/divider7"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvPhoneInfo"
+        android:layout_alignParentStart="true"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider" />
+
+    <ImageView
+        android:id="@+id/ivLinkInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider7"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_link_chain"
+        app:tint="@color/main_color" />
+
+    <TextView
+        android:id="@+id/tvWebsiteInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ivLinkInfo"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/ivLinkInfo"
+        android:textColor="@color/black"
+        tools:text="www.website.com" />
+</RelativeLayout>

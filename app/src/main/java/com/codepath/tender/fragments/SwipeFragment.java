@@ -87,7 +87,7 @@ public class SwipeFragment extends Fragment {
         ibUp = view.findViewById(R.id.ibUp);
         ibDown = view.findViewById(R.id.ibDown);
         nameSheet = view.findViewById(R.id.tvNameSheet);
-        distanceSheet = view.findViewById(R.id.tvDistanceSheet);
+        distanceSheet = view.findViewById(R.id.tvDistanceInfo);
         ratingBarSheet = view.findViewById(R.id.ratingBarSheet);
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
