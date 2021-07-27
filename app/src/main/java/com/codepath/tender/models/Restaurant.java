@@ -26,6 +26,7 @@ public class Restaurant extends ParseObject {
     //for details api only
     private String display_phone;
     private Hours[] hours;
+    private String[] photos;
 
     public Restaurant() {}
 
@@ -72,6 +73,8 @@ public class Restaurant extends ParseObject {
     public String getDisplay_phone() { return display_phone; }
 
     public Hours[] getHours() { return hours; }
+
+    public String[] getPhotos() { return photos; }
 
     public void setId(String id) {
         this.id = id;
@@ -122,6 +125,8 @@ public class Restaurant extends ParseObject {
     }
 
     public void setHours(Hours[] hours) { this.hours = hours;}
+
+    public void setPhotos(String[] photos) { this.photos = photos; }
 
     //helper method that returns a display string of the distance in miles
     public String getDisplayDistance() {

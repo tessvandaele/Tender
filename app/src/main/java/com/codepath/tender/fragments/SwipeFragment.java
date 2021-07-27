@@ -99,7 +99,7 @@ public class SwipeFragment extends Fragment {
         //setting tab layout
         tabLayout.addTab(tabLayout.newTab().setText("Info"));
         tabLayout.addTab(tabLayout.newTab().setText("Hours"));
-        tabLayout.addTab(tabLayout.newTab().setText("Menu"));
+        tabLayout.addTab(tabLayout.newTab().setText("Gallery"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         setTabLayout();
 
