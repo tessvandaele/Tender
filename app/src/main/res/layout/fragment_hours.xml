@@ -1,14 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="220dp"
+    android:layout_weight="2"
     tools:context=".tabs.HoursFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/linearLayoutDays"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hours fragment" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="0dp"
+        android:layout_toStartOf="@+id/centerShim"
+        android:orientation="vertical"
+        android:padding="0dp">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/monday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Monday"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tuesday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Tuesday"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/wednesday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Wednesday"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/thursday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Thursday"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/friday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Friday"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/saturday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Saturday"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/sunday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Sunday"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/centerShim"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutTimes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@+id/centerShim"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvMonday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="closed"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvTuesday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="closed"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvWednesday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="closed"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvThursday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="closed"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvFriday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="closed"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvSaturday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="closed"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/tvSunday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="closed"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black" />
+    </LinearLayout>
+</RelativeLayout>
