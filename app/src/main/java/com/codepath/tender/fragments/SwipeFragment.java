@@ -215,7 +215,6 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 model.getRestaurantDetails(model.getRestaurants().get(layoutManager.getTopPosition()).getId());
-                setTabLayout();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
@@ -230,6 +229,7 @@ public class SwipeFragment extends Fragment {
         model.setRestaurantDetailsListener(new RestaurantRepository.RestaurantDetailsListener() {
             @Override
             public void onFinishDetailsFetch(Restaurant restaurant) {
+                setTabLayout(restaurant);
                 Log.d("Restaurant", restaurant.getName());
             }
         });
@@ -265,14 +265,14 @@ public class SwipeFragment extends Fragment {
     }
 
     //sets up the tab layout
-    private void setTabLayout() {
+    private void setTabLayout(Restaurant restaurant) {
         tabLayout.addTab(tabLayout.newTab().setText("Info"));
         tabLayout.addTab(tabLayout.newTab().setText("Hours"));
         tabLayout.addTab(tabLayout.newTab().setText("Menu"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPagerAdapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
                 tabLayout.getTabCount());
-        viewPagerAdapter.setRestaurant(model.getRestaurants().get(layoutManager.getTopPosition()));
+        viewPagerAdapter.setRestaurant(restaurant);
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
