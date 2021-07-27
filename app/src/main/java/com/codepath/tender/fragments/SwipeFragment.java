@@ -1,5 +1,6 @@
 package com.codepath.tender.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,6 +57,7 @@ public class SwipeFragment extends Fragment {
     private RatingBar ratingBarSheet;
     private TextView reviewCount;
     private TextView price;
+    private TextView open;
 
     //tab layout in bottom sheet
     private TabLayout tabLayout;
@@ -90,6 +92,7 @@ public class SwipeFragment extends Fragment {
         ratingBarSheet = view.findViewById(R.id.ratingBarSheet);
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
+        open = view.findViewById(R.id.tvOpenOrClosed);
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager);
 
@@ -229,8 +232,8 @@ public class SwipeFragment extends Fragment {
         model.setRestaurantDetailsListener(new RestaurantRepository.RestaurantDetailsListener() {
             @Override
             public void onFinishDetailsFetch(Restaurant restaurant) {
-                setTabLayout(restaurant);
-                Log.d("Restaurant", restaurant.getName());
+                viewPagerAdapter.setRestaurant(restaurant);
+                setOpenOrClosed(restaurant);
             }
         });
     }
@@ -287,5 +290,16 @@ public class SwipeFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+    }
+
+    //sets textview to be closed/red when restaurant is closed and open/green when it is open
+    private void setOpenOrClosed(Restaurant restaurant) {
+        if(restaurant.getHours()[0].isIs_open_now()){
+            open.setText("Open");
+            open.setTextColor(Color.parseColor("#4fa64f"));
+        } else {
+            open.setText("Closed");
+            open.setTextColor(Color.parseColor("#ed2939"));
+        }
     }
 }
