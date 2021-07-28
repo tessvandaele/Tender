@@ -5,13 +5,14 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.tabs.HoursFragment;
 import com.codepath.tender.tabs.InfoFragment;
 import com.codepath.tender.tabs.GalleryFragment;
 
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     Context context;
     int totalTabs;
 

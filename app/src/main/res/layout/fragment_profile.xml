@@ -1,162 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.ProfileFragment">
 
-    <ImageButton
-        android:id="@+id/ibLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="#00FFFFFF"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:src="@drawable/ic_logout" />
-
-    <ImageView
-        android:id="@+id/ivProfileImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
-        app:srcCompat="@drawable/profile_sample"
-        tools:src="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/tvProfileUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivProfileImage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
-        tools:text="tess_vandaele" />
-
-    <TextView
-        android:id="@+id/tvLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvProfileUsername"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        tools:text="1907.56 | 3056.23" />
-
-    <View
-        android:id="@+id/divider2"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/tvLocation"
-        android:layout_margin="20dp"
-        android:layout_marginTop="20dp"
-        android:background="?android:attr/listDivider" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/max_distance_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider2"
-        android:layout_marginStart="20dp"
-        android:text="Maximum Distance" />
-
-    <SeekBar
-        android:id="@+id/barRadius"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/max_distance_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:max="25"
-        android:progress="10"
-        android:progressTint="@color/main_color"
-        android:secondaryProgressTint="@color/main_color"
-        android:thumbTint="@color/main_color" />
-
-    <TextView
-        android:id="@+id/tvRadius"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider2"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="22dp"
-        android:text="10 mi"
-        android:textColor="@android:color/darker_gray" />
-
-    <View
-        android:id="@+id/divider4"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/barRadius"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
-        android:background="?android:attr/listDivider" />
-
-    <TextView
-        android:id="@+id/price_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/divider4"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="Prices" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/priceChips"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/price_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipPrice1"
-            style="@style/CustomChipChoice"
+        <ImageButton
+            android:id="@+id/ibLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checkable="true"
-            android:text="$"
-            android:textAlignment="center"
-            app:checkedIconEnabled="false" />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#00FFFFFF"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:src="@drawable/ic_logout" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipPrice2"
-            style="@style/CustomChipChoice"
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="120dp"
+            app:srcCompat="@drawable/profile_sample"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvProfileUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$$"
-            android:textAlignment="center" />
+            android:layout_below="@+id/ivProfileImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            tools:text="tess_vandaele" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipPrice3"
-            style="@style/CustomChipChoice"
+        <TextView
+            android:id="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="$$$"
-            android:textAlignment="center" />
+            android:layout_below="@+id/tvProfileUsername"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            tools:text="1907.56 | 3056.23" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipPrice4"
-            style="@style/CustomChipChoice"
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tvLocation"
+            android:layout_margin="20dp"
+            android:layout_marginTop="20dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/max_distance_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$$$$"
-            android:textAlignment="center" />
-    </com.google.android.material.chip.ChipGroup>
+            android:layout_below="@+id/divider2"
+            android:layout_marginStart="20dp"
+            android:text="Maximum Distance" />
 
-</RelativeLayout>
+        <SeekBar
+            android:id="@+id/barRadius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/max_distance_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:max="25"
+            android:progress="10"
+            android:progressTint="@color/main_color"
+            android:secondaryProgressTint="@color/main_color"
+            android:thumbTint="@color/main_color" />
+
+        <TextView
+            android:id="@+id/tvRadius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider2"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="22dp"
+            android:text="10 mi"
+            android:textColor="@android:color/darker_gray" />
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/barRadius"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/price_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider4"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Prices" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/priceChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/price_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPrice1"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="$"
+                android:textAlignment="center"
+                app:checkedIconEnabled="false" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPrice2"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$$"
+                android:textAlignment="center" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPrice3"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="$$$"
+                android:textAlignment="center" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPrice4"
+                style="@style/CustomChipChoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$$$$"
+                android:textAlignment="center" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <View
+            android:id="@+id/divider9"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/priceChips"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/categoriesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider9"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Cuisine" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/categoryChips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/categoriesText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/pizza"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="pizza"
+                app:checkedIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/mexican"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="mexican"
+                app:checkedIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chinese"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="chinese"
+                app:checkedIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/burgers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="burgers"
+                app:checkedIconVisible="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/seafood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="seafood"
+                app:chipIconVisible="true" />
+        </com.google.android.material.chip.ChipGroup>
+
+    </RelativeLayout>
+
+</ScrollView>
