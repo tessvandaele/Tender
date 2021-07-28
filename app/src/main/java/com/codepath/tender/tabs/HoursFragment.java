@@ -76,6 +76,9 @@ public class HoursFragment extends Fragment {
 
     //binds the hours data of the restaurant to hours tab
     public void bindHours() throws ParseException {
+        if(restaurant.getHours() == null) {
+            return;
+        }
         Open[] hours = restaurant.getHours()[0].getOpen();
         for(int i = 0; i<hours.length; i++) {
             int day = hours[i].getDay();

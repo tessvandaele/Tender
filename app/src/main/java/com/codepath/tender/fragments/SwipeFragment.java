@@ -308,6 +308,7 @@ public class SwipeFragment extends Fragment {
 
     //sets textview to be closed/red when restaurant is closed and open/green when it is open
     private void setOpenOrClosed(Restaurant restaurant) {
+        if(restaurant.getHours() == null) return;
         if(restaurant.getHours()[0].isIs_open_now()){
             open.setText("Open");
             open.setTextColor(Color.parseColor("#4fa64f"));
