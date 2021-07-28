@@ -115,8 +115,8 @@ public class RestaurantRepository {
     }
 
     //run GET request to Yelp API and send resulting list to swipe fragment through listener
-    public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices) {
-        yelpService.getRestaurants("Bearer " + API_KEY, latitude, longitude, limit, offset, radius, prices).enqueue(new Callback<YelpSearchResult>() {
+    public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices, String categories) {
+        yelpService.getRestaurants("Bearer " + API_KEY, latitude, longitude, limit, offset, radius, prices, categories).enqueue(new Callback<YelpSearchResult>() {
             @Override
             public void onResponse(Call<YelpSearchResult> call, Response<YelpSearchResult> response) {
                 YelpSearchResult searchResult = response.body();

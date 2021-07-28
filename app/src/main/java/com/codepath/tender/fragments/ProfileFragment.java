@@ -230,8 +230,8 @@ public class ProfileFragment extends Fragment {
                         if(buttonView.getText().equals(CATEGORY_FOUR)) categories[3] = false;
                         if(buttonView.getText().equals(CATEGORY_FIVE)) categories[4] = false;
                     }
-                    //userViewModel.setPrices(getPriceString());
                     String categoryString = getCategoryString();
+                    userViewModel.setCategories(categoryString);
                     ParseUser.getCurrentUser().put(CATEGORIES_KEY, categoryString);
                     ParseUser.getCurrentUser().saveInBackground();
                 }

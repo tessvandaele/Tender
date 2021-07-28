@@ -22,7 +22,8 @@ public interface YelpService {
             @Query("limit") int limit, //limit number of restaurants fetched
             @Query("offset") int offset, //offset for where to start retrieval
             @Query("radius") int radius,
-            @Query("price") String prices);
+            @Query("price") String prices,
+            @Query("categories") String categories);
 
     @GET("businesses/{id}")
     Call<Restaurant> getRestaurantDetails(

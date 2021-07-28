@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         liveDataMerger.addSource(userViewModel.getPrices(), value -> liveDataMerger.setValue(value));
         liveDataMerger.addSource(userViewModel.getLatitude(), value -> liveDataMerger.setValue(value));
         liveDataMerger.addSource(userViewModel.getLongitude(), value -> liveDataMerger.setValue(value));
+        liveDataMerger.addSource(userViewModel.getCategories(), value -> liveDataMerger.setValue(value));
         liveDataMerger.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
@@ -98,10 +99,10 @@ public class MainActivity extends AppCompatActivity {
         //fetch restaurants
         double latitude = userViewModel.getLatitude().getValue();
         double longitude = userViewModel.getLongitude().getValue();
-        int limit = 30;
         int radius = userViewModel.getRadius().getValue() * 1609;
         String prices = userViewModel.getPrices().getValue();
-        restaurantViewModel.fetchRestaurants(latitude, longitude, limit, restaurantViewModel.getOffset(), radius, prices);
+        String categories = userViewModel.getCategories().getValue();
+        restaurantViewModel.fetchRestaurants(latitude, longitude, 30, 0, radius, prices, categories);
     }
 
     @Override

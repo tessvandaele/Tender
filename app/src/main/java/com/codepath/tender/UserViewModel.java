@@ -7,12 +7,18 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import com.parse.ParseUser;
 
+import static com.codepath.tender.Constants.CATEGORIES_KEY;
+import static com.codepath.tender.Constants.LATITUDE_KEY;
+import static com.codepath.tender.Constants.LONGITUDE_KEY;
+import static com.codepath.tender.Constants.PRICES_KEY;
+
 public class UserViewModel extends AndroidViewModel {
 
     private MutableLiveData<Integer> radius;
     private MutableLiveData<String> prices;
     private MutableLiveData<Double> latitude;
     private MutableLiveData<Double> longitude;
+    private MutableLiveData<String> categories;
 
     public UserViewModel(@NonNull Application application) {
         super(application);
@@ -42,6 +48,12 @@ public class UserViewModel extends AndroidViewModel {
         }
         this.longitude.setValue(longitude);
     }
+    public void setCategories(String categories) {
+        if(this.categories == null) {
+            this.categories = new MutableLiveData<>();
+        }
+        this.categories.setValue(categories);
+    }
 
     public MutableLiveData<Integer> getRadius() {
         if(radius == null) {
@@ -53,22 +65,29 @@ public class UserViewModel extends AndroidViewModel {
     public MutableLiveData<String> getPrices() {
         if(prices == null) {
             this.prices = new MutableLiveData<>();
-            this.prices.setValue(ParseUser.getCurrentUser().getString("prices"));
+            this.prices.setValue(ParseUser.getCurrentUser().getString(PRICES_KEY));
         }
         return prices;
     }
     public MutableLiveData<Double> getLatitude() {
         if(latitude == null) {
             latitude = new MutableLiveData<>();
-            latitude.setValue(ParseUser.getCurrentUser().getDouble("latitude"));
+            latitude.setValue(ParseUser.getCurrentUser().getDouble(LATITUDE_KEY));
         }
         return latitude;
     }
     public MutableLiveData<Double> getLongitude() {
         if(longitude == null) {
             longitude = new MutableLiveData<>();
-            longitude.setValue(ParseUser.getCurrentUser().getDouble("longitude"));
+            longitude.setValue(ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY));
         }
         return longitude;
+    }
+    public MutableLiveData<String> getCategories() {
+        if(categories == null) {
+            this.categories = new MutableLiveData<>();
+            this.categories.setValue(ParseUser.getCurrentUser().getString(CATEGORIES_KEY));
+        }
+        return categories;
     }
 }
