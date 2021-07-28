@@ -21,6 +21,7 @@ import com.codepath.tender.RestaurantRepository;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.adapters.ViewPagerAdapter;
+import com.codepath.tender.models.Categories;
 import com.codepath.tender.models.Restaurant;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
@@ -58,6 +59,7 @@ public class SwipeFragment extends Fragment {
     private TextView reviewCount;
     private TextView price;
     private TextView open;
+    private TextView categories;
 
     //tab layout in bottom sheet
     private TabLayout tabLayout;
@@ -91,6 +93,7 @@ public class SwipeFragment extends Fragment {
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
         open = view.findViewById(R.id.tvOpenOrClosed);
+        categories = view.findViewById(R.id.tvCategoriesSheet);
 
         //tab layout
         tabLayout = view.findViewById(R.id.tabLayout);
@@ -179,6 +182,13 @@ public class SwipeFragment extends Fragment {
         ratingBarSheet.setRating((float) restaurants.get(position).getRating());
         reviewCount.setText(restaurants.get(position).getReview_count() + " reviews");
         price.setText(restaurants.get(position).getPrice());
+
+        String categoriesString = "";
+        Categories[] categories_array = restaurants.get(position).getCategories();
+        for(int i = 0; i<categories_array.length; i++) {
+            categoriesString += categories_array[i].getTitle() + ", ";
+        }
+        categories.setText(categoriesString.substring(0, categoriesString.length() - 2));
     }
 
     //set up automated swiping

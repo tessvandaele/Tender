@@ -118,7 +118,18 @@
                 android:layout_below="@+id/ratingBarSheet"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                tools:text="Open" />
+
+            <TextView
+                android:id="@+id/tvCategoriesSheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tvOpenOrClosed"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/tvOpenOrClosed"
+                tools:text="American, Sandwiches" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
