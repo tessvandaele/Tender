@@ -3,6 +3,7 @@ package com.codepath.tender.tabs;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.Open;
 import com.codepath.tender.models.Restaurant;
 
@@ -30,16 +32,9 @@ public class HoursFragment extends Fragment {
     private TextView saturday;
     private TextView sunday;
 
-    public HoursFragment() {}
+    private RestaurantViewModel model;
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-        try {
-            bindHours();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
+    public HoursFragment() {}
 
     //inflate layout
     @Override
@@ -57,6 +52,17 @@ public class HoursFragment extends Fragment {
         friday = view.findViewById(R.id.tvFriday);
         saturday = view.findViewById(R.id.tvSaturday);
         sunday = view.findViewById(R.id.tvSunday);
+
+        model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+
+        model.getCurrent_restaurant().observe(getViewLifecycleOwner(), restaurant1 -> {
+            this.restaurant = restaurant1;
+            try {
+                bindHours();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     //coverts 4-digit military time to standard time with AM/PM

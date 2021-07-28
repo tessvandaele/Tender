@@ -28,13 +28,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         galleryFragment = new GalleryFragment();
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        infoFragment.setRestaurant(restaurant);
-        hoursFragment.setRestaurant(restaurant);
-        galleryFragment.setRestaurant(restaurant);
-    }
-
-
     @Override
     public Fragment getItem(int position) {
         switch (position) {

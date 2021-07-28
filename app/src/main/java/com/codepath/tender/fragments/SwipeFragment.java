@@ -93,41 +93,28 @@ public class SwipeFragment extends Fragment {
         reviewCount = view.findViewById(R.id.tvReviewCountSheet);
         price = view.findViewById(R.id.tvPriceSheet);
         open = view.findViewById(R.id.tvOpenOrClosed);
+
+        //tab layout
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager);
-
-        //setting tab layout
-        tabLayout.addTab(tabLayout.newTab().setText("Info"));
-        tabLayout.addTab(tabLayout.newTab().setText("Hours"));
-        tabLayout.addTab(tabLayout.newTab().setText("Gallery"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         setTabLayout();
 
         //view model
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
+        initializeLayoutManager();
+        setLayoutManagerProperties();
+
         //setting the bottom sheet behavior
         LinearLayout linearLayout = view.findViewById(R.id.design_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
-        initializeLayoutManager();
-        setLayoutManagerProperties();
-
+        //setting offset and position from view model
         offset = model.getOffset();
         layoutManager.setTopPosition(model.getTopPosition());
 
         setFetchListener();
-
-        adapter = new CardStackAdapter(getContext(), model.getRestaurants().getValue());
-        cardStackView.setLayoutManager(layoutManager);
-        cardStackView.setAdapter(adapter);
-        cardStackView.setItemAnimator(new DefaultItemAnimator());
-
-        model.getRestaurants().observe(getViewLifecycleOwner(), words -> {
-            // Update the cached copy of the words in the adapter.
-            adapter.setRestaurants(model.getRestaurants().getValue());
-        });
-
+        setCardStackAdapter();
         setAutomatedSwiping();
         setBottomSheet();
     }
@@ -168,6 +155,19 @@ public class SwipeFragment extends Fragment {
             //called when a card disappears
             @Override
             public void onCardDisappeared(View view, int position) { }
+        });
+    }
+
+    //creates the card stack adapter and sets up the stack view
+    private void setCardStackAdapter() {
+        adapter = new CardStackAdapter(getContext(), model.getRestaurants().getValue());
+        cardStackView.setLayoutManager(layoutManager);
+        cardStackView.setAdapter(adapter);
+        cardStackView.setItemAnimator(new DefaultItemAnimator());
+
+        model.getRestaurants().observe(getViewLifecycleOwner(), restaurants -> {
+            // Update the cached copy of the words in the adapter.
+            adapter.setRestaurants(restaurants);
         });
     }
 
@@ -244,7 +244,7 @@ public class SwipeFragment extends Fragment {
         model.setRestaurantDetailsListener(new RestaurantRepository.RestaurantDetailsListener() {
             @Override
             public void onFinishDetailsFetch(Restaurant restaurant) {
-                viewPagerAdapter.setRestaurant(restaurant);
+                model.setRestaurant(restaurant);
                 setOpenOrClosed(restaurant);
             }
         });
@@ -280,10 +280,15 @@ public class SwipeFragment extends Fragment {
 
     //sets up the tab layout
     private void setTabLayout() {
+        tabLayout.addTab(tabLayout.newTab().setText("Info"));
+        tabLayout.addTab(tabLayout.newTab().setText("Hours"));
+        tabLayout.addTab(tabLayout.newTab().setText("Gallery"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPagerAdapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
                 tabLayout.getTabCount());
         viewPager.setAdapter(viewPagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

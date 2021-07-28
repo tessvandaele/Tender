@@ -20,6 +20,8 @@ public class RestaurantViewModel extends AndroidViewModel {
     private int topPosition;
     private int offset;
 
+    private MutableLiveData<Restaurant> current_restaurant;
+
 
     private MutableLiveData<Integer> radius;
     private MutableLiveData<String> prices;
@@ -31,6 +33,7 @@ public class RestaurantViewModel extends AndroidViewModel {
         super(application);
         repository = new RestaurantRepository();
         restaurants = new MutableLiveData<>();
+        current_restaurant = new MutableLiveData<>();
 
         //initializing restaurants arraylist
         ArrayList<Restaurant> temp = new ArrayList<>();
@@ -95,6 +98,9 @@ public class RestaurantViewModel extends AndroidViewModel {
         this.longitude.setValue(longitude);
     }
 
+    public void setRestaurant(Restaurant restaurant) {
+        this.current_restaurant.setValue(restaurant);
+    }
 
     public int getOffset() {
         return offset;
@@ -134,6 +140,10 @@ public class RestaurantViewModel extends AndroidViewModel {
             longitude.setValue(ParseUser.getCurrentUser().getDouble("longitude"));
         }
         return longitude;
+    }
+
+    public MutableLiveData<Restaurant> getCurrent_restaurant() {
+        return current_restaurant;
     }
 
     public void addAllRestaurants(List<Restaurant> restaurants) {

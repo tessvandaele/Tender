@@ -3,6 +3,7 @@ package com.codepath.tender.tabs;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.Restaurant;
 
 public class InfoFragment extends Fragment {
@@ -21,12 +23,9 @@ public class InfoFragment extends Fragment {
     private TextView display_phone;
     private TextView website;
 
-    public InfoFragment() {}
+    private RestaurantViewModel model;
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-        bind();
-    }
+    public InfoFragment() {}
 
     //inflate layout
     @Override
@@ -41,6 +40,15 @@ public class InfoFragment extends Fragment {
         distance = view.findViewById(R.id.tvDistanceInfo);
         display_phone = view.findViewById(R.id.tvPhoneInfo);
         website = view.findViewById(R.id.tvWebsiteInfo);
+
+        model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+
+        model.getCurrent_restaurant().observe(getViewLifecycleOwner(), restaurant -> {
+            this.restaurant = restaurant;
+            bind();
+        });
+
+
     }
 
     public void bind() {
