@@ -32,6 +32,14 @@ import com.parse.ParseUser;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.codepath.tender.Constants.CATEGORIES_KEY;
+import static com.codepath.tender.Constants.CATEGORY_FIVE;
+import static com.codepath.tender.Constants.CATEGORY_FOUR;
+import static com.codepath.tender.Constants.CATEGORY_ONE;
+import static com.codepath.tender.Constants.CATEGORY_THREE;
+import static com.codepath.tender.Constants.CATEGORY_TWO;
+import static com.codepath.tender.Constants.LATITUDE_KEY;
+import static com.codepath.tender.Constants.LONGITUDE_KEY;
 import static com.codepath.tender.Constants.PRICES_KEY;
 import static com.codepath.tender.Constants.RADIUS_KEY;
 
@@ -45,8 +53,10 @@ public class ProfileFragment extends Fragment {
     private SeekBar barRadius;
     private TextView tvRadius;
     private ChipGroup priceChips;
+    private ChipGroup categoryChips;
 
     private boolean[] prices;
+    private boolean[] categories;
 
     private UserViewModel userViewModel;
 
@@ -62,6 +72,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         prices = new boolean[] {false, false, false, false};
+        categories = new boolean[] {false, false, false, false, false};
 
         ibLogout = view.findViewById(R.id.ibLogout);
         tvUsername = view.findViewById(R.id.tvProfileUsername);
@@ -69,18 +80,23 @@ public class ProfileFragment extends Fragment {
         barRadius = view.findViewById(R.id.barRadius);
         tvRadius = view.findViewById(R.id.tvRadius);
         priceChips = view.findViewById(R.id.priceChips);
+        categoryChips = view.findViewById(R.id.categoryChips);
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)));
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
-        tvLocation.setText(ParseUser.getCurrentUser().getDouble("latitude") + " | " + ParseUser.getCurrentUser().getDouble("longitude"));
+        tvLocation.setText(ParseUser.getCurrentUser().getDouble(LATITUDE_KEY) + " | " + ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY));
 
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
         setLogout();
-        setChips();
+
+        setPriceChipsData();
+        setCategoryChipsData();
+
         setStatusBarListener();
-        setChipListener();
+        setPriceChipsListener();
+        setCategoryChipsListener();
     }
 
     //sets up the log out button to allow user to log out
@@ -99,7 +115,7 @@ public class ProfileFragment extends Fragment {
     }
 
     //sets the price chips to the correct setting based on user preference
-    public void setChips() {
+    public void setPriceChipsData() {
         List<String> user_prices = Arrays.asList(ParseUser.getCurrentUser().getString(PRICES_KEY).split(", "));
         //initialize price chips
         for(int i = 0; i<user_prices.size(); i++){
@@ -109,6 +125,28 @@ public class ProfileFragment extends Fragment {
             chip.setChecked(true);
         }
     }
+
+    //sets the category chips to the correct setting based on user preference
+    public void setCategoryChipsData() {
+        List<String> user_categories = Arrays.asList(ParseUser.getCurrentUser().getString(CATEGORIES_KEY).split(", "));
+        //initialize price chips
+        for(int i = 0; i<user_categories.size(); i++){
+            int category = getCategoryNum(user_categories.get(i));
+            Chip chip = (Chip) categoryChips.getChildAt(category);
+            categories[category] = true;
+            chip.setChecked(true);
+        }
+    }
+
+    private int getCategoryNum(String s) {
+        if(s.equals(CATEGORY_ONE)) return 0;
+        if(s.equals(CATEGORY_TWO)) return 1;
+        if(s.equals(CATEGORY_THREE)) return 2;
+        if(s.equals(CATEGORY_FOUR)) return 3;
+        if(s.equals(CATEGORY_FIVE)) return 4;
+        return 0;
+    }
+
 
     //sets up the status bar listener
     public void setStatusBarListener() {
@@ -130,7 +168,7 @@ public class ProfileFragment extends Fragment {
     }
 
     //sets up the chip listener
-    public void setChipListener() {
+    public void setPriceChipsListener() {
         for (int i = 0; i<priceChips.getChildCount(); i++) {
             Chip chip = (Chip)priceChips.getChildAt(i);
 
@@ -168,5 +206,57 @@ public class ProfileFragment extends Fragment {
             }
         }
         return result.substring(0, result.length()-2);
+    }
+
+    //sets up the chip listener
+    public void setCategoryChipsListener() {
+        for (int i = 0; i<categoryChips.getChildCount(); i++) {
+            Chip chip = (Chip)categoryChips.getChildAt(i);
+
+            // Set the chip checked change listener
+            chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked) {
+                        if(buttonView.getText().equals(CATEGORY_ONE)) categories[0] = true;
+                        if(buttonView.getText().equals(CATEGORY_TWO)) categories[1] = true;
+                        if(buttonView.getText().equals(CATEGORY_THREE)) categories[2] = true;
+                        if(buttonView.getText().equals(CATEGORY_FOUR)) categories[3] = true;
+                        if(buttonView.getText().equals(CATEGORY_FIVE)) categories[4] = true;
+                    } else {
+                        if(buttonView.getText().equals(CATEGORY_ONE)) categories[0] = false;
+                        if(buttonView.getText().equals(CATEGORY_TWO)) categories[1] = false;
+                        if(buttonView.getText().equals(CATEGORY_THREE)) categories[2] = false;
+                        if(buttonView.getText().equals(CATEGORY_FOUR)) categories[3] = false;
+                        if(buttonView.getText().equals(CATEGORY_FIVE)) categories[4] = false;
+                    }
+                    //userViewModel.setPrices(getPriceString());
+                    String categoryString = getCategoryString();
+                    ParseUser.getCurrentUser().put(CATEGORIES_KEY, categoryString);
+                    ParseUser.getCurrentUser().saveInBackground();
+                }
+            });
+        }
+    }
+
+    //converts boolean array to string of categories the user has selected
+    //ex: [true, false, true, true, false] -> "pizza, chinese, burgers"
+    public String getCategoryString() {
+        String result = "";
+        for(int i = 0; i<5; i++){
+            if(categories[i] == true) {
+                result = result + getCategoryName(i) + ", ";
+            }
+        }
+        return result.substring(0, result.length()-2);
+    }
+
+    public String getCategoryName(int position){
+        if(position == 0) return CATEGORY_ONE;
+        if(position == 1) return CATEGORY_TWO;
+        if(position == 2) return CATEGORY_THREE;
+        if(position == 3) return CATEGORY_FOUR;
+        if(position == 4) return CATEGORY_FIVE;
+        return "";
     }
 }

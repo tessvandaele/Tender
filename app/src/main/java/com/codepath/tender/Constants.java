@@ -14,14 +14,6 @@ public class Constants {
     public static final String RADIUS_KEY = "radius";
     public static final String PRICES_KEY = "prices";
 
-    public static final String NAME_KEY = "name";
-    public static final String IMAGE_KEY = "image_url";
-    public static final String DISTANCE_KEY = "distance";
-    public static final String RATING_KEY = "rating";
-    public static final String REVIEW_COUNT_KEY = "review_count";
-    public static final String PRICE_KEY = "price";
-    public static final String PHONE_KEY = "phone";
-
     public static final String LATITUDE_KEY = "latitude";
     public static final String LONGITUDE_KEY = "longitude";
 
@@ -32,5 +24,12 @@ public class Constants {
     public static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     public static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     public static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+    public static final String CATEGORIES_KEY = "categories";
+    public static final String CATEGORY_ONE = "pizza";
+    public static final String CATEGORY_TWO = "mexican";
+    public static final String CATEGORY_THREE = "chinese";
+    public static final String CATEGORY_FOUR = "burgers";
+    public static final String CATEGORY_FIVE = "seafood";
 
 }
