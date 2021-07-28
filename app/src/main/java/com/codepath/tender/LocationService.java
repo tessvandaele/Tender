@@ -32,12 +32,12 @@ public class LocationService {
 
     private Context context;
     private FusedLocationProviderClient mFusedLocationClient;
-    private RestaurantViewModel model;
+    private UserViewModel userViewModel;
 
-    public LocationService(Context context, FusedLocationProviderClient fusedLocationProviderClient, RestaurantViewModel model) {
+    public LocationService(Context context, FusedLocationProviderClient fusedLocationProviderClient, UserViewModel userViewModel) {
         this.context = context;
         this.mFusedLocationClient = fusedLocationProviderClient;
-        this.model = model;
+        this.userViewModel = userViewModel;
     }
 
     @SuppressLint("MissingPermission")
@@ -54,8 +54,8 @@ public class LocationService {
                             requestNewLocationData();
                         } else {
                             //update view model
-                            model.setLatitude(location.getLatitude());
-                            model.setLongitude(location.getLongitude());
+                            userViewModel.setLatitude(location.getLatitude());
+                            userViewModel.setLongitude(location.getLongitude());
 
                             //update parse database
                             ParseUser.getCurrentUser().put(LATITUDE_KEY, location.getLatitude());
@@ -100,8 +100,8 @@ public class LocationService {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
-            model.setLatitude(mLastLocation.getLatitude());
-            model.setLongitude(mLastLocation.getLongitude());
+            userViewModel.setLatitude(mLastLocation.getLatitude());
+            userViewModel.setLongitude(mLastLocation.getLongitude());
             ParseUser.getCurrentUser().put(LATITUDE_KEY, mLastLocation.getLatitude());
             ParseUser.getCurrentUser().put(LONGITUDE_KEY, mLastLocation.getLongitude());
             ParseUser.getCurrentUser().saveInBackground();

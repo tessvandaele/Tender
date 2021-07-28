@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private BottomNavigationView bottomNavigationView;
-    private RestaurantViewModel model;
+    private RestaurantViewModel restaurantViewModel;
+    private UserViewModel userViewModel;
     private LocationService locationService;
 
     @Override
@@ -34,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        model = new ViewModelProvider(this).get(RestaurantViewModel.class);
+        restaurantViewModel = new ViewModelProvider(this).get(RestaurantViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -68,52 +71,36 @@ public class MainActivity extends AppCompatActivity {
         //set default fragment selection
         bottomNavigationView.setSelectedItemId(R.id.navigation_swipe);
 
-        //observer on radius data to refresh the restaurant deck when user changes radius preference
-        model.getRadius().observe(this, new Observer<Integer>() {
+        //observer on user filter data to refresh the restaurant deck
+        MediatorLiveData liveDataMerger = new MediatorLiveData<>();
+        liveDataMerger.addSource(userViewModel.getRadius(), value -> liveDataMerger.setValue(value));
+        liveDataMerger.addSource(userViewModel.getPrices(), value -> liveDataMerger.setValue(value));
+        liveDataMerger.addSource(userViewModel.getLatitude(), value -> liveDataMerger.setValue(value));
+        liveDataMerger.addSource(userViewModel.getLongitude(), value -> liveDataMerger.setValue(value));
+        liveDataMerger.observe(this, new Observer() {
             @Override
-            public void onChanged(Integer integer) {
+            public void onChanged(Object o) {
                 refreshRestaurants();
             }
         });
 
-        //observer on price data to refresh the restaurant deck when user changes price preference
-        model.getPrices().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String string) {
-                refreshRestaurants();
-            }
-        });
 
-        model.getLatitude().observe(this, new Observer<Double>() {
-            @Override
-            public void onChanged(Double aDouble) {
-                refreshRestaurants();
-            }
-        });
-
-        model.getLongitude().observe(this, new Observer<Double>() {
-            @Override
-            public void onChanged(Double aDouble) {
-                refreshRestaurants();
-            }
-        });
-
-        locationService = new LocationService(this, mFusedLocationClient, model);
+        locationService = new LocationService(this, mFusedLocationClient, userViewModel);
         locationService.getLastLocation();
     }
 
     //helper method for when the deck of restaurants needs to be refloaded
     public void refreshRestaurants() {
         //reset offset and restaurants list
-        model.setOffset(0);
-        model.clearRestaurants();
+        restaurantViewModel.setOffset(0);
+        restaurantViewModel.clearRestaurants();
         //fetch restaurants
-        double latitude = model.getLatitude().getValue();
-        double longitude = model.getLongitude().getValue();
+        double latitude = userViewModel.getLatitude().getValue();
+        double longitude = userViewModel.getLongitude().getValue();
         int limit = 30;
-        int radius = model.getRadius().getValue() * 1609;
-        String prices = model.getPrices().getValue();
-        model.fetchRestaurants(latitude, longitude, limit, model.getOffset(), radius, prices);
+        int radius = userViewModel.getRadius().getValue() * 1609;
+        String prices = userViewModel.getPrices().getValue();
+        restaurantViewModel.fetchRestaurants(latitude, longitude, limit, restaurantViewModel.getOffset(), radius, prices);
     }
 
     @Override

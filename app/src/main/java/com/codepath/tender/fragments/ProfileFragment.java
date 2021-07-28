@@ -17,23 +17,14 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.codepath.tender.LoginActivity;
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.codepath.tender.UserViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.parse.ParseUser;
@@ -57,7 +48,7 @@ public class ProfileFragment extends Fragment {
 
     private boolean[] prices;
 
-    private RestaurantViewModel model;
+    private UserViewModel userViewModel;
 
     //empty constructor
     public ProfileFragment() {}
@@ -84,7 +75,7 @@ public class ProfileFragment extends Fragment {
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         tvLocation.setText(ParseUser.getCurrentUser().getDouble("latitude") + " | " + ParseUser.getCurrentUser().getDouble("longitude"));
 
-        model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+        userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
         setLogout();
         setChips();
@@ -125,7 +116,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tvRadius.setText(progress + " mi");
-                model.setRadius(progress);
+                userViewModel.setRadius(progress);
                 ParseUser.getCurrentUser().put(RADIUS_KEY, progress);
                 ParseUser.getCurrentUser().saveInBackground();
             }
@@ -159,7 +150,7 @@ public class ProfileFragment extends Fragment {
                         if(buttonView.getText().equals("$$$")) prices[2] = false;
                         if(buttonView.getText().equals("$$$$")) prices[3] = false;
                     }
-                    model.setPrices(getPriceString());
+                    userViewModel.setPrices(getPriceString());
                     ParseUser.getCurrentUser().put(PRICES_KEY, getPriceString());
                     ParseUser.getCurrentUser().saveInBackground();
                 }

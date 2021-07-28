@@ -22,13 +22,6 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     private MutableLiveData<Restaurant> current_restaurant;
 
-
-    private MutableLiveData<Integer> radius;
-    private MutableLiveData<String> prices;
-    private MutableLiveData<Double> latitude;
-    private MutableLiveData<Double> longitude;
-
-
     public RestaurantViewModel (Application application) {
         super(application);
         repository = new RestaurantRepository();
@@ -70,34 +63,6 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void setTopPosition(int topPosition) { this.topPosition = topPosition; }
 
-    public void setRadius(int radius) {
-        if(this.radius == null) {
-            this.radius = new MutableLiveData<>();
-        }
-        this.radius.setValue(radius);
-    }
-
-    public void setPrices(String prices) {
-        if(this.prices == null) {
-            this.prices = new MutableLiveData<>();
-        }
-        this.prices.setValue(prices);
-    }
-
-    public void setLatitude(Double latitude) {
-        if(this.latitude == null) {
-            this.latitude = new MutableLiveData<>();
-        }
-        this.latitude.setValue(latitude);
-    }
-
-    public void setLongitude(Double longitude) {
-        if(this.longitude == null) {
-            this.longitude = new MutableLiveData<>();
-        }
-        this.longitude.setValue(longitude);
-    }
-
     public void setRestaurant(Restaurant restaurant) {
         this.current_restaurant.setValue(restaurant);
     }
@@ -108,38 +73,6 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public int getTopPosition() {
         return topPosition;
-    }
-
-    public MutableLiveData<Integer> getRadius() {
-        if(radius == null) {
-            radius = new MutableLiveData<>();
-            radius.setValue(10);
-        }
-        return radius;
-    }
-
-    public MutableLiveData<String> getPrices() {
-        if(prices == null) {
-            this.prices = new MutableLiveData<>();
-            this.prices.setValue(ParseUser.getCurrentUser().getString("prices"));
-        }
-        return prices;
-    }
-
-    public MutableLiveData<Double> getLatitude() {
-        if(latitude == null) {
-            latitude = new MutableLiveData<>();
-            latitude.setValue(ParseUser.getCurrentUser().getDouble("latitude"));
-        }
-        return latitude;
-    }
-
-    public MutableLiveData<Double> getLongitude() {
-        if(longitude == null) {
-            longitude = new MutableLiveData<>();
-            longitude.setValue(ParseUser.getCurrentUser().getDouble("longitude"));
-        }
-        return longitude;
     }
 
     public MutableLiveData<Restaurant> getCurrent_restaurant() {
