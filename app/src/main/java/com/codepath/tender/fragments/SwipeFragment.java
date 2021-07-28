@@ -118,10 +118,15 @@ public class SwipeFragment extends Fragment {
 
         setFetchListener();
 
-        adapter = new CardStackAdapter(getContext(), model.getRestaurants());
+        adapter = new CardStackAdapter(getContext(), model.getRestaurants().getValue());
         cardStackView.setLayoutManager(layoutManager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
+
+        model.getRestaurants().observe(getViewLifecycleOwner(), words -> {
+            // Update the cached copy of the words in the adapter.
+            adapter.setRestaurants(model.getRestaurants().getValue());
+        });
 
         setAutomatedSwiping();
         setBottomSheet();
@@ -144,7 +149,7 @@ public class SwipeFragment extends Fragment {
                 //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
                     int position = layoutManager.getTopPosition() - 1;
-                    model.insertFavorite(model.getRestaurants().get(position).getId(), ParseUser.getCurrentUser().getObjectId());
+                    model.insertFavorite(model.getRestaurants().getValue().get(position).getId(), ParseUser.getCurrentUser().getObjectId());
                 }
             }
 
@@ -176,7 +181,7 @@ public class SwipeFragment extends Fragment {
 
     //populate bottom sheet
     private void populateBottomSheet(int position) {
-        ArrayList<Restaurant> restaurants = model.getRestaurants();
+        ArrayList<Restaurant> restaurants = model.getRestaurants().getValue();
         nameSheet.setText(restaurants.get(position).getName());
         ratingBarSheet.setRating((float) restaurants.get(position).getRating());
         reviewCount.setText(restaurants.get(position).getReview_count() + " reviews");
@@ -224,7 +229,7 @@ public class SwipeFragment extends Fragment {
         ibUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.getRestaurantDetails(model.getRestaurants().get(layoutManager.getTopPosition()).getId());
+                model.getRestaurantDetails(model.getRestaurants().getValue().get(layoutManager.getTopPosition()).getId());
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
@@ -260,7 +265,6 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onFinishFetch(List<Restaurant> restaurants) {
                 model.addAllRestaurants(restaurants);
-                adapter.notifyDataSetChanged();
                 layoutManager.scrollToPosition(0);
 
                 //populate the first bottom sheet (not recognized by cardAppeared())

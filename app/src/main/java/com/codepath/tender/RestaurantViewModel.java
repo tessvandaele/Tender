@@ -16,9 +16,10 @@ import java.util.List;
 public class RestaurantViewModel extends AndroidViewModel {
 
     private RestaurantRepository repository;
-    private ArrayList<Restaurant> restaurants;
+    private MutableLiveData<ArrayList<Restaurant>> restaurants;
     private int topPosition;
     private int offset;
+
 
     private MutableLiveData<Integer> radius;
     private MutableLiveData<String> prices;
@@ -29,7 +30,11 @@ public class RestaurantViewModel extends AndroidViewModel {
     public RestaurantViewModel (Application application) {
         super(application);
         repository = new RestaurantRepository();
-        restaurants = new ArrayList<>();
+        restaurants = new MutableLiveData<>();
+
+        //initializing restaurants arraylist
+        ArrayList<Restaurant> temp = new ArrayList<>();
+        restaurants.setValue(temp);
     }
 
     public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
@@ -132,14 +137,14 @@ public class RestaurantViewModel extends AndroidViewModel {
     }
 
     public void addAllRestaurants(List<Restaurant> restaurants) {
-        this.restaurants.addAll(restaurants);
+        this.restaurants.getValue().addAll(restaurants);
     }
 
     public void clearRestaurants() {
-        this.restaurants.clear();
+        this.restaurants.getValue().clear();
     }
 
-    public ArrayList<Restaurant> getRestaurants() {
+    public MutableLiveData<ArrayList<Restaurant>> getRestaurants() {
         return this.restaurants;
     }
 }

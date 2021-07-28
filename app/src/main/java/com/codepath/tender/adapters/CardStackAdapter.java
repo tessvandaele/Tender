@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.tender.R;
 import com.codepath.tender.models.Restaurant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /* adapter for the stack of swiping cards on home screen */
@@ -75,5 +76,10 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
             distance.setText(restaurant.getDisplayDistance() + "les away");
             rating.setRating((float)restaurant.getRating());
         }
+    }
+
+    public void setRestaurants(ArrayList<Restaurant> restaurants) {
+        this.restaurants = restaurants;
+        notifyDataSetChanged();
     }
 }
