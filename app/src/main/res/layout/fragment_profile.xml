@@ -305,6 +305,17 @@
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
+        <Switch
+            android:id="@+id/categoriesSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/categoriesText"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="0dp"
+            android:thumbTint="@color/main_color"
+            android:trackTint="@color/main_color" />
+
     </RelativeLayout>
 
 </ScrollView>

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -65,6 +66,7 @@ public class ProfileFragment extends Fragment {
     private TextView tvRadius;
     private ChipGroup priceChips;
     private ChipGroup categoryChips;
+    private Switch categorySwitch;
 
     private boolean[] prices;
     private boolean[] categories;
@@ -92,6 +94,8 @@ public class ProfileFragment extends Fragment {
         tvRadius = view.findViewById(R.id.tvRadius);
         priceChips = view.findViewById(R.id.priceChips);
         categoryChips = view.findViewById(R.id.categoryChips);
+        categorySwitch = view.findViewById(R.id.categoriesSwitch);
+
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)));
@@ -108,6 +112,7 @@ public class ProfileFragment extends Fragment {
         setStatusBarListener();
         setPriceChipsListener();
         setCategoryChipsListener();
+        setCategorySwitchListener();
     }
 
     //sets up the log out button to allow user to log out
@@ -142,6 +147,7 @@ public class ProfileFragment extends Fragment {
         List<String> user_categories = Arrays.asList(ParseUser.getCurrentUser().getString(CATEGORIES_KEY).split(", "));
         //initialize price chips
         for(int i = 0; i<user_categories.size(); i++){
+            categorySwitch.setChecked(true);
             int category = getCategoryNum(user_categories.get(i));
             Chip chip = (Chip) categoryChips.getChildAt(category);
             categories[category] = true;
@@ -300,5 +306,23 @@ public class ProfileFragment extends Fragment {
         if(position == 11) return CATEGORY_TWELVE;
         if(position == 12) return CATEGORY_THIRTEEN;
         return "";
+    }
+
+    private void setCategorySwitchListener() {
+        categorySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!isChecked) {
+                    for (int i = 0; i<categoryChips.getChildCount(); i++) {
+                        Chip chip = (Chip) categoryChips.getChildAt(i);
+                        chip.setChecked(false);
+
+                    }
+                    userViewModel.setCategories("");
+                    ParseUser.getCurrentUser().put(CATEGORIES_KEY, "");
+                    ParseUser.getCurrentUser().saveInBackground();
+                }
+            }
+        });
     }
 }
