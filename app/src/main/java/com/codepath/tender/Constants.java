@@ -31,5 +31,15 @@ public class Constants {
     public static final String CATEGORY_THREE = "chinese";
     public static final String CATEGORY_FOUR = "burgers";
     public static final String CATEGORY_FIVE = "seafood";
-
+    public static final String CATEGORY_SIX = "thai";
+    public static final String CATEGORY_SEVEN = "italian";
+    public static final String CATEGORY_EIGHT = "steak";
+    public static final String CATEGORY_EIGHT_NAME = "steakhouse";
+    public static final String CATEGORY_NINE = "breakfast_brunch";
+    public static final String CATEGORY_NINE_NAME = "breakfast";
+    public static final String CATEGORY_TEN = "sandwiches";
+    public static final String CATEGORY_ELEVEN = "vegetarian";
+    public static final String CATEGORY_TWELVE = "sushi";
+    public static final String CATEGORY_THIRTEEN = "newamerican, tradamerican";
+    public static final String CATEGORY_THIRTEEN_NAME = "american";
 }

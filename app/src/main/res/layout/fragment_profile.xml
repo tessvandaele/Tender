@@ -8,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
         <ImageButton
             android:id="@+id/ibLogout"
@@ -184,55 +185,125 @@
             android:layout_marginBottom="10dp"
             android:text="Cuisine" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/categoryChips"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/categoriesText"
-            android:layout_centerHorizontal="true"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp">
+            android:layout_below="@id/categoriesText"
+            android:layout_marginBottom="20dp"
+            android:gravity="center|center_horizontal"
+            android:orientation="vertical">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/pizza"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/categoryChips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checkable="true"
-                android:text="pizza"
-                app:checkedIconVisible="true" />
+                android:layout_margin="10dp"
+                app:chipSpacingHorizontal="30dp">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/mexican"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:text="mexican"
-                app:checkedIconVisible="true" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/pizza"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="pizza"
+                    app:checkedIconVisible="true" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chinese"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:text="chinese"
-                app:checkedIconVisible="true" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/mexican"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="mexican"
+                    app:checkedIconVisible="true" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/burgers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:text="burgers"
-                app:checkedIconVisible="true" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chinese"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="chinese"
+                    app:checkedIconVisible="true" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/seafood"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:text="seafood"
-                app:chipIconVisible="true" />
-        </com.google.android.material.chip.ChipGroup>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/burgers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="burgers"
+                    app:checkedIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/seafood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="seafood"
+                    app:chipIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/thai"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="thai"
+                    app:checkedIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/italian"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="italian"
+                    app:checkedIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/steakhouse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="steakhouse"
+                    app:checkedIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/breakfast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="breakfast"
+                    app:checkedIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sandwhiches"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="sandwiches"
+                    app:checkedIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/vegetarian"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="vegetarian"
+                    app:checkedIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sushi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="sushi"
+                    app:checkedIconVisible="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/american"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="american"
+                    app:checkedIconVisible="true" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
 
     </RelativeLayout>
 

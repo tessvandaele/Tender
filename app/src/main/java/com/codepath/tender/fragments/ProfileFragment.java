@@ -33,10 +33,21 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.codepath.tender.Constants.CATEGORIES_KEY;
+import static com.codepath.tender.Constants.CATEGORY_EIGHT;
+import static com.codepath.tender.Constants.CATEGORY_EIGHT_NAME;
+import static com.codepath.tender.Constants.CATEGORY_ELEVEN;
 import static com.codepath.tender.Constants.CATEGORY_FIVE;
 import static com.codepath.tender.Constants.CATEGORY_FOUR;
+import static com.codepath.tender.Constants.CATEGORY_NINE;
+import static com.codepath.tender.Constants.CATEGORY_NINE_NAME;
 import static com.codepath.tender.Constants.CATEGORY_ONE;
+import static com.codepath.tender.Constants.CATEGORY_SEVEN;
+import static com.codepath.tender.Constants.CATEGORY_SIX;
+import static com.codepath.tender.Constants.CATEGORY_TEN;
+import static com.codepath.tender.Constants.CATEGORY_THIRTEEN;
+import static com.codepath.tender.Constants.CATEGORY_THIRTEEN_NAME;
 import static com.codepath.tender.Constants.CATEGORY_THREE;
+import static com.codepath.tender.Constants.CATEGORY_TWELVE;
 import static com.codepath.tender.Constants.CATEGORY_TWO;
 import static com.codepath.tender.Constants.LATITUDE_KEY;
 import static com.codepath.tender.Constants.LONGITUDE_KEY;
@@ -72,7 +83,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         prices = new boolean[] {false, false, false, false};
-        categories = new boolean[] {false, false, false, false, false};
+        categories = new boolean[] {false, false, false, false, false, false, false, false, false, false, false, false, false};
 
         ibLogout = view.findViewById(R.id.ibLogout);
         tvUsername = view.findViewById(R.id.tvProfileUsername);
@@ -137,16 +148,6 @@ public class ProfileFragment extends Fragment {
             chip.setChecked(true);
         }
     }
-
-    private int getCategoryNum(String s) {
-        if(s.equals(CATEGORY_ONE)) return 0;
-        if(s.equals(CATEGORY_TWO)) return 1;
-        if(s.equals(CATEGORY_THREE)) return 2;
-        if(s.equals(CATEGORY_FOUR)) return 3;
-        if(s.equals(CATEGORY_FIVE)) return 4;
-        return 0;
-    }
-
 
     //sets up the status bar listener
     public void setStatusBarListener() {
@@ -223,12 +224,28 @@ public class ProfileFragment extends Fragment {
                         if(buttonView.getText().equals(CATEGORY_THREE)) categories[2] = true;
                         if(buttonView.getText().equals(CATEGORY_FOUR)) categories[3] = true;
                         if(buttonView.getText().equals(CATEGORY_FIVE)) categories[4] = true;
+                        if(buttonView.getText().equals(CATEGORY_SIX)) categories[5] = true;
+                        if(buttonView.getText().equals(CATEGORY_SEVEN)) categories[6] = true;
+                        if(buttonView.getText().equals(CATEGORY_EIGHT_NAME)) categories[7] = true;
+                        if(buttonView.getText().equals(CATEGORY_NINE_NAME)) categories[8] = true;
+                        if(buttonView.getText().equals(CATEGORY_TEN)) categories[9] = true;
+                        if(buttonView.getText().equals(CATEGORY_ELEVEN)) categories[10] = true;
+                        if(buttonView.getText().equals(CATEGORY_TWELVE)) categories[11] = true;
+                        if(buttonView.getText().equals(CATEGORY_THIRTEEN_NAME)) categories[12] = true;
                     } else {
                         if(buttonView.getText().equals(CATEGORY_ONE)) categories[0] = false;
                         if(buttonView.getText().equals(CATEGORY_TWO)) categories[1] = false;
                         if(buttonView.getText().equals(CATEGORY_THREE)) categories[2] = false;
                         if(buttonView.getText().equals(CATEGORY_FOUR)) categories[3] = false;
                         if(buttonView.getText().equals(CATEGORY_FIVE)) categories[4] = false;
+                        if(buttonView.getText().equals(CATEGORY_SIX)) categories[5] = false;
+                        if(buttonView.getText().equals(CATEGORY_SEVEN)) categories[6] = false;
+                        if(buttonView.getText().equals(CATEGORY_EIGHT_NAME)) categories[7] = false;
+                        if(buttonView.getText().equals(CATEGORY_NINE_NAME)) categories[8] = false;
+                        if(buttonView.getText().equals(CATEGORY_TEN)) categories[9] = false;
+                        if(buttonView.getText().equals(CATEGORY_ELEVEN)) categories[10] = false;
+                        if(buttonView.getText().equals(CATEGORY_TWELVE)) categories[11] = false;
+                        if(buttonView.getText().equals(CATEGORY_THIRTEEN_NAME)) categories[12] = false;
                     }
                     String categoryString = getCategoryString();
                     userViewModel.setCategories(categoryString);
@@ -243,12 +260,29 @@ public class ProfileFragment extends Fragment {
     //ex: [true, false, true, true, false] -> "pizza, chinese, burgers"
     public String getCategoryString() {
         String result = "";
-        for(int i = 0; i<5; i++){
+        for(int i = 0; i<13; i++){
             if(categories[i] == true) {
                 result = result + getCategoryName(i) + ", ";
             }
         }
         return result.substring(0, result.length()-2);
+    }
+
+    private int getCategoryNum(String s) {
+        if(s.equals(CATEGORY_ONE)) return 0;
+        if(s.equals(CATEGORY_TWO)) return 1;
+        if(s.equals(CATEGORY_THREE)) return 2;
+        if(s.equals(CATEGORY_FOUR)) return 3;
+        if(s.equals(CATEGORY_FIVE)) return 4;
+        if(s.equals(CATEGORY_SIX)) return 5;
+        if(s.equals(CATEGORY_SEVEN)) return 6;
+        if(s.equals(CATEGORY_EIGHT)) return 7;
+        if(s.equals(CATEGORY_NINE)) return 8;
+        if(s.equals(CATEGORY_TEN)) return 9;
+        if(s.equals(CATEGORY_ELEVEN)) return 10;
+        if(s.equals(CATEGORY_TWELVE)) return 11;
+        if(s.equals(CATEGORY_THIRTEEN)) return 12;
+        return 0;
     }
 
     public String getCategoryName(int position){
@@ -257,6 +291,14 @@ public class ProfileFragment extends Fragment {
         if(position == 2) return CATEGORY_THREE;
         if(position == 3) return CATEGORY_FOUR;
         if(position == 4) return CATEGORY_FIVE;
+        if(position == 5) return CATEGORY_SIX;
+        if(position == 6) return CATEGORY_SEVEN;
+        if(position == 7) return CATEGORY_EIGHT;
+        if(position == 8) return CATEGORY_NINE;
+        if(position == 9) return CATEGORY_TEN;
+        if(position == 10) return CATEGORY_ELEVEN;
+        if(position == 11) return CATEGORY_TWELVE;
+        if(position == 12) return CATEGORY_THIRTEEN;
         return "";
     }
 }
