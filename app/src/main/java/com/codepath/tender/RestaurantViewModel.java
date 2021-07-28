@@ -35,7 +35,7 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void insertFavorite(String restaurant_id, String user_id) { repository.insertFavorite(restaurant_id, user_id); }
 
-    public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices, String categories) { repository.fetchRestaurants(latitude, longitude, limit, offset, radius, prices, categories); }
+    public void fetchRestaurants(double latitude, double longitude, int limit, int offset, int radius, String prices, String categories, String sort) { repository.fetchRestaurants(latitude, longitude, limit, offset, radius, prices, categories, sort); }
 
     public void deleteFavorite(String id) { repository.deleteFavorite(id); }
 

@@ -23,7 +23,8 @@ public interface YelpService {
             @Query("offset") int offset, //offset for where to start retrieval
             @Query("radius") int radius,
             @Query("price") String prices,
-            @Query("categories") String categories);
+            @Query("categories") String categories,
+            @Query("sort_by") String sort);
 
     @GET("businesses/{id}")
     Call<Restaurant> getRestaurantDetails(

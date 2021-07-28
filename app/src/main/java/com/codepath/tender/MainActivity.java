@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         int radius = userViewModel.getRadius().getValue() * 1609;
         String prices = userViewModel.getPrices().getValue();
         String categories = userViewModel.getCategories().getValue();
-        restaurantViewModel.fetchRestaurants(latitude, longitude, 30, 0, radius, prices, categories);
+        restaurantViewModel.fetchRestaurants(latitude, longitude, 30, 0, radius, prices, categories, "distance");
     }
 
     @Override

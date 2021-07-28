@@ -271,6 +271,7 @@ public class ProfileFragment extends Fragment {
                 result = result + getCategoryName(i) + ", ";
             }
         }
+        if(result.equals("")) return "";
         return result.substring(0, result.length()-2);
     }
 
