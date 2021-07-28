@@ -61,8 +61,6 @@ public class SwipeFragment extends Fragment {
 
     //tab layout in bottom sheet
     private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private ViewPagerAdapter viewPagerAdapter;
 
     private RestaurantViewModel model;
     private int offset;
@@ -96,8 +94,8 @@ public class SwipeFragment extends Fragment {
 
         //tab layout
         tabLayout = view.findViewById(R.id.tabLayout);
-        viewPager = view.findViewById(R.id.viewPager);
-        setTabLayout();
+        ViewPager viewPager = view.findViewById(R.id.viewPager);
+        setTabLayout(viewPager);
 
         //view model
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
@@ -109,14 +107,14 @@ public class SwipeFragment extends Fragment {
         LinearLayout linearLayout = view.findViewById(R.id.design_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(linearLayout);
 
-        //setting offset and position from view model
-        offset = model.getOffset();
-        layoutManager.setTopPosition(model.getTopPosition());
-
         setFetchListener();
         setCardStackAdapter();
         setAutomatedSwiping();
-        setBottomSheet();
+        setBottomSheetButtons();
+
+        //setting offset and position from view model
+        offset = model.getOffset();
+        layoutManager.setTopPosition(model.getTopPosition());
     }
 
     private void initializeLayoutManager() {
@@ -150,7 +148,7 @@ public class SwipeFragment extends Fragment {
 
             //called when a new card appears
             @Override
-            public void onCardAppeared(View view, int position) { populateBottomSheet(position); }
+            public void onCardAppeared(View view, int position) { populateBottomSheetData(position); }
 
             //called when a card disappears
             @Override
@@ -164,11 +162,6 @@ public class SwipeFragment extends Fragment {
         cardStackView.setLayoutManager(layoutManager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
-
-        model.getRestaurants().observe(getViewLifecycleOwner(), restaurants -> {
-            // Update the cached copy of the words in the adapter.
-            adapter.setRestaurants(restaurants);
-        });
     }
 
     //saving state of fragment to view model
@@ -180,7 +173,7 @@ public class SwipeFragment extends Fragment {
     }
 
     //populate bottom sheet
-    private void populateBottomSheet(int position) {
+    private void populateBottomSheetData(int position) {
         ArrayList<Restaurant> restaurants = model.getRestaurants().getValue();
         nameSheet.setText(restaurants.get(position).getName());
         ratingBarSheet.setRating((float) restaurants.get(position).getRating());
@@ -219,13 +212,13 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 layoutManager.scrollToPosition(0);
-                populateBottomSheet(0);
+                populateBottomSheetData(0);
             }
         });
     }
 
     //set up the bottom info sheet pop up
-    private void setBottomSheet() {
+    private void setBottomSheetButtons() {
         ibUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -266,10 +259,11 @@ public class SwipeFragment extends Fragment {
             public void onFinishFetch(List<Restaurant> restaurants) {
                 model.addAllRestaurants(restaurants);
                 layoutManager.scrollToPosition(0);
+                adapter.setRestaurants(restaurants);
 
                 //populate the first bottom sheet (not recognized by cardAppeared())
                 if(layoutManager.getTopPosition() == 0 && restaurants.size() != 0) {
-                    populateBottomSheet(0);
+                    populateBottomSheetData(0);
                 }
 
                 //increase offset
@@ -279,16 +273,15 @@ public class SwipeFragment extends Fragment {
     }
 
     //sets up the tab layout
-    private void setTabLayout() {
+    private void setTabLayout(ViewPager viewPager) {
         tabLayout.addTab(tabLayout.newTab().setText("Info"));
         tabLayout.addTab(tabLayout.newTab().setText("Hours"));
         tabLayout.addTab(tabLayout.newTab().setText("Gallery"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        viewPagerAdapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(),getParentFragmentManager(),
                 tabLayout.getTabCount());
         viewPager.setAdapter(viewPagerAdapter);
-
-        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

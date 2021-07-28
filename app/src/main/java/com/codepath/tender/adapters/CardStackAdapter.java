@@ -78,7 +78,7 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         }
     }
 
-    public void setRestaurants(ArrayList<Restaurant> restaurants) {
+    public void setRestaurants(List<Restaurant> restaurants) {
         this.restaurants = restaurants;
         notifyDataSetChanged();
     }
