@@ -78,8 +78,15 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         }
     }
 
+    //resets the restaurant array and card stack
     public void setRestaurants(List<Restaurant> restaurants) {
         this.restaurants = restaurants;
         notifyDataSetChanged();
+    }
+
+    //adds to the restaurant array and remains at current position in card stack
+    public void addRestaurants(List<Restaurant> restaurants, int offset) {
+        this.restaurants.addAll(restaurants);
+        notifyItemRangeInserted(offset-31, restaurants.size());
     }
 }

@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantRepository;
 import com.codepath.tender.RestaurantViewModel;
+import com.codepath.tender.UserViewModel;
 import com.codepath.tender.adapters.CardStackAdapter;
 import com.codepath.tender.adapters.ViewPagerAdapter;
 import com.codepath.tender.models.Categories;
@@ -64,7 +65,8 @@ public class SwipeFragment extends Fragment {
     //tab layout in bottom sheet
     private TabLayout tabLayout;
 
-    private RestaurantViewModel model;
+    private RestaurantViewModel restaurantViewModel;
+    private UserViewModel userViewModel;
     private int offset;
 
     //empty constructor
@@ -101,7 +103,8 @@ public class SwipeFragment extends Fragment {
         setTabLayout(viewPager);
 
         //view model
-        model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+        restaurantViewModel = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+        userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
         initializeLayoutManager();
         setLayoutManagerProperties();
@@ -116,8 +119,8 @@ public class SwipeFragment extends Fragment {
         setBottomSheetButtons();
 
         //setting offset and position from view model
-        offset = model.getOffset();
-        layoutManager.setTopPosition(model.getTopPosition());
+        offset = restaurantViewModel.getOffset();
+        layoutManager.scrollToPosition(restaurantViewModel.getTopPosition());
     }
 
     private void initializeLayoutManager() {
@@ -130,14 +133,19 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onCardSwiped(Direction direction) {
                 //check if more cards need to be loaded
-                if(offset - layoutManager.getTopPosition() < 2) {
-                    //add logic for loading more restaurants
+                offset = restaurantViewModel.getOffset();
+                int top = layoutManager.getTopPosition();
+                if(offset - top < 2) {
+                    addRestaurants(offset);
+
+                    offset+= 30;
+                    restaurantViewModel.setOffset(offset);
                 }
 
                 //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
                     int position = layoutManager.getTopPosition() - 1;
-                    model.insertFavorite(model.getRestaurants().getValue().get(position).getId(), ParseUser.getCurrentUser().getObjectId());
+                    restaurantViewModel.insertFavorite(restaurantViewModel.getRestaurants().getValue().get(position).getId(), ParseUser.getCurrentUser().getObjectId());
                 }
             }
 
@@ -161,7 +169,7 @@ public class SwipeFragment extends Fragment {
 
     //creates the card stack adapter and sets up the stack view
     private void setCardStackAdapter() {
-        adapter = new CardStackAdapter(getContext(), model.getRestaurants().getValue());
+        adapter = new CardStackAdapter(getContext(), restaurantViewModel.getRestaurants().getValue());
         cardStackView.setLayoutManager(layoutManager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
@@ -171,13 +179,13 @@ public class SwipeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        model.setTopPosition(layoutManager.getTopPosition());
-        model.setOffset(offset);
+        restaurantViewModel.setTopPosition(layoutManager.getTopPosition());
+        restaurantViewModel.setOffset(offset);
     }
 
     //populate bottom sheet
     private void populateBottomSheetData(int position) {
-        ArrayList<Restaurant> restaurants = model.getRestaurants().getValue();
+        ArrayList<Restaurant> restaurants = restaurantViewModel.getRestaurants().getValue();
         nameSheet.setText(restaurants.get(position).getName());
         ratingBarSheet.setRating((float) restaurants.get(position).getRating());
         reviewCount.setText(restaurants.get(position).getReview_count() + " reviews");
@@ -232,7 +240,7 @@ public class SwipeFragment extends Fragment {
         ibUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                model.getRestaurantDetails(model.getRestaurants().getValue().get(layoutManager.getTopPosition()).getId());
+                restaurantViewModel.getRestaurantDetails(restaurantViewModel.getRestaurants().getValue().get(layoutManager.getTopPosition()).getId());
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
@@ -244,10 +252,10 @@ public class SwipeFragment extends Fragment {
             }
         });
 
-        model.setRestaurantDetailsListener(new RestaurantRepository.RestaurantDetailsListener() {
+        restaurantViewModel.setRestaurantDetailsListener(new RestaurantRepository.RestaurantDetailsListener() {
             @Override
             public void onFinishDetailsFetch(Restaurant restaurant) {
-                model.setRestaurant(restaurant);
+                restaurantViewModel.setRestaurant(restaurant);
                 setOpenOrClosed(restaurant);
             }
         });
@@ -264,20 +272,23 @@ public class SwipeFragment extends Fragment {
 
     //implements the fetch listener interface
     private void setFetchListener() {
-        model.setFetchRestaurantListener(new RestaurantRepository.FetchRestaurantsListener() {
+        restaurantViewModel.setFetchRestaurantListener(new RestaurantRepository.FetchRestaurantsListener() {
             @Override
             public void onFinishFetch(List<Restaurant> restaurants) {
-                model.addAllRestaurants(restaurants);
-                layoutManager.scrollToPosition(0);
-                adapter.setRestaurants(restaurants);
+                if(restaurantViewModel.getOffset() == 30) { //refreshing deck completely
+                    restaurantViewModel.clearRestaurants();
+                    restaurantViewModel.addAllRestaurants(restaurants);
+                    layoutManager.scrollToPosition(0);
+                    adapter.setRestaurants(restaurants);
+                } else { //adding to the end of the deck
+                    restaurantViewModel.addAllRestaurants(restaurants);
+                    adapter.addRestaurants(restaurants, offset);
+                }
 
                 //populate the first bottom sheet (not recognized by cardAppeared())
                 if(layoutManager.getTopPosition() == 0 && restaurants.size() != 0) {
                     populateBottomSheetData(0);
                 }
-
-                //increase offset
-                offset += 30;
             }
         });
     }
@@ -316,5 +327,16 @@ public class SwipeFragment extends Fragment {
             open.setText("Closed");
             open.setTextColor(Color.parseColor("#ed2939"));
         }
+    }
+
+    //helper method to fetch more restaurants when the end of the deck is reached
+    public void addRestaurants(int offset) {
+        //fetch restaurants
+        double latitude = userViewModel.getLatitude().getValue();
+        double longitude = userViewModel.getLongitude().getValue();
+        int radius = userViewModel.getRadius().getValue() * 1609;
+        String prices = userViewModel.getPrices().getValue();
+        String categories = userViewModel.getCategories().getValue();
+        restaurantViewModel.fetchRestaurants(latitude, longitude, 30, offset, radius, prices, categories, "distance");
     }
 }

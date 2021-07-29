@@ -12,14 +12,23 @@
         tools:context=".fragments.SwipeFragment">
 
 
+        <TextView
+            android:id="@+id/tvNoMoreCards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="You're out of cards!" />
+
         <com.yuyakaido.android.cardstackview.CardStackView
             android:id="@+id/card_stack_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/ibDislike"
             android:layout_marginBottom="0dp"
-            android:backgroundTint="#FFFFFF"
-            android:padding="8dp" />
+            android:backgroundTint="#F8F8F8"
+            android:padding="8dp">
+
+        </com.yuyakaido.android.cardstackview.CardStackView>
 
         <ImageButton
             android:id="@+id/ibDislike"

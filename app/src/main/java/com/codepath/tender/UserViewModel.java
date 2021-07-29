@@ -11,6 +11,7 @@ import static com.codepath.tender.Constants.CATEGORIES_KEY;
 import static com.codepath.tender.Constants.LATITUDE_KEY;
 import static com.codepath.tender.Constants.LONGITUDE_KEY;
 import static com.codepath.tender.Constants.PRICES_KEY;
+import static com.codepath.tender.Constants.RADIUS_KEY;
 
 public class UserViewModel extends AndroidViewModel {
 
@@ -58,7 +59,7 @@ public class UserViewModel extends AndroidViewModel {
     public MutableLiveData<Integer> getRadius() {
         if(radius == null) {
             radius = new MutableLiveData<>();
-            radius.setValue(10);
+            radius.setValue(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         }
         return radius;
     }

@@ -93,9 +93,8 @@ public class MainActivity extends AppCompatActivity {
     //helper method for when the deck of restaurants needs to be refloaded
     public void refreshRestaurants() {
         //reset offset and restaurants list
-        restaurantViewModel.setOffset(0);
+        restaurantViewModel.setOffset(30);
         restaurantViewModel.setTopPosition(0);
-        restaurantViewModel.clearRestaurants();
         //fetch restaurants
         double latitude = userViewModel.getLatitude().getValue();
         double longitude = userViewModel.getLongitude().getValue();
