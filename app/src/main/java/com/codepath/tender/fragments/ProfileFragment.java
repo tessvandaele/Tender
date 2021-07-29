@@ -144,13 +144,20 @@ public class ProfileFragment extends Fragment {
 
     //sets the category chips to the correct setting based on user preference
     public void setCategoryChipsData() {
-        List<String> user_categories = Arrays.asList(ParseUser.getCurrentUser().getString(CATEGORIES_KEY).split(", "));
+        //check for no categories selected
+        String parse_string = ParseUser.getCurrentUser().getString(CATEGORIES_KEY);
+        if(parse_string.equals("")) return;
+
+        //parse categories string and iterate
+        List<String> user_categories = Arrays.asList(ParseUser.getCurrentUser().getString(CATEGORIES_KEY).split(","));
         //initialize price chips
         for(int i = 0; i<user_categories.size(); i++){
+            //check the main switch since at least one category is checked
             categorySwitch.setChecked(true);
             int category = getCategoryNum(user_categories.get(i));
             Chip chip = (Chip) categoryChips.getChildAt(category);
             categories[category] = true;
+            //check correct chip
             chip.setChecked(true);
         }
     }
@@ -225,6 +232,7 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked) {
+                        categorySwitch.setChecked(true);
                         if(buttonView.getText().equals(CATEGORY_ONE)) categories[0] = true;
                         if(buttonView.getText().equals(CATEGORY_TWO)) categories[1] = true;
                         if(buttonView.getText().equals(CATEGORY_THREE)) categories[2] = true;
@@ -268,11 +276,11 @@ public class ProfileFragment extends Fragment {
         String result = "";
         for(int i = 0; i<13; i++){
             if(categories[i] == true) {
-                result = result + getCategoryName(i) + ", ";
+                result = result + getCategoryName(i) + ",";
             }
         }
         if(result.equals("")) return "";
-        return result.substring(0, result.length()-2);
+        return result.substring(0, result.length()-1);
     }
 
     private int getCategoryNum(String s) {
