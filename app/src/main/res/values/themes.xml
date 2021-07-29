@@ -26,4 +26,9 @@
         <item name="chipBackgroundColor">@color/background_color_chip_selected</item>
         <item name="android:textColor">@color/text_color_chip_selected</item>
     </style>
+
+    <style name="AlertDialog" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColorPrimary">@color/main_color</item>
+    </style>
 </resources>

@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -102,6 +104,7 @@ public class DetailsActivity extends AppCompatActivity {
         setListeners();
         setupReviewLinkButton();
         setOpenMapsButton();
+        setOtherUsersDialogButton();
         bindData();
     }
 
@@ -150,12 +153,23 @@ public class DetailsActivity extends AppCompatActivity {
 
         model.setOtherUsersListener(new RestaurantRepository.OtherUsersListener() {
             @Override
-            public void onFinishOtherUserFetch(ParseUser user) {
-                if(user != null && !user.getUsername().equals(ParseUser.getCurrentUser().getUsername())){
-                    favorite_usernames.add(user.getUsername());
-                    setOtherUserText();
+            public void onFinishOtherUserFetch(List<ParseUser> users) {
+                for(int i = 0; i<users.size(); i++) {
+                    ParseUser user = users.get(i);
+                    if(user != null && !user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+                        favorite_usernames.add(user.getUsername());
+                    }
                 }
+                setOtherUserText();
+            }
+        });
+    }
 
+    public void setOtherUsersDialogButton() {
+        other_users.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openOtherUserDialog();
             }
         });
     }
@@ -234,6 +248,27 @@ public class DetailsActivity extends AppCompatActivity {
         Date date = originalFormat.parse(time);
         String formattedDate = targetFormat.format(date);  // 20120821
         return formattedDate;
+    }
+
+    public void openOtherUserDialog() {
+        String users = "";
+        for(int i = 0; i<favorite_usernames.size(); i++) {
+            users += favorite_usernames.get(i) + "\n";
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog);
+
+        //opening dialog with users that have favorites restaurant
+        builder.setMessage(users)
+                .setCancelable(true)
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() { //no
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        //close dialog
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
 

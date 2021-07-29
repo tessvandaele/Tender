@@ -260,6 +260,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="307dp"
             android:layout_marginEnd="10dp"
+            android:clickable="true"
             tools:text="Liked by ryan_fresh and 2 others" />
 
     </com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader>
