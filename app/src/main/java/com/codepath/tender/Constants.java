@@ -42,4 +42,6 @@ public class Constants {
     public static final String CATEGORY_TWELVE = "sushi";
     public static final String CATEGORY_THIRTEEN = "newamerican, tradamerican";
     public static final String CATEGORY_THIRTEEN_NAME = "american";
+
+    public static final String COMMENTS_INTENT_KEY = "comment_users";
 }

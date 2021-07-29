@@ -263,5 +263,21 @@
             android:clickable="true"
             tools:text="Liked by ryan_fresh and 2 others" />
 
+        <ImageButton
+            android:id="@+id/ibComments"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            app:tint="@color/main_color"
+            app:srcCompat="@drawable/ic_comments" />
+
     </com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader>
 </RelativeLayout>

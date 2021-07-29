@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.codepath.tender.Constants.COMMENTS_INTENT_KEY;
 import static com.codepath.tender.Constants.RESTAURANT_INTENT_KEY;
 
 /* user can view a detailed screen of restaurant information */
@@ -55,6 +56,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView other_users;
     private ImageButton all_reviews_link;
     private TextView hours;
+    private ImageButton comments;
 
 
     private RecyclerView rvReviews;
@@ -94,6 +96,7 @@ public class DetailsActivity extends AppCompatActivity {
         rvReviews = findViewById(R.id.rvReviews);
         header = findViewById(R.id.header);
         open_maps = findViewById(R.id.btnOpenMaps);
+        comments = findViewById(R.id.ibComments);
 
         //recycler view set up
         adapter = new ReviewAdapter(this, reviews);
@@ -102,9 +105,7 @@ public class DetailsActivity extends AppCompatActivity {
         header.attachTo(rvReviews);
 
         setListeners();
-        setupReviewLinkButton();
-        setOpenMapsButton();
-        setOtherUsersDialogButton();
+        setButtons();
         bindData();
     }
 
@@ -161,6 +162,24 @@ public class DetailsActivity extends AppCompatActivity {
                     }
                 }
                 setOtherUserText();
+            }
+        });
+    }
+
+    public void setButtons() {
+        setupReviewLinkButton();
+        setOpenMapsButton();
+        setOtherUsersDialogButton();
+        setCommentsButton();
+    }
+
+    private void setCommentsButton() {
+        comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailsActivity.this, CommentsActivity.class);
+                intent.putStringArrayListExtra(COMMENTS_INTENT_KEY, favorite_usernames);
+                DetailsActivity.this.startActivity(intent);
             }
         });
     }
