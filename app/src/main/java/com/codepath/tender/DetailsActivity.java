@@ -178,7 +178,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailsActivity.this, CommentsActivity.class);
-                intent.putStringArrayListExtra(COMMENTS_INTENT_KEY, favorite_usernames);
+                intent.putExtra(COMMENTS_INTENT_KEY, restaurant_id);
                 DetailsActivity.this.startActivity(intent);
             }
         });

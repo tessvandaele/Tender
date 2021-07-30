@@ -21,9 +21,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     private String userId;
 
     public CommentsAdapter(Context context, String userId, List<Comment> comments) {
-        comments = comments;
+        this.comments = comments;
         this.userId = userId;
-        context = context;
+        this.context = context;
     }
 
     @Override
@@ -34,8 +34,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     @Override
     public void onBindViewHolder(CommentViewHolder holder, int position) {
-        Comment comment = comments.get(position);
-        holder.bindComment(comment);
+        holder.bindComment(comments.get(position));
     }
 
     @Override

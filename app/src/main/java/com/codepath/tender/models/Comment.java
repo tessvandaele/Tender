@@ -8,6 +8,8 @@ public class Comment extends ParseObject {
     public static final String USERNAME_KEY = "username";
     public static final String BODY_KEY = "body";
 
+    public Comment() {}
+
     public String getUsername() {
         return getString(USERNAME_KEY);
     }

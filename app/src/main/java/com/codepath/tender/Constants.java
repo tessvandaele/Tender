@@ -44,4 +44,6 @@ public class Constants {
     public static final String CATEGORY_THIRTEEN_NAME = "american";
 
     public static final String COMMENTS_INTENT_KEY = "comment_users";
+    public static final String COMMENT_TABLE_KEY = "Comment";
+    public static final int MAX_COMMENTS_TO_DISPLAY = 30;
 }

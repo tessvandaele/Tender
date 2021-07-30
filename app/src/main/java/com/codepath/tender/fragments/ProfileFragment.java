@@ -146,7 +146,7 @@ public class ProfileFragment extends Fragment {
     public void setCategoryChipsData() {
         //check for no categories selected
         String parse_string = ParseUser.getCurrentUser().getString(CATEGORIES_KEY);
-        if(parse_string.equals("")) return;
+        if(parse_string == null || parse_string.equals("")) return;
 
         //parse categories string and iterate
         List<String> user_categories = Arrays.asList(ParseUser.getCurrentUser().getString(CATEGORIES_KEY).split(","));
