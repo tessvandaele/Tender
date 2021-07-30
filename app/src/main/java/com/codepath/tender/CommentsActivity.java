@@ -26,6 +26,7 @@ import java.util.List;
 import static com.codepath.tender.Constants.COMMENTS_INTENT_KEY;
 import static com.codepath.tender.Constants.COMMENT_TABLE_KEY;
 import static com.codepath.tender.Constants.MAX_COMMENTS_TO_DISPLAY;
+import static com.codepath.tender.Constants.PROFILE_IMAGE_KEY;
 import static com.codepath.tender.Constants.RESTAURANT_ID_KEY;
 import static com.codepath.tender.models.Comment.BODY_KEY;
 import static com.codepath.tender.models.Comment.USERNAME_KEY;
@@ -74,6 +75,7 @@ public class CommentsActivity extends AppCompatActivity {
                 comment.put(USERNAME_KEY, ParseUser.getCurrentUser().getUsername());
                 comment.put(BODY_KEY, data);
                 comment.put(RESTAURANT_ID_KEY, restaurant_id);
+                comment.put(PROFILE_IMAGE_KEY, ParseUser.getCurrentUser().getString("profile_image"));
 
                 comment.saveInBackground(new SaveCallback() {
                     @Override

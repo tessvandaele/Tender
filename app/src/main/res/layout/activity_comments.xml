@@ -29,11 +29,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/ibSend"
-            android:hint="Add a comment..."
             android:layout_toLeftOf="@+id/ibSend"
             android:gravity="top"
+            android:hint="Add a comment..."
             android:imeOptions="actionSend"
-            android:inputType="textShortMessage" />
+            android:inputType="textShortMessage"
+            android:textSize="12sp" />
 
         <ImageButton
             android:id="@+id/ibSend"

@@ -46,4 +46,5 @@ public class Constants {
     public static final String COMMENTS_INTENT_KEY = "comment_users";
     public static final String COMMENT_TABLE_KEY = "Comment";
     public static final int MAX_COMMENTS_TO_DISPLAY = 30;
+    public static final String PROFILE_IMAGE_KEY = "profile_image";
 }

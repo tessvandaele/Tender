@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.tender.R;
 import com.codepath.tender.models.Comment;
 
@@ -47,17 +49,20 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
         TextView body;
         TextView username;
+        ImageView profile_image;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
 
             body = itemView.findViewById(R.id.tvBodyComment);
             username = itemView.findViewById(R.id.tvUsernameComment);
+            profile_image = itemView.findViewById(R.id.ivProfileImageComment);
         }
 
         public void bindComment(Comment comment) {
             username.setText(comment.getUsername());
             body.setText(comment.getBody());
+            Glide.with(context).load(comment.getProfile_image()).circleCrop().into(profile_image);
         }
     }
 }

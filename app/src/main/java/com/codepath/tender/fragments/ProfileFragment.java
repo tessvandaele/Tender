@@ -1,20 +1,13 @@
 package com.codepath.tender.fragments;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -22,6 +15,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.codepath.tender.LoginActivity;
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
@@ -67,6 +61,7 @@ public class ProfileFragment extends Fragment {
     private ChipGroup priceChips;
     private ChipGroup categoryChips;
     private Switch categorySwitch;
+    private ImageView profile_image;
 
     private boolean[] prices;
     private boolean[] categories;
@@ -95,12 +90,15 @@ public class ProfileFragment extends Fragment {
         priceChips = view.findViewById(R.id.priceChips);
         categoryChips = view.findViewById(R.id.categoryChips);
         categorySwitch = view.findViewById(R.id.categoriesSwitch);
+        profile_image = view.findViewById(R.id.ivProfileImage);
 
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)));
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         tvLocation.setText(ParseUser.getCurrentUser().getDouble(LATITUDE_KEY) + " | " + ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY));
+        String url = ParseUser.getCurrentUser().getString("profile_image");
+        Glide.with(this).load(ParseUser.getCurrentUser().getString("profile_image")).circleCrop().into(profile_image);
 
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
