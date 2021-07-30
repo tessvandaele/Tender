@@ -38,6 +38,10 @@ import com.yuyakaido.android.cardstackview.SwipeableMethod;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
+
 /* user can swipe through a deck of restaurants and swipe based on preference */
 
 public class SwipeFragment extends Fragment {
@@ -51,6 +55,7 @@ public class SwipeFragment extends Fragment {
     private ImageButton ibLike;
     private ImageButton ibDislike;
     private ImageButton ibRefresh;
+    private KonfettiView konfettiView;
 
     //bottom sheet views
     private ImageButton ibUp;
@@ -96,6 +101,7 @@ public class SwipeFragment extends Fragment {
         price = view.findViewById(R.id.tvPriceSheet);
         open = view.findViewById(R.id.tvOpenOrClosed);
         categories = view.findViewById(R.id.tvCategoriesSheet);
+        konfettiView = view.findViewById(R.id.viewKonfetti);
 
         //tab layout
         tabLayout = view.findViewById(R.id.tabLayout);
@@ -144,6 +150,7 @@ public class SwipeFragment extends Fragment {
 
                 //add restaurant to favorites list if user swiped right
                 if(direction == Direction.Right) {
+                    buildConfetti();
                     int position = layoutManager.getTopPosition() - 1;
                     restaurantViewModel.insertFavorite(restaurantViewModel.getRestaurants().getValue().get(position).getId(), ParseUser.getCurrentUser().getObjectId());
                 }
@@ -338,5 +345,16 @@ public class SwipeFragment extends Fragment {
         String prices = userViewModel.getPrices().getValue();
         String categories = userViewModel.getCategories().getValue();
         restaurantViewModel.fetchRestaurants(latitude, longitude, 30, offset, radius, prices, categories, "best_match");
+    }
+
+    public void buildConfetti() {
+        konfettiView.build()
+                .addColors(Color.rgb(0, 151, 172 ), Color.rgb(255, 208, 141), Color.rgb(246, 131, 112))
+                .setDirection(0.0, 359.0)
+                .setSpeed(1f, 5f)
+                .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                .addSizes(new Size(12, 5f))
+                .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                .streamFor(300, 700L);
     }
 }

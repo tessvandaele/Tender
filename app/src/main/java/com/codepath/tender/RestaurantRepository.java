@@ -157,8 +157,10 @@ public class RestaurantRepository {
         yelpService.getRestaurantDetails("Bearer " + API_KEY, id).enqueue(new Callback<Restaurant>() {
             @Override
             public void onResponse(Call<Restaurant> call, Response<Restaurant> response) {
-                favorites.add(response.body());
-                favoritesListener.onFinishFetch(response.body());
+                if(response.body() != null) { //TODO: look into why some restaurants are null
+                    favorites.add(response.body());
+                    favoritesListener.onFinishFetch(response.body());
+                }
             }
 
             @Override

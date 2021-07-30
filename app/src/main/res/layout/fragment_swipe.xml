@@ -80,6 +80,11 @@
             android:scaleX="2.5"
             android:scaleY="2.5"
             android:src="@drawable/ic_up_arrow_circle" />
+
+        <nl.dionsegijn.konfetti.KonfettiView
+            android:id="@+id/viewKonfetti"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
     <include layout="@layout/bottom_sheet" />
