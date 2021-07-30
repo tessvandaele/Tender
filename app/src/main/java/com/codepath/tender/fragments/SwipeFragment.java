@@ -337,6 +337,6 @@ public class SwipeFragment extends Fragment {
         int radius = userViewModel.getRadius().getValue() * 1609;
         String prices = userViewModel.getPrices().getValue();
         String categories = userViewModel.getCategories().getValue();
-        restaurantViewModel.fetchRestaurants(latitude, longitude, 30, offset, radius, prices, categories, "distance");
+        restaurantViewModel.fetchRestaurants(latitude, longitude, 30, offset, radius, prices, categories, "best_match");
     }
 }
