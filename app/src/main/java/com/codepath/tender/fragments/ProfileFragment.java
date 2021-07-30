@@ -1,7 +1,13 @@
 package com.codepath.tender.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +17,10 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -20,13 +29,17 @@ import com.codepath.tender.LoginActivity;
 import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.UserViewModel;
+import com.codepath.tender.models.Comment;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static com.codepath.tender.Constants.CATEGORIES_KEY;
 import static com.codepath.tender.Constants.CATEGORY_EIGHT;
 import static com.codepath.tender.Constants.CATEGORY_EIGHT_NAME;
@@ -47,6 +60,7 @@ import static com.codepath.tender.Constants.CATEGORY_TWO;
 import static com.codepath.tender.Constants.LATITUDE_KEY;
 import static com.codepath.tender.Constants.LONGITUDE_KEY;
 import static com.codepath.tender.Constants.PRICES_KEY;
+import static com.codepath.tender.Constants.PROFILE_IMAGE_KEY;
 import static com.codepath.tender.Constants.RADIUS_KEY;
 
 /* user can logout of account and view profile */
@@ -62,11 +76,16 @@ public class ProfileFragment extends Fragment {
     private ChipGroup categoryChips;
     private Switch categorySwitch;
     private ImageView profile_image;
+    private ImageButton camera;
 
     private boolean[] prices;
     private boolean[] categories;
 
     private UserViewModel userViewModel;
+
+    private File photoFile;
+    public String photoFileName = "photo.jpg";
+    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
 
     //empty constructor
     public ProfileFragment() {}
@@ -91,18 +110,20 @@ public class ProfileFragment extends Fragment {
         categoryChips = view.findViewById(R.id.categoryChips);
         categorySwitch = view.findViewById(R.id.categoriesSwitch);
         profile_image = view.findViewById(R.id.ivProfileImage);
+        camera = view.findViewById(R.id.ibCamera);
 
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)));
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         tvLocation.setText(ParseUser.getCurrentUser().getDouble(LATITUDE_KEY) + " | " + ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY));
-        String url = ParseUser.getCurrentUser().getString("profile_image");
-        Glide.with(this).load(ParseUser.getCurrentUser().getString("profile_image")).circleCrop().into(profile_image);
+        ParseFile file = ParseUser.getCurrentUser().getParseFile(PROFILE_IMAGE_KEY);
+        Glide.with(this).load(file.getUrl()).circleCrop().into(profile_image);
 
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
 
         setLogout();
+        setCameraBtn();
 
         setPriceChipsData();
         setCategoryChipsData();
@@ -331,5 +352,64 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public void setCameraBtn() {
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchCamera();
+            }
+        });
+    }
+
+    //creates implicit intent to camera
+    private void launchCamera() {
+        //creating an implicit intent for action_image_capture
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //create a File reference for future access
+        photoFile = getPhotoFileUri(photoFileName);
+
+        //defining where we want the output image to be stored (in photoFile)
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        //checking for an application that can handle the intent
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            // Start the image capture intent to take photo
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    //retrieves the image from the camera api
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //check that code is correct for camera use
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            //check that a picture was taken
+            if (resultCode == RESULT_OK) {
+                // set bitmap with image
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                //set image view with image from camera
+                Glide.with(getContext()).load(takenImage).circleCrop().into(profile_image);
+                ParseUser.getCurrentUser().put(PROFILE_IMAGE_KEY, new ParseFile(photoFile));
+            } else { // Result was a failure
+                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //helper method to return the file based on file name
+    public File getPhotoFileUri(String fileName) {
+        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "MainActivity");
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            Log.d("MainActivity", "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 }

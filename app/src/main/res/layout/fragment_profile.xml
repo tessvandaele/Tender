@@ -317,6 +317,17 @@
             android:thumbTint="@color/main_color"
             android:trackTint="@color/main_color" />
 
+        <ImageButton
+            android:id="@+id/ibCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/ivProfileImage"
+            android:layout_alignBottom="@+id/ivProfileImage"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#00FFFFFF"
+            android:src="@android:drawable/ic_menu_camera" />
+
     </RelativeLayout>
 
 </ScrollView>
