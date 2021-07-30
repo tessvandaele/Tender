@@ -42,7 +42,8 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/main_color"
-        android:text="create account" />
+        android:text="create account"
+        app:cornerRadius="20dp" />
 
     <ImageButton
         android:id="@+id/ibBack"
