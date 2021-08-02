@@ -3,6 +3,8 @@ package com.codepath.tender.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,8 +38,10 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 import static com.codepath.tender.Constants.CATEGORIES_KEY;
@@ -77,6 +81,7 @@ public class ProfileFragment extends Fragment {
     private Switch categorySwitch;
     private ImageView profile_image;
     private ImageButton camera;
+    private TextView name;
 
     private boolean[] prices;
     private boolean[] categories;
@@ -111,14 +116,15 @@ public class ProfileFragment extends Fragment {
         categorySwitch = view.findViewById(R.id.categoriesSwitch);
         profile_image = view.findViewById(R.id.ivProfileImage);
         camera = view.findViewById(R.id.ibCamera);
+        name = view.findViewById(R.id.tvNameProfile);
 
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
-        tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)));
+        tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)) + " mi");
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
-        tvLocation.setText(ParseUser.getCurrentUser().getDouble(LATITUDE_KEY) + " | " + ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY));
-        ParseUser current = ParseUser.getCurrentUser();
-        ParseFile file = current.getParseFile(PROFILE_IMAGE_KEY);
+        tvLocation.setText(getUserAddress());
+        name.setText(ParseUser.getCurrentUser().getString("name"));
+        ParseFile file = ParseUser.getCurrentUser().getParseFile(PROFILE_IMAGE_KEY);
         Glide.with(this).load(file.getUrl()).circleCrop().into(profile_image);
 
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
@@ -133,6 +139,22 @@ public class ProfileFragment extends Fragment {
         setPriceChipsListener();
         setCategoryChipsListener();
         setCategorySwitchListener();
+    }
+
+    private String getUserAddress() {
+        String result = "";
+        double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
+        double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            result += addresses.get(0).getFeatureName() + " " + addresses.get(0).getThoroughfare();
+            result += "\n";
+            result += addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() + " " + addresses.get(0).getPostalCode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     //sets up the log out button to allow user to log out

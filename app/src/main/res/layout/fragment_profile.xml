@@ -11,65 +11,107 @@
         android:layout_height="wrap_content"
         android:gravity="center">
 
-        <ImageButton
-            android:id="@+id/ibLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="20dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="#00FFFFFF"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
-            android:src="@drawable/ic_logout" />
-
-        <ImageView
-            android:id="@+id/ivProfileImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="120dp"
-            app:srcCompat="@drawable/profile_sample"
-            tools:src="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/tvProfileUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ivProfileImage"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="0dp"
-            tools:text="tess_vandaele" />
-
-        <TextView
-            android:id="@+id/tvLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvProfileUsername"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            tools:text="1907.56 | 3056.23" />
-
-        <View
-            android:id="@+id/divider2"
+        <RelativeLayout
+            android:id="@+id/relativeLayoutProfile"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/tvLocation"
-            android:layout_margin="20dp"
-            android:layout_marginTop="20dp"
-            android:background="?android:attr/listDivider" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/grad">
+
+            <ImageButton
+                android:id="@+id/ibLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="#00FFFFFF"
+                android:src="@drawable/ic_logout"
+                app:tint="@color/white" />
+
+
+            <RelativeLayout
+                android:id="@+id/profileImageLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/circle_border">
+                >
+
+                <ImageView
+                    android:id="@+id/ivProfileImage"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_margin="9dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/circle"
+                    android:padding="3dp"
+                    android:scaleType="centerInside"/>
+
+            </RelativeLayout>
+
+
+            <ImageButton
+                android:id="@+id/ibCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/profileImageLayout"
+                android:layout_alignBottom="@+id/profileImageLayout"
+                android:layout_marginEnd="-5dp"
+                android:layout_marginBottom="-5dp"
+                android:background="#00FFFFFF"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
+                android:src="@drawable/ic_camera"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/tvNameProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profileImageLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                tools:text="Tess Van Daele" />
+
+            <TextView
+                android:id="@+id/tvProfileUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvNameProfile"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:textAlignment="viewStart"
+                tools:text="tess_vandaele " />
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvProfileUsername"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:lineSpacingExtra="8sp"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                tools:text="700 Main street \n 787" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/max_distance_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider2"
+            android:layout_below="@id/relativeLayoutProfile"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             android:text="Maximum Distance" />
 
         <SeekBar
@@ -92,9 +134,9 @@
             android:id="@+id/tvRadius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/divider2"
+            android:layout_below="@id/relativeLayoutProfile"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="22dp"
             android:text="10 mi"
             android:textColor="@android:color/darker_gray" />
@@ -316,17 +358,6 @@
             android:checked="false"
             android:thumbTint="@color/main_color"
             android:trackTint="@color/main_color" />
-
-        <ImageButton
-            android:id="@+id/ibCamera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/ivProfileImage"
-            android:layout_alignBottom="@+id/ivProfileImage"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="#00FFFFFF"
-            android:src="@android:drawable/ic_menu_camera" />
 
     </RelativeLayout>
 
