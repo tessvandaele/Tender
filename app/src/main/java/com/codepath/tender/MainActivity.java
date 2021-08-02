@@ -2,6 +2,9 @@ package com.codepath.tender;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.codepath.tender.fragments.FavoritesFragment;
 import com.codepath.tender.fragments.ProfileFragment;
@@ -30,11 +33,25 @@ public class MainActivity extends AppCompatActivity {
     private RestaurantViewModel restaurantViewModel;
     private UserViewModel userViewModel;
     private LocationService locationService;
+    private RelativeLayout overlay;
+    private ImageButton closeOverlay;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //instructions overlay
+        overlay = findViewById(R.id.rlOverlay);
+        closeOverlay = findViewById(R.id.ibCloseOverlay);
+        overlay.setVisibility(View.INVISIBLE);
+        Boolean login = getIntent().getBooleanExtra("login_user", false);
+
+        if(login) {
+            setOverlayButton();
+            overlay.setVisibility(View.VISIBLE);
+        }
 
         restaurantViewModel = new ViewModelProvider(this).get(RestaurantViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -88,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
 
         locationService = new LocationService(this, mFusedLocationClient, userViewModel);
         locationService.getLastLocation();
+
+
     }
 
     //helper method for when the deck of restaurants needs to be refloaded
@@ -116,4 +135,15 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         locationService.onResume();
     }
+
+    public void setOverlayButton() {
+        closeOverlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                overlay.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
 }

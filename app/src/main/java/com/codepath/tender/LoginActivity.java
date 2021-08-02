@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //check if user is already logged in
         if(ParseUser.getCurrentUser() != null){
-            goMainActivity();
+            goMainActivity(false);
         }
 
         //assigning views
@@ -74,14 +74,15 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 //no exception; navigate to main activity
-                goMainActivity();
+                goMainActivity(true);
             }
         });
     }
 
     //creates an intent to the main activity
-    private void goMainActivity() {
+    private void goMainActivity(Boolean new_login) {
         Intent i = new Intent(LoginActivity.this, MainActivity.class);
+        i.putExtra("login_user", new_login);
         startActivity(i);
         finish();
     }
