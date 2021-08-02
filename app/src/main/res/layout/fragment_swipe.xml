@@ -16,8 +16,7 @@
             android:id="@+id/tvNoMoreCards"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="You're out of cards!" />
+            android:layout_centerInParent="true" />
 
         <com.yuyakaido.android.cardstackview.CardStackView
             android:id="@+id/card_stack_view"

@@ -279,5 +279,15 @@
             app:tint="@color/main_color"
             app:srcCompat="@drawable/ic_comments" />
 
+        <ImageButton
+            android:id="@+id/ibBackDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:backgroundTint="#00FFFFFF"
+            app:tint="#FFFFFF"
+            app:srcCompat="@drawable/ic_back" />
+
     </com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader>
 </RelativeLayout>

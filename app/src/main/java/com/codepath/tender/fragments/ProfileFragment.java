@@ -117,7 +117,8 @@ public class ProfileFragment extends Fragment {
         tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)));
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         tvLocation.setText(ParseUser.getCurrentUser().getDouble(LATITUDE_KEY) + " | " + ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY));
-        ParseFile file = ParseUser.getCurrentUser().getParseFile(PROFILE_IMAGE_KEY);
+        ParseUser current = ParseUser.getCurrentUser();
+        ParseFile file = current.getParseFile(PROFILE_IMAGE_KEY);
         Glide.with(this).load(file.getUrl()).circleCrop().into(profile_image);
 
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);

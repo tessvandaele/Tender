@@ -35,6 +35,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     EditText user_comment;
     ImageButton send_btn;
+    ImageButton back;
     RecyclerView rv_comments;
     List<Comment> comments_list;
     Boolean firstLoad;
@@ -51,6 +52,7 @@ public class CommentsActivity extends AppCompatActivity {
         //assigning views
         user_comment = findViewById(R.id.etMessage);
         send_btn = findViewById(R.id.ibSend);
+        back = findViewById(R.id.ibBackComments);
         rv_comments = findViewById(R.id.rvComments);
         comments_list = new ArrayList<>();
         firstLoad = true;
@@ -63,7 +65,13 @@ public class CommentsActivity extends AppCompatActivity {
         rv_comments.setLayoutManager(linearLayoutManager);
         linearLayoutManager.setReverseLayout(true);
 
-        // When send button is clicked, create message object on Parse
+        setSendButton();
+        setBackButton();
+        refreshMessages();
+    }
+
+    private void setSendButton() {
+        // When send button is clicked, create comment object on Parse
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,8 +94,15 @@ public class CommentsActivity extends AppCompatActivity {
                 user_comment.setText(null);
             }
         });
+    }
 
-        refreshMessages();
+    private void setBackButton() {
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     // Query messages from Parse so we can load them into the chat adapter

@@ -56,6 +56,7 @@ public class SwipeFragment extends Fragment {
     private ImageButton ibDislike;
     private ImageButton ibRefresh;
     private KonfettiView konfettiView;
+    private TextView outOfCards;
 
     //bottom sheet views
     private ImageButton ibUp;
@@ -91,6 +92,7 @@ public class SwipeFragment extends Fragment {
         ibLike = view.findViewById(R.id.ibLike);
         ibDislike = view.findViewById(R.id.ibDislike);
         ibRefresh = view.findViewById(R.id.ibRefresh);
+        outOfCards = view.findViewById(R.id.tvNoMoreCards);
 
         //bottom sheet
         ibUp = view.findViewById(R.id.ibUp);
@@ -287,6 +289,7 @@ public class SwipeFragment extends Fragment {
                     restaurantViewModel.addAllRestaurants(restaurants);
                     layoutManager.scrollToPosition(0);
                     adapter.setRestaurants(restaurants);
+                    outOfCards.setText("No more cards!");
                 } else { //adding to the end of the deck
                     restaurantViewModel.addAllRestaurants(restaurants);
                     adapter.addRestaurants(restaurants, offset);

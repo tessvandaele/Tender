@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.bumptech.glide.Glide;
 import com.codepath.tender.adapters.ReviewAdapter;
+import com.codepath.tender.fragments.FavoritesFragment;
 import com.codepath.tender.models.Open;
 import com.codepath.tender.models.Restaurant;
 import com.codepath.tender.models.Review;
@@ -57,7 +58,7 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageButton all_reviews_link;
     private TextView hours;
     private ImageButton comments;
-
+    private ImageButton back;
 
     private RecyclerView rvReviews;
     private RecyclerViewHeader header;
@@ -97,6 +98,7 @@ public class DetailsActivity extends AppCompatActivity {
         header = findViewById(R.id.header);
         open_maps = findViewById(R.id.btnOpenMaps);
         comments = findViewById(R.id.ibComments);
+        back = findViewById(R.id.ibBackDetails);
 
         //recycler view set up
         adapter = new ReviewAdapter(this, reviews);
@@ -171,6 +173,16 @@ public class DetailsActivity extends AppCompatActivity {
         setOpenMapsButton();
         setOtherUsersDialogButton();
         setCommentsButton();
+        setBackButton();
+    }
+
+    private void setBackButton() {
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void setCommentsButton() {
