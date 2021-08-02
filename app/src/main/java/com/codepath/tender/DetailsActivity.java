@@ -262,6 +262,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     public void setTodaysHours(Restaurant restaurant) throws ParseException {
         //calculate todays week day as int: mon = 0, tue = 1, etc
+        hours.setText("Closed");
         int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-2;
         if(today == -1) today = 6;
         for(int i = 0; i<restaurant.getHours()[0].getOpen().length; i++){
