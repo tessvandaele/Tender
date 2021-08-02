@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 /* user can sign up for a new tender account */
@@ -20,6 +21,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText etUsernameSignup;
     private EditText etPasswordSignup;
+    private EditText etNameSignup;
     private Button btnCreateAccount;
     private ImageButton ibBack;
 
@@ -30,6 +32,7 @@ public class SignupActivity extends AppCompatActivity {
 
         etUsernameSignup = findViewById(R.id.etUsernameSignup);
         etPasswordSignup = findViewById(R.id.etPasswordSignup);
+        etNameSignup = findViewById(R.id.etNameSignup);
         btnCreateAccount = findViewById(R.id.btnCreateAccount);
         ibBack = findViewById(R.id.ibBack);
 
@@ -53,10 +56,17 @@ public class SignupActivity extends AppCompatActivity {
                             return;
                         }
 
-                        //create intent back to log in screen so user can log in with new account
-                        Intent i = new Intent(SignupActivity.this, LoginActivity.class);
-                        startActivity(i);
-                        finish();
+                        //save name of user
+                        user.put("name", etNameSignup.getText().toString());
+                        user.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                //create intent back to log in screen so user can log in with new account
+                                Intent i = new Intent(SignupActivity.this, LoginActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
                     }
                 });
             }

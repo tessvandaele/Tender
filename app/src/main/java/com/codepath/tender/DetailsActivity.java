@@ -286,7 +286,7 @@ public class DetailsActivity extends AppCompatActivity {
         for(int i = 0; i<favorite_usernames.size(); i++) {
             users += favorite_usernames.get(i) + "\n";
         }
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
 
         //opening dialog with users that have favorites restaurant
         builder.setMessage(users)

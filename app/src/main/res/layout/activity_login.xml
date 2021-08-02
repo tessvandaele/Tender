@@ -39,7 +39,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
         android:backgroundTint="@color/main_color"
         android:text="login"
         app:cornerRadius="20dp" />
@@ -48,10 +47,10 @@
         android:id="@+id/btnSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnLogin"
+        android:layout_below="@id/or"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/main_color"
@@ -66,5 +65,14 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="100dp"
         app:srcCompat="@drawable/tender_logo" />
+
+    <TextView
+        android:id="@+id/or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="- or -" />
 
 </RelativeLayout>
