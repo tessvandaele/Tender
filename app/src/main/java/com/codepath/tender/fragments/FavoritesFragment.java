@@ -7,26 +7,28 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codepath.tender.R;
+import com.codepath.tender.RecyclerTouchItemHelper;
 import com.codepath.tender.RestaurantRepository;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.adapters.FavoritesAdapter;
 import com.codepath.tender.models.Restaurant;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /* user can view a list of favorite restaurants, navigate to a details page, and delete a favorite */
 
-public class FavoritesFragment extends Fragment {
+public class FavoritesFragment extends Fragment implements RecyclerTouchItemHelper.RecyclerItemTouchHelperListener{
 
     private RecyclerView recyclerView;
     private FavoritesAdapter adapter;
     private RestaurantViewModel model;
     private FavoritesAdapter.OnClickListenerDelete listener;
+    private LinearLayoutManager layoutManager;
 
     ArrayList<Restaurant> favorites;
 
@@ -54,7 +56,12 @@ public class FavoritesFragment extends Fragment {
         //adapter and layout manager set up
         adapter = new FavoritesAdapter(getContext(), favorites, listener);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        //touch helper to allow swipe to delete; left swipe only
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerTouchItemHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         setFavoriteListener();
         model.getFavorites();
@@ -87,5 +94,14 @@ public class FavoritesFragment extends Fragment {
                 model.getFavorites();
             }
         });
+    }
+
+    //when item is swipe left, it is deleted from list
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof FavoritesAdapter.ViewHolder) {
+            // remove item from recycler view
+            adapter.removeItem(viewHolder.getAdapterPosition());
+        }
     }
 }

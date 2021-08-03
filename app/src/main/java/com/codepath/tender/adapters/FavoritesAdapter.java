@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -68,9 +68,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         private TextView distance;
         private TextView reviewCount;
         private TextView price;
-        private ImageButton delete;
         private TextView address1;
         private TextView address2;
+        public RelativeLayout viewBackground, viewForeground;
 
         //vew holder constructor
         public ViewHolder(@NonNull View itemView) {
@@ -79,11 +79,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             image = itemView.findViewById(R.id.ivImage);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             distance = itemView.findViewById(R.id.tvDistance);
-            delete = itemView.findViewById(R.id.ibDelete);
             reviewCount = itemView.findViewById(R.id.tvReviewCount);
             price = itemView.findViewById(R.id.tvPrice);
             address1 = itemView.findViewById(R.id.tvAddress1);
             address2 = itemView.findViewById(R.id.tvAddress2);
+            viewBackground = itemView.findViewById(R.id.view_background);
+            viewForeground = itemView.findViewById(R.id.view_foreground);
 
             //setting click listener on view holder
             itemView.setOnClickListener(this);
@@ -97,7 +98,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             reviewCount.setText(Integer.toString(restaurant.getReview_count()));
             price.setText(restaurant.getPrice());
 
-            if(restaurant.getLocation().getDisplay_address().length > 2) {
+            if (restaurant.getLocation().getDisplay_address().length > 2) {
                 address1.setText(restaurant.getLocation().getDisplay_address()[0] + ", " + restaurant.getLocation().getDisplay_address()[1]);
                 address2.setText(restaurant.getLocation().getDisplay_address()[2]);
             } else {
@@ -109,14 +110,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                     .load(restaurant.getImage_url())
                     .centerCrop()
                     .into(image);
-
-            //setting delete icon to call interface method defined in favorites fragment
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClicked(restaurant.getId());
-                }
-            });
         }
 
         //start intent for details activity
@@ -130,5 +123,11 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
                 context.startActivity(intent);
             }
         }
+    }
+
+    //helper method to remove item from list
+    public void removeItem(int position) {
+        favorites.remove(position);
+        notifyItemRemoved(position);
     }
 }

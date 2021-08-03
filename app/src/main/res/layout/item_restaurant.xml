@@ -3,115 +3,135 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="110dp"
     android:layout_margin="5dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@+id/tvDistance"
-        android:layout_toEndOf="@+id/ivImage"
-        android:background="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        tools:text="Kerbey Lane Cafe" />
-
-    <ImageView
-        android:id="@+id/ivImage"
-        android:layout_width="100dp"
+    <RelativeLayout
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="#E37474">
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="@style/Widget.AppCompat.RatingBar.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvName"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/ivImage"
-        android:numStars="5"
-        android:progressTint="@color/main_color"
-        android:rating="4.5" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="DELETE"
+            android:textColor="#fff"
+            android:textSize="13dp" />
 
-    <TextView
-        android:id="@+id/tvDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        tools:text="5.7 mi" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/view_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/tvDistance"
+            android:layout_toEndOf="@+id/ivImage"
+            android:background="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Kerbey Lane Cafe" />
+
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvName"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/ivImage"
+            android:numStars="5"
+            android:progressTint="@color/main_color"
+            android:rating="4.5" />
+
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            tools:text="5.7 mi" />
+
+        <TextView
+            android:id="@+id/tvAddress1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ratingBar"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/ivImage"
+            tools:text="57 Main Avenue, San Fransisco" />
+
+        <TextView
+            android:id="@+id/tvAddress2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAddress1"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@+id/ivImage"
+            android:textColor="#AEAEAE"
+            tools:text="American" />
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDistance"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/main_color"
+            tools:text="$$" />
+
+        <TextView
+            android:id="@+id/tvReviewCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/ratingBar"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toEndOf="@+id/ratingBar"
+            android:textSize="10sp"
+            tools:text="236 Reviews" />
+
+
+    </RelativeLayout>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/tvAddress2"
-        android:layout_alignParentStart="true"
+        android:layout_below="@+id/view_foreground"
         android:layout_marginTop="5dp"
         android:background="?android:attr/listDivider" />
-
-    <ImageButton
-        android:id="@+id/ibDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/divider"
-        android:layout_alignParentEnd="true"
-        android:backgroundTint="#00FFFFFF"
-        app:srcCompat="@drawable/ic_trash" />
-
-    <TextView
-        android:id="@+id/tvAddress1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ratingBar"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/ivImage"
-        tools:text="57 Main Avenue, San Fransisco" />
-
-    <TextView
-        android:id="@+id/tvAddress2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvAddress1"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_toEndOf="@+id/ivImage"
-        android:textColor="#AEAEAE"
-        tools:text="American" />
-
-    <TextView
-        android:id="@+id/tvPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDistance"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:textColor="@color/main_color"
-        tools:text="$$" />
-
-    <TextView
-        android:id="@+id/tvReviewCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ratingBar"
-        android:layout_marginStart="5dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/ratingBar"
-        android:textSize="10sp"
-        tools:text="236 Reviews" />
 
 </RelativeLayout>
