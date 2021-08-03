@@ -8,55 +8,64 @@
 
 ## Overview
 ### Description
-The Food Tinder app is a spin on the classic Tinder app wherein users can swipe on food, rather than people, to find a place to eat. Users can either swipe right to "match" with a food location and have it added to their interest list or swipe left to dismiss the food service. The app will provide a detailed view of the chosen restaurant with information such as customer rating, location, hours, and pictures. The app will also provide navigation to restaurants and a reviewing service for users to leave reviews of visited restaurants.
+Tender is a restaurant browsing app that fetches data from the Yelp API and uses a Parse database for user authentication. Similar to the popular app Tinder, users can swipe through a deck to like or dislike restaurant profiles, which generally comprise a photo gallery, business information, and distance from the user. The app also provides features such as google maps navigation, a chat feature, and restaurant search filtering.
 
 ### App Evaluation
 
 - **Category:** Food
 - **Mobile:** This app provides an easy and fun way to find food near you. Browsing restaurant websites online is often frustrating on a mobile device so this app makes it a clean, simple process.
-- **Story:** A user will be provided with a set of food options which can be filtered based on preferences such as type of food, price level, and distance. The user can then swipe to indicate interest or disinterest in the food service. When the user is interested in the restaurant, the app will offer them extra details and navigation to the service.
+- **Story:** A user will be provided with a set of food options which can be filtered based on preferences such as type of food, price level, and distance. The user can then swipe to indicate interest or disinterest in the food service. When the user is interested in a restaurant, the app will offer them extra details and navigation to the service.
 - **Market:** This app is targeted mostly towards young adults who are likely familiar with the tinder platform and eat out frequently. Generally, however, the app can be used by anyone searching for a place to eat near them.
 - **Habit:** This app is used when the user needs to eat a meal but cannot decide where to eat or wants to try something new.
-- **Scope:** This app can have varying levels of technicality. It's basic form will simply be a swiping app in which restaurants can be added to an interested list. Then, additional features such as navigation and reviewing can be addded.
+- **Scope:** This app can have varying levels of technicality. It's basic form will simply be a swiping app in which restaurants can be added to an interested list. Then, additional features such as navigation and search filtering can be addded.
 
 ## Product Spec
 
 ### 1. User Stories (Required and Optional)
 
-**Required Must-have Stories**
+The following **must-have** features are completed:
 
-- [ ] User can login to their profile
-- [ ] User can view a set of restaurants (displayed like a deck of cards)
-- [ ] User can swipe left to dismiss the card or swipe right to add the card to their interested list
-- [ ] User can view a list of restaurants they are interested in
-- [ ] User can remove restaurants from their interested list
-- [ ] User can view a detailed screen of information on a specific restaurant
+- [x] User can login to their profile
+- [x] User can view a set of restaurants (displayed as a deck of cards)
+- [x] User can swipe left to dismiss the card or swipe right to add the card to their interested list
+- [x] User can view a list of restaurants they are interested in
+- [x] User can remove restaurants from their interested list
+- [x] User can view a detailed screen of information on a specific restaurant
 
-**Optional Nice-to-have Stories**
+The following **extra** features are complete:
 
-- [ ] User can change preferences on what restaurants to see
-- [ ] User can get navigation to a restaurant
-- [ ] User can leave a review of a restaurant
-- [ ] User can personalize their profile (profile image, user name, address, etc.)
-- [ ] The app has a logo and coherent theme throughout
-- [ ] User can log out of their profile
+- [x] User can view a restaurant profile with additional information by swiping up on a restaurant in the deck
+- [x] User can change filters on what restaurants are generated (max radius, price level, and food categories)
+- [x] User can get navigation to a restaurant
+- [x] User can view yelp reviews of a restaurant
+- [ ] User can view and personalize their profile (profile image and name)
+- [x] The app has a logo and coherent theme throughout
+- [x] User can create a new account
+- [x] User can log out of their profile
+- [x] Each restaurant has a comments page where users can leave comments on places in their favorites list
 
 ### 2. Screen Archetypes
 
 * Login view
    * User can login to their profile
    * The app has a logo and coherent theme
+* Signup view
+   * User can create an account 
 * Card view
    * User can view a set of restaurants
    * User can swipe left and right depending on their oppinion
-* Interested view
+   * User can swipe up to view detailed restaurant profile (bussiness info, hours, and gallery)
+* Favorites view
     * User can view a list of restaurants they are interested in 
     * User can remove restaurants from their interested list
 * Details view
-    * User can view a screen with extra information on a specific restaurant (information includes 5-star rating, location, bussiness hours, menu, etc.)
+    * User can view a screen with extra information on a specific restaurant (information includes 5-star rating, location, bussiness hours, map, etc.)
     * User can get navigation to the restaurant
-    * User can leave a review for a restaurant
-* Account view
+    * User can view yelp reviews of the restaurant
+* Comments view
+    * User can leave a comments on the resturant
+    * User can view a list of comments made by other users of the app
+* Profile view
     * User can personalize their viewing preferences
     * User can personalize their profile
     * User can log out of their account
@@ -65,19 +74,18 @@ The Food Tinder app is a spin on the classic Tinder app wherein users can swipe 
 
 **Tab Navigation** (Tab to Screen)
 
-* Home screen
-* Interested screen
-* Account settings screen
+* Swipe screen
+* Favorites screen
+* Profile screen
 
 **Flow Navigation** (Screen to Screen)
 
 * Login screen
    * Home screen
-* Home screen
-   * Account settings screen
-   * Interested screen
-* Interested screen
-    * Home screen
+* Swipe screen
+   * Favorites screen
+   * Profile screen
+* Favorites screen
     * Details screen
 * Account settings screen
     * Home screen
