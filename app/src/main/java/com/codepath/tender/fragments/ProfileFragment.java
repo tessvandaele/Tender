@@ -1,5 +1,7 @@
 package com.codepath.tender.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -29,9 +33,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.codepath.tender.LoginActivity;
 import com.codepath.tender.R;
-import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.UserViewModel;
-import com.codepath.tender.models.Comment;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.parse.ParseFile;
@@ -82,6 +84,7 @@ public class ProfileFragment extends Fragment {
     private ImageView profile_image;
     private ImageButton camera;
     private TextView name;
+    private ImageButton edit_name;
 
     private boolean[] prices;
     private boolean[] categories;
@@ -117,6 +120,7 @@ public class ProfileFragment extends Fragment {
         profile_image = view.findViewById(R.id.ivProfileImage);
         camera = view.findViewById(R.id.ibCamera);
         name = view.findViewById(R.id.tvNameProfile);
+        edit_name = view.findViewById(R.id.ibEditName);
 
 
         tvUsername.setText(ParseUser.getCurrentUser().getUsername());
@@ -131,6 +135,7 @@ public class ProfileFragment extends Fragment {
 
         setLogout();
         setCameraBtn();
+        setEditNameButton();
 
         setPriceChipsData();
         setCategoryChipsData();
@@ -434,5 +439,48 @@ public class ProfileFragment extends Fragment {
 
         // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
+    }
+
+    private void setEditNameButton() {
+        edit_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditNameDialog();
+            }
+        });
+    }
+
+    private void openEditNameDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
+
+        //opening dialog with users that have favorites restaurant
+        builder.setTitle("Change Name");
+        builder.setMessage("Enter name");
+        final EditText new_name = new EditText(getContext());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        new_name.setLayoutParams(lp);
+        builder.setView(new_name);
+
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(!new_name.getText().toString().equals("")){
+                    ParseUser.getCurrentUser().put("name", new_name.getText().toString());
+                    ParseUser.getCurrentUser().saveInBackground();
+                    name.setText(new_name.getText().toString());
+                    dialog.cancel();
+                }
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() { //no
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        //close dialog
+                        dialog.cancel();
+                    }
+                });
+
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }
