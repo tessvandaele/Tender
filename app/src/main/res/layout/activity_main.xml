@@ -13,7 +13,9 @@
         android:layout_above="@+id/bottom_navigation"
         android:layout_alignParentStart="true"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginBottom="0dp" >
+
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -30,15 +32,6 @@
         android:layout_marginBottom="0dp"
         android:background="#AA000000"
         app:layout_anchorGravity="center">
-
-        <ImageButton
-            android:id="@+id/ibCloseOverlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@color/transparent"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-            app:tint="@color/white" />
 
         <ImageView
             android:id="@+id/left_arrow"
@@ -178,7 +171,7 @@
             android:layout_width="100dp"
             android:layout_height="180dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="80dp"
             android:layout_toStartOf="@+id/arrow_down_like"
             android:rotation="-20"
@@ -197,16 +190,14 @@
             android:text="restart deck"
             android:textColor="@color/white" />
 
-        <TextView
-            android:id="@+id/welcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <View
+            android:layout_width="350dp"
+            android:layout_height="300dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="Welcome to Tender"
-            android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:layout_marginTop="50dp"
+            android:background="@drawable/dotted_line"
+            android:layerType="software"
+            android:rotation="90" />
 
     </RelativeLayout>
 

@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private LocationService locationService;
     private RelativeLayout overlay;
-    private ImageButton closeOverlay;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
         //instructions overlay
         overlay = findViewById(R.id.rlOverlay);
-        closeOverlay = findViewById(R.id.ibCloseOverlay);
         overlay.setVisibility(View.INVISIBLE);
         Boolean login = getIntent().getBooleanExtra("login_user", false);
 
@@ -137,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setOverlayButton() {
-        closeOverlay.setOnClickListener(new View.OnClickListener() {
+        overlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 overlay.setVisibility(View.GONE);
