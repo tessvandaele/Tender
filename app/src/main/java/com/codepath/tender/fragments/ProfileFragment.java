@@ -74,7 +74,6 @@ import static com.codepath.tender.Constants.RADIUS_KEY;
 public class ProfileFragment extends Fragment {
 
     private ImageButton ibLogout;
-    private TextView tvUsername;
     private TextView tvLocation;
     private SeekBar barRadius;
     private TextView tvRadius;
@@ -110,7 +109,6 @@ public class ProfileFragment extends Fragment {
         categories = new boolean[] {false, false, false, false, false, false, false, false, false, false, false, false, false};
 
         ibLogout = view.findViewById(R.id.ibLogout);
-        tvUsername = view.findViewById(R.id.tvProfileUsername);
         tvLocation = view.findViewById(R.id.tvLocation);
         barRadius = view.findViewById(R.id.barRadius);
         tvRadius = view.findViewById(R.id.tvRadius);
@@ -122,8 +120,6 @@ public class ProfileFragment extends Fragment {
         name = view.findViewById(R.id.tvNameProfile);
         edit_name = view.findViewById(R.id.ibEditName);
 
-
-        tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)) + " mi");
         barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
         tvLocation.setText(getUserAddress());
@@ -147,19 +143,16 @@ public class ProfileFragment extends Fragment {
     }
 
     private String getUserAddress() {
-        String result = "";
         double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
         double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            result += addresses.get(0).getFeatureName() + " " + addresses.get(0).getThoroughfare();
-            result += "\n";
-            result += addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() + " " + addresses.get(0).getPostalCode();
+            return addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() ;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return "";
     }
 
     //sets up the log out button to allow user to log out
