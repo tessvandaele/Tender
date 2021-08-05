@@ -100,9 +100,9 @@ The following **extra** features are complete:
 
 ### Demo Video
 
-Here is a demo of the app wirframes:
+Here's a walkthrough of implemented user stories:
 
-<img src='wireframe/TenderWireframe.gif' title='Video Walkthrough' width='200' alt='Video Walkthrough' />
+<img src='tender_demo.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCAP](https://www.cockos.com/licecap/).
 
