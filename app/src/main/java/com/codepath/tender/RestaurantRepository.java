@@ -39,7 +39,6 @@ public class RestaurantRepository {
     private YelpService yelpService;
     private FetchRestaurantsListener restaurantsListener;
     private FetchFavoritesListener favoritesListener;
-    private DeleteFavoriteListener deleteFavoriteListener;
     private RestaurantDetailsListener restaurantDetailsListener;
     private ReviewsListener reviewsListener;
     private OtherUsersListener otherUsersListener;
@@ -54,11 +53,6 @@ public class RestaurantRepository {
     //interface to refresh swipe adapter when data is updated
     public interface FetchFavoritesListener {
         void onFinishFetch(Restaurant restaurants);
-    }
-
-    //interface to delete a user favorite from list
-    public interface DeleteFavoriteListener {
-        void onFinishDelete();
     }
 
     //interface to get detailed data of restaurant in detail activity
@@ -140,6 +134,7 @@ public class RestaurantRepository {
         //parse for favorites restaurant objects
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(FAVORITE_TABLE_KEY);
         query.whereEqualTo(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId());
+        query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<ParseObject>() { //parse for favorites of user
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -184,9 +179,6 @@ public class RestaurantRepository {
                     object.deleteInBackground(new DeleteCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if(e == null) {
-                                deleteFavoriteListener.onFinishDelete();
-                            }
                         }
                     });
                 }
@@ -274,11 +266,6 @@ public class RestaurantRepository {
     //method to initialize the fetch favorites listener
     public void setFetchFavoritesListener(FetchFavoritesListener listener) {
         this.favoritesListener = listener;
-    }
-
-    //method to initialize the delete favorites listener
-    public void setDeleteFavoritesListener(DeleteFavoriteListener listener) {
-        this.deleteFavoriteListener = listener;
     }
 
     //method to initialize the details listener

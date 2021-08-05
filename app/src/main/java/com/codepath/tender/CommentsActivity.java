@@ -76,14 +76,12 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String data = user_comment.getText().toString();
-                Toast.makeText(CommentsActivity.this, data, Toast.LENGTH_SHORT).show();
 
                 // Using new `Message.java` Parse-backed model now
                 ParseObject comment = ParseObject.create(COMMENT_TABLE_KEY);
                 comment.put(USERNAME_KEY, ParseUser.getCurrentUser().getUsername());
                 comment.put(BODY_KEY, data);
                 comment.put(RESTAURANT_ID_KEY, restaurant_id);
-                comment.put(PROFILE_IMAGE_KEY, ParseUser.getCurrentUser().getString(PROFILE_IMAGE_KEY));
 
                 comment.saveInBackground(new SaveCallback() {
                     @Override

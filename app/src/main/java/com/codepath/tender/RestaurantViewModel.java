@@ -51,8 +51,6 @@ public class RestaurantViewModel extends AndroidViewModel {
 
     public void setFetchFavoritesListener(RestaurantRepository.FetchFavoritesListener listener) { repository.setFetchFavoritesListener(listener); }
 
-    public void setDeleteFavoriteListener(RestaurantRepository.DeleteFavoriteListener listener) { repository.setDeleteFavoritesListener(listener); }
-
     public void setRestaurantDetailsListener(RestaurantRepository.RestaurantDetailsListener listener) { repository.setRestaurantDetailsListener(listener);}
 
     public void setReviewsListener(RestaurantRepository.ReviewsListener listener) { repository.setReviewsListener(listener); }

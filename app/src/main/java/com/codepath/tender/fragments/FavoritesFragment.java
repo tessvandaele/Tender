@@ -50,9 +50,6 @@ public class FavoritesFragment extends Fragment implements RecyclerTouchItemHelp
         //creating a view model in which data will be saved across screen changes
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
-        //implementing delete listener interface to delete a favorite from the list
-        setDeleteListeners();
-
         //adapter and layout manager set up
         adapter = new FavoritesAdapter(getContext(), favorites, listener);
         recyclerView.setAdapter(adapter);
@@ -78,30 +75,12 @@ public class FavoritesFragment extends Fragment implements RecyclerTouchItemHelp
         });
     }
 
-    //helper method to implement delete listener interface to delete a favorite from the list
-    public void setDeleteListeners() {
-        listener = new FavoritesAdapter.OnClickListenerDelete() {
-            @Override
-            public void onItemClicked(String id) {
-                model.deleteFavorite(id);
-            }
-        };
-
-        model.setDeleteFavoriteListener(new RestaurantRepository.DeleteFavoriteListener() {
-            @Override
-            public void onFinishDelete() {
-                favorites.clear();
-                model.getFavorites();
-            }
-        });
-    }
-
     //when item is swipe left, it is deleted from list
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof FavoritesAdapter.ViewHolder) {
             // remove item from recycler view
-            adapter.removeItem(viewHolder.getAdapterPosition());
+            adapter.removeItem(viewHolder.getAdapterPosition(), model);
         }
     }
 }

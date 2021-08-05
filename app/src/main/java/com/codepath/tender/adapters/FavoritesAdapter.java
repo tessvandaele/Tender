@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.codepath.tender.DetailsActivity;
 import com.codepath.tender.R;
+import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.Restaurant;
 
 import java.util.List;
@@ -126,7 +127,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     }
 
     //helper method to remove item from list
-    public void removeItem(int position) {
+    public void removeItem(int position, RestaurantViewModel model) {
+        model.deleteFavorite(favorites.get(position).getId());
         favorites.remove(position);
         notifyItemRemoved(position);
     }
