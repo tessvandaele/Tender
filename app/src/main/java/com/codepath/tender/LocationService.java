@@ -28,25 +28,28 @@ import static com.codepath.tender.Constants.LATITUDE_KEY;
 import static com.codepath.tender.Constants.LONGITUDE_KEY;
 import static com.codepath.tender.MainActivity.PERMISSION_ID;
 
+/* handles retrieving user location */
+
 public class LocationService {
 
     private Context context;
-    private FusedLocationProviderClient mFusedLocationClient;
+    private FusedLocationProviderClient fusedLocationClient;
     private UserViewModel userViewModel;
 
     public LocationService(Context context, FusedLocationProviderClient fusedLocationProviderClient, UserViewModel userViewModel) {
         this.context = context;
-        this.mFusedLocationClient = fusedLocationProviderClient;
+        this.fusedLocationClient = fusedLocationProviderClient;
         this.userViewModel = userViewModel;
     }
 
+    //main method to get user location and store it in parse database
     @SuppressLint("MissingPermission")
     public void getLastLocation() {
         // check if permissions are given
         if (checkPermissions()) {
             // check if location is enabled
             if (isLocationEnabled()) {
-                mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         Location location = task.getResult();
@@ -65,7 +68,7 @@ public class LocationService {
                     }
                 });
             } else {
-                Toast.makeText(context, "Please turn on your location...", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Please turn on your location", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 context.startActivity(intent);
             }
@@ -121,8 +124,8 @@ public class LocationService {
 
         // setting LocationRequest
         // on FusedLocationClient
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        fusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
     }
 
     // If everything is alright then get location

@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FusedLocationProviderClient mFusedLocationClient;
+    private FusedLocationProviderClient fusedLocationClient;
     final static int PERMISSION_ID = 44;
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         restaurantViewModel = new ViewModelProvider(this).get(RestaurantViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -99,11 +99,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        locationService = new LocationService(this, mFusedLocationClient, userViewModel);
+        //request user location
+        locationService = new LocationService(this, fusedLocationClient, userViewModel);
         locationService.getLastLocation();
-
-
     }
 
     //helper method for when the deck of restaurants needs to be refloaded
@@ -133,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         locationService.onResume();
     }
 
+    //closes instructions overlay when clicked anywhere
     public void setOverlayButton() {
         overlay.setOnClickListener(new View.OnClickListener() {
             @Override

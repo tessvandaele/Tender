@@ -40,6 +40,8 @@ import java.util.List;
 import static com.codepath.tender.Constants.MAPVIEW_BUNDLE_KEY;
 import static com.codepath.tender.Constants.MAP_API_KEY;
 
+/*handles creating google map in details activity */
+
 public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClickListener {
 
     final private static String TAG = "MapService";
@@ -51,7 +53,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
     private GeoApiContext geoApiContext;
     private Marker marker;
 
-    private ArrayList<PolylineData> polylines_list;
+    private ArrayList<PolylineData> polylinesList;
 
     //constructor
     public MapService(Context context, MapView mapView) {
@@ -61,7 +63,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
 
     //initialize map view
     public void createMap(Bundle savedInstanceState) {
-        polylines_list = new ArrayList<>();
+        polylinesList = new ArrayList<>();
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
@@ -164,12 +166,12 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
             @Override
             public void run() {
                 //clearing any past data
-                if(polylines_list.size() > 0){
-                    for(PolylineData polylineData: polylines_list){
+                if(polylinesList.size() > 0){
+                    for(PolylineData polylineData: polylinesList){
                         polylineData.getPolyline().remove();
                     }
-                    polylines_list.clear();
-                    polylines_list = new ArrayList<>();
+                    polylinesList.clear();
+                    polylinesList = new ArrayList<>();
                 }
 
                 double duration = 999999999;
@@ -191,7 +193,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
                     Polyline polyline = map.addPolyline(new PolylineOptions().addAll(newDecodedPath));
                     polyline.setColor(ContextCompat.getColor(context, R.color.grey));
                     polyline.setClickable(true);
-                    polylines_list.add(new PolylineData(polyline, route.legs[0]));
+                    polylinesList.add(new PolylineData(polyline, route.legs[0]));
 
                     // highlight the fastest route and adjust camera
                     double tempDuration = route.legs[0].duration.inSeconds;
@@ -208,7 +210,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
     @Override
     public void onPolylineClick(Polyline polyline) {
         //find which polyline in our list is the one that was clicked
-        for(PolylineData polylineData: polylines_list){
+        for(PolylineData polylineData: polylinesList){
             if(polyline.getId().equals(polylineData.getPolyline().getId())){
                 //this polyline was clicked; set color to blue and index to 1
                 polylineData.getPolyline().setColor(ContextCompat.getColor(context, R.color.main_color));
@@ -252,11 +254,10 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
         );
     }
 
+    //creates dialog that prompts the user whether to open google maps of not
     public void openGoogleMapsDialog() {
         //creating alert dialog
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        //prompting user whether to opem google maps
         builder.setMessage("Open Google Maps?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() { //yes
@@ -286,6 +287,8 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnPolylineClick
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+
+        //setting alert button colors
         alert.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(context.getResources().getColor(R.color.transparent));
         alert.getButton(AlertDialog.BUTTON_NEGATIVE).setBackgroundColor(context.getResources().getColor(R.color.transparent));
         alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.dark_grey));

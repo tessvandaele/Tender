@@ -18,17 +18,19 @@ import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.Restaurant;
 
+/* tab 1: displays address, phone number, and website */
+
 public class InfoFragment extends Fragment {
 
     private Restaurant restaurant;
 
     private TextView address;
     private TextView distance;
-    private TextView display_phone;
+    private TextView displayPhone;
     private TextView website;
-    private ImageButton phone_button;
-    private ImageButton link_button;
-    private ImageButton map_button;
+    private ImageButton phoneButton;
+    private ImageButton linkButton;
+    private ImageButton mapButton;
 
     private RestaurantViewModel model;
 
@@ -45,26 +47,26 @@ public class InfoFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         address = view.findViewById(R.id.tvAddressInfo);
         distance = view.findViewById(R.id.tvDistanceInfo);
-        display_phone = view.findViewById(R.id.tvPhoneInfo);
+        displayPhone = view.findViewById(R.id.tvPhoneInfo);
         website = view.findViewById(R.id.tvWebsiteInfo);
-        phone_button = view.findViewById(R.id.ivPhoneInfo);
-        link_button = view.findViewById(R.id.ivLinkInfo);
-        map_button = view.findViewById(R.id.ivLocationInfo);
+        phoneButton = view.findViewById(R.id.ivPhoneInfo);
+        linkButton = view.findViewById(R.id.ivLinkInfo);
+        mapButton = view.findViewById(R.id.ivLocationInfo);
 
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
+        //updating every time the current restaurant changes
         model.getCurrent_restaurant().observe(getViewLifecycleOwner(), restaurant -> {
             this.restaurant = restaurant;
             bind();
         });
-
-
     }
 
+    //binding restaurant data to view
     public void bind() {
         address.setText(getAddressString());
         distance.setText(restaurant.getDisplayDistance());
-        display_phone.setText(restaurant.getDisplay_phone());
+        displayPhone.setText(restaurant.getDisplay_phone());
         website.setText(restaurant.getUrl().substring(0, 20) + "...");
 
         setButtonRedirects();
@@ -85,9 +87,10 @@ public class InfoFragment extends Fragment {
         return result;
     }
 
+    //sets up all of the image buttons that redirect the user to an outside source
     public void setButtonRedirects() {
         //redirect to google maps
-        map_button.setOnClickListener(new View.OnClickListener() {
+        mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 double latitude = restaurant.getCoordinates().getLatitude();
@@ -107,7 +110,7 @@ public class InfoFragment extends Fragment {
         });
 
         //redirect to phone
-        phone_button.setOnClickListener(new View.OnClickListener() {
+        phoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -117,7 +120,7 @@ public class InfoFragment extends Fragment {
         });
 
         //redirect to yelp webpage
-        link_button.setOnClickListener(new View.OnClickListener() {
+        linkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurant.getUrl()));

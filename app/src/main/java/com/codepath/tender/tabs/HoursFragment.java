@@ -20,6 +20,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/* tab 2: displays restaurant bussiness hours */
+
 public class HoursFragment extends Fragment {
 
     private Restaurant restaurant;
@@ -55,6 +57,7 @@ public class HoursFragment extends Fragment {
 
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
+        //updating every time the current restaurant changes
         model.getCurrent_restaurant().observe(getViewLifecycleOwner(), restaurant1 -> {
             this.restaurant = restaurant1;
             try {

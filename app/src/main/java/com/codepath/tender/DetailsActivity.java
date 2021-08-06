@@ -54,23 +54,22 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView rating;
     private TextView price;
     private TextView location;
-    private TextView other_users;
-    private ImageButton all_reviews_link;
+    private TextView otherUsers;
+    private ImageButton allReviewsLink;
     private TextView hours;
     private ImageButton comments;
     private ImageButton back;
+    private Button openMaps;
 
     private RecyclerView rvReviews;
     private RecyclerViewHeader header;
-    private Button open_maps;
-
     private ReviewAdapter adapter;
+
     private RestaurantViewModel model;
-
-    private String restaurant_id;
-    private String yelp_url;
-
     private MapService mapService;
+
+    private String restaurantId;
+    private String yelpUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,18 +84,19 @@ public class DetailsActivity extends AppCompatActivity {
 
         model = new ViewModelProvider(this).get(RestaurantViewModel.class);
 
+        //assigning views
         image = findViewById(R.id.ivImageDetails);
         name = findViewById(R.id.tvNameDetails);
         location = findViewById(R.id.tvAddressDetails);
         rating = findViewById(R.id.tvRatingDetails);
         distance = findViewById(R.id.tvDistanceDetails);
         price = findViewById(R.id.tvPriceDetails);
-        other_users = findViewById(R.id.tvOtherUsers);
-        all_reviews_link = findViewById(R.id.btnAllReviewsLink);
+        otherUsers = findViewById(R.id.tvOtherUsers);
+        allReviewsLink = findViewById(R.id.btnAllReviewsLink);
         hours = findViewById(R.id.tvHoursDetails);
         rvReviews = findViewById(R.id.rvReviews);
         header = findViewById(R.id.header);
-        open_maps = findViewById(R.id.btnOpenMaps);
+        openMaps = findViewById(R.id.btnOpenMaps);
         comments = findViewById(R.id.ibComments);
         back = findViewById(R.id.ibBackDetails);
 
@@ -113,13 +113,15 @@ public class DetailsActivity extends AppCompatActivity {
 
     //retrieves the correct restaurant based on restaurant name
     public void bindData() {
-        restaurant_id = getIntent().getStringExtra(RESTAURANT_INTENT_KEY);
-        model.getRestaurantDetails(restaurant_id);
-        model.getRestaurantReviews(restaurant_id);
-        model.getOtherUsersWithFavorite(restaurant_id);
+        restaurantId = getIntent().getStringExtra(RESTAURANT_INTENT_KEY);
+        model.getRestaurantDetails(restaurantId);
+        model.getRestaurantReviews(restaurantId);
+        model.getOtherUsersWithFavorite(restaurantId);
     }
 
+    //sets both the details fetch listener and reviews listener to bind data once fetched
     public void setListeners() {
+        //bind restaurant data once retrieved
         model.setRestaurantDetailsListener(new RestaurantRepository.RestaurantDetailsListener() {
             @Override
             public void onFinishDetailsFetch(Restaurant restaurant) {
@@ -136,7 +138,7 @@ public class DetailsActivity extends AppCompatActivity {
                         .centerCrop()
                         .into(image);
 
-                yelp_url = restaurant.getUrl();
+                yelpUrl = restaurant.getUrl();
                 mapService.setMarker(restaurant.getCoordinates().getLatitude(), restaurant.getCoordinates().getLongitude(), restaurant.getName());
                 try {
                     setTodaysHours(restaurant);
@@ -146,6 +148,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+        //bind reviews data once retrieved
         model.setReviewsListener(new RestaurantRepository.ReviewsListener() {
             @Override
             public void onFinishReviewsFetch(List<Review> new_reviews) {
@@ -154,6 +157,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+        //add to list of other users that liked the restaurant
         model.setOtherUsersListener(new RestaurantRepository.OtherUsersListener() {
             @Override
             public void onFinishOtherUserFetch(List<ParseUser> users) {
@@ -168,6 +172,7 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
+    //calls helper methods for each button
     public void setButtons() {
         setupReviewLinkButton();
         setOpenMapsButton();
@@ -176,6 +181,7 @@ public class DetailsActivity extends AppCompatActivity {
         setBackButton();
     }
 
+    //navigate back to favorites list
     private void setBackButton() {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,19 +191,21 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
+    //navigate to comments activity
     private void setCommentsButton() {
         comments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailsActivity.this, CommentsActivity.class);
-                intent.putExtra(COMMENTS_INTENT_KEY, restaurant_id);
+                intent.putExtra(COMMENTS_INTENT_KEY, restaurantId);
                 DetailsActivity.this.startActivity(intent);
             }
         });
     }
 
+    //open dialog of other users that have liked the restaurant
     public void setOtherUsersDialogButton() {
-        other_users.setOnClickListener(new View.OnClickListener() {
+        otherUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openOtherUserDialog();
@@ -205,11 +213,12 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
+    //opens a hyperlink to the yelp reviews page
     public void setupReviewLinkButton() {
-        all_reviews_link.setOnClickListener(new View.OnClickListener() {
+        allReviewsLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(yelp_url));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(yelpUrl));
                 startActivity(browserIntent);
             }
         });
@@ -217,7 +226,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     //redirects user to google maps for directions to restaurant location
     public void setOpenMapsButton() {
-        open_maps.setOnClickListener(new View.OnClickListener() {
+        openMaps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mapService.openGoogleMapsDialog();
@@ -238,7 +247,7 @@ public class DetailsActivity extends AppCompatActivity {
             //making certain parts of text bold
             Spannable sb = new SpannableString(final_string);
             sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 9, final_string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            other_users.setText(sb, TextView.BufferType.SPANNABLE);
+            otherUsers.setText(sb, TextView.BufferType.SPANNABLE);
         } else if(favorite_usernames.size() == 2) {
             String username = favorite_usernames.get(0);
             String final_string = liked_by + username + " and 1 other";
@@ -247,7 +256,7 @@ public class DetailsActivity extends AppCompatActivity {
             Spannable sb = new SpannableString(final_string);
             sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 9, 9+username.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 14+username.length(), final_string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            other_users.setText(sb, TextView.BufferType.SPANNABLE);
+            otherUsers.setText(sb, TextView.BufferType.SPANNABLE);
         } else {
             String username = favorite_usernames.get(0);
             String final_string = liked_by + username + " and " + (favorite_usernames.size()-1) + " others";
@@ -256,10 +265,11 @@ public class DetailsActivity extends AppCompatActivity {
             Spannable sb = new SpannableString(final_string);
             sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 9, 9+username.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 14+username.length(), final_string.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            other_users.setText(sb, TextView.BufferType.SPANNABLE);
+            otherUsers.setText(sb, TextView.BufferType.SPANNABLE);
         }
     }
 
+    //retrieves today's business hours
     public void setTodaysHours(Restaurant restaurant) throws ParseException {
         //calculate todays week day as int: mon = 0, tue = 1, etc
         hours.setText("Closed");
@@ -282,6 +292,7 @@ public class DetailsActivity extends AppCompatActivity {
         return formattedDate;
     }
 
+    //opens dialog with other usernames who likes restaurant
     public void openOtherUserDialog() {
         String users = "";
         for(int i = 0; i<favorite_usernames.size(); i++) {

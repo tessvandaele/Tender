@@ -30,17 +30,9 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     private List<Restaurant> favorites;
     private Context context;
 
-    private OnClickListenerDelete listener;
-
-    //interface to send positional data to favorites fragment
-    public interface OnClickListenerDelete {
-        void onItemClicked(String id);
-    }
-
-    public FavoritesAdapter(Context context, List<Restaurant> favorites, OnClickListenerDelete listener) {
+    public FavoritesAdapter(Context context, List<Restaurant> favorites) {
         this.context = context;
         this.favorites = favorites;
-        this.listener = listener;
     }
 
     //inflating the item_restaurant layout as the view for the view holder
@@ -73,7 +65,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         private TextView address2;
         public RelativeLayout viewBackground, viewForeground;
 
-        //vew holder constructor
+        //assigning views
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.tvName);
@@ -99,6 +91,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             reviewCount.setText(Integer.toString(restaurant.getReview_count()));
             price.setText(restaurant.getPrice());
 
+            //displaying address based on its length
             if (restaurant.getLocation().getDisplay_address().length > 2) {
                 address1.setText(restaurant.getLocation().getDisplay_address()[0] + ", " + restaurant.getLocation().getDisplay_address()[1]);
                 address2.setText(restaurant.getLocation().getDisplay_address()[2]);

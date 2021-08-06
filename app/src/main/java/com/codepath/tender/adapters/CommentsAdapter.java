@@ -16,15 +16,16 @@ import com.codepath.tender.models.Comment;
 
 import java.util.List;
 
+
+/* adapter for list of comments in comments activity */
+
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentViewHolder> {
 
     private List<Comment> comments;
     private Context context;
-    private String userId;
 
-    public CommentsAdapter(Context context, String userId, List<Comment> comments) {
+    public CommentsAdapter(Context context, List<Comment> comments) {
         this.comments = comments;
-        this.userId = userId;
         this.context = context;
     }
 
@@ -53,16 +54,18 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
-
             body = itemView.findViewById(R.id.tvBodyComment);
             username = itemView.findViewById(R.id.tvUsernameComment);
             profile_image = itemView.findViewById(R.id.ivProfileImageComment);
         }
 
+        //binding comment data
         public void bindComment(Comment comment) {
             username.setText(comment.getUsername());
             body.setText(comment.getBody());
-            Glide.with(context).load(comment.getProfile_image()).circleCrop().into(profile_image);
+            Glide.with(context).load(comment.getProfile_image())
+                                .circleCrop()
+                                .into(profile_image);
         }
     }
 }

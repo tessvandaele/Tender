@@ -13,6 +13,8 @@ import static com.codepath.tender.Constants.LONGITUDE_KEY;
 import static com.codepath.tender.Constants.PRICES_KEY;
 import static com.codepath.tender.Constants.RADIUS_KEY;
 
+/* View model that provides user data to the UI */
+
 public class UserViewModel extends AndroidViewModel {
 
     private MutableLiveData<Integer> radius;

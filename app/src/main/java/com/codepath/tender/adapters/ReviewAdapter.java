@@ -28,6 +28,8 @@ import static com.codepath.tender.Constants.DAY_MILLIS;
 import static com.codepath.tender.Constants.HOUR_MILLIS;
 import static com.codepath.tender.Constants.MINUTE_MILLIS;
 
+/* adapter for list of reviews in details activity */
+
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder>{
 
     private List<Review> reviews;
@@ -38,7 +40,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         this.reviews = reviews;
     }
 
-    //inflating the item_restaurant layout as the view for the view holder
+    //inflating the item_review layout as the view for the view holder
     @NonNull
     @Override
     public ReviewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -65,8 +67,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         private TextView user_text;
         private ImageButton review_link;
 
-
-        //vew holder constructor
+        //assigning views
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             user_image = itemView.findViewById(R.id.ivUserImage);
@@ -77,7 +78,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             review_link = itemView.findViewById(R.id.btnReviewLink);
         }
 
-        //binding the data to the view holder
+        //binding data to the view holder
         public void bind(Review review) {
             user_name.setText(review.getUser().getName());
             created_at.setText(getRelativeTimeAgo(review.getTime_created()));
@@ -91,8 +92,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                         .into(user_image);
             }
 
-
-
+            //intent to yelp page of review
             review_link.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,7 +100,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                     context.startActivity(browserIntent);
                 }
             });
-
         }
 
         //returns relative time stamp

@@ -12,6 +12,8 @@ import com.codepath.tender.tabs.HoursFragment;
 import com.codepath.tender.tabs.InfoFragment;
 import com.codepath.tender.tabs.GalleryFragment;
 
+/* adapter to manage the tab layout in the bottom sheet menu */
+
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     Context context;
     int totalTabs;

@@ -31,38 +31,41 @@ import static com.codepath.tender.Constants.RESTAURANT_ID_KEY;
 import static com.codepath.tender.models.Comment.BODY_KEY;
 import static com.codepath.tender.models.Comment.USERNAME_KEY;
 
+/* displays a list of the comments of the current restaurant */
+
 public class CommentsActivity extends AppCompatActivity {
 
-    EditText user_comment;
-    ImageButton send_btn;
+    EditText userComment;
+    ImageButton sendBtn;
     ImageButton back;
-    RecyclerView rv_comments;
-    List<Comment> comments_list;
+    RecyclerView rvComments;
+    List<Comment> commentsList;
     Boolean firstLoad;
     CommentsAdapter adapter;
+    String restaurantId;
 
-    String restaurant_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
 
-        restaurant_id = getIntent().getStringExtra(COMMENTS_INTENT_KEY);
+        //getting restaurant id from intent
+        restaurantId = getIntent().getStringExtra(COMMENTS_INTENT_KEY);
 
         //assigning views
-        user_comment = findViewById(R.id.etMessage);
-        send_btn = findViewById(R.id.ibSend);
+        userComment = findViewById(R.id.etMessage);
+        sendBtn = findViewById(R.id.ibSend);
         back = findViewById(R.id.ibBackComments);
-        rv_comments = findViewById(R.id.rvComments);
-        comments_list = new ArrayList<>();
+        rvComments = findViewById(R.id.rvComments);
+
+        commentsList = new ArrayList<>();
         firstLoad = true;
 
         //setting up recycler view with adapter and layout manager
-        String userId = ParseUser.getCurrentUser().getObjectId();
-        adapter = new CommentsAdapter(CommentsActivity.this, userId, comments_list);
-        rv_comments.setAdapter(adapter);
+        adapter = new CommentsAdapter(CommentsActivity.this, commentsList);
+        rvComments.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rv_comments.setLayoutManager(linearLayoutManager);
+        rvComments.setLayoutManager(linearLayoutManager);
         linearLayoutManager.setReverseLayout(true);
 
         setSendButton();
@@ -70,30 +73,33 @@ public class CommentsActivity extends AppCompatActivity {
         refreshMessages();
     }
 
+    //logic for publishing a comment
     private void setSendButton() {
         // When send button is clicked, create comment object on Parse
-        send_btn.setOnClickListener(new View.OnClickListener() {
+        sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String data = user_comment.getText().toString();
+                String data = userComment.getText().toString();
 
                 // Using new `Message.java` Parse-backed model now
                 ParseObject comment = ParseObject.create(COMMENT_TABLE_KEY);
                 comment.put(USERNAME_KEY, ParseUser.getCurrentUser().getUsername());
                 comment.put(BODY_KEY, data);
-                comment.put(RESTAURANT_ID_KEY, restaurant_id);
+                comment.put(RESTAURANT_ID_KEY, restaurantId);
 
                 comment.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
+                        //refresh the list of comments
                         refreshMessages();
                     }
                 });
-                user_comment.setText(null);
+                userComment.setText(null);
             }
         });
     }
 
+    //sets up button to navigate back to details page
     private void setBackButton() {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +115,7 @@ public class CommentsActivity extends AppCompatActivity {
         ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class);
         // Configure limit and sort order
         query.setLimit(MAX_COMMENTS_TO_DISPLAY);
-        query.whereEqualTo(RESTAURANT_ID_KEY, restaurant_id);
+        query.whereEqualTo(RESTAURANT_ID_KEY, restaurantId);
 
         // get the latest 50 messages, order will show up newest to oldest of this group
         query.orderByDescending("createdAt");
@@ -118,8 +124,8 @@ public class CommentsActivity extends AppCompatActivity {
         query.findInBackground(new FindCallback<Comment>() {
             public void done(List<Comment> comments, ParseException e) {
                 if (e == null) {
-                    comments_list.clear();
-                    comments_list.addAll(comments);
+                    commentsList.clear();
+                    commentsList.addAll(comments);
                     adapter.notifyDataSetChanged(); // update adapter
                     // Scroll to the bottom of the list on initial load
                     if (firstLoad) {

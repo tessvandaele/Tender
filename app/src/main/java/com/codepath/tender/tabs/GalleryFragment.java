@@ -15,6 +15,8 @@ import com.codepath.tender.R;
 import com.codepath.tender.RestaurantViewModel;
 import com.codepath.tender.models.Restaurant;
 
+/* tab 3: displays three images of the restaurant */
+
 public class GalleryFragment extends Fragment {
 
     private Restaurant restaurant;
@@ -42,6 +44,7 @@ public class GalleryFragment extends Fragment {
 
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
+        //updating every time the current restaurant changes
         model.getCurrent_restaurant().observe(getViewLifecycleOwner(), restaurant1 -> {
             this.restaurant = restaurant1;
             bind();
@@ -49,6 +52,7 @@ public class GalleryFragment extends Fragment {
 
     }
 
+    //binding the restaurant images to the views
     private void bind() {
         if(image1 != null) {
             Glide.with(getContext()).load(restaurant.getPhotos()[0]).centerCrop().into(image1);

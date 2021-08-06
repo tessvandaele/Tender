@@ -69,7 +69,7 @@ import static com.codepath.tender.Constants.PRICES_KEY;
 import static com.codepath.tender.Constants.PROFILE_IMAGE_KEY;
 import static com.codepath.tender.Constants.RADIUS_KEY;
 
-/* user can logout of account and view profile */
+/* user can change profile info, change search filters, and log out of acount */
 
 public class ProfileFragment extends Fragment {
 
@@ -120,14 +120,9 @@ public class ProfileFragment extends Fragment {
         name = view.findViewById(R.id.tvNameProfile);
         edit_name = view.findViewById(R.id.ibEditName);
 
-        tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)) + " mi");
-        barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
-        tvLocation.setText(getUserAddress());
-        name.setText(ParseUser.getCurrentUser().getString("name"));
-        ParseFile file = ParseUser.getCurrentUser().getParseFile(PROFILE_IMAGE_KEY);
-        Glide.with(this).load(file.getUrl()).circleCrop().into(profile_image);
-
         userViewModel = new ViewModelProvider(getActivity()).get(UserViewModel.class);
+
+        setUserInfo();
 
         setLogout();
         setCameraBtn();
@@ -142,6 +137,17 @@ public class ProfileFragment extends Fragment {
         setCategorySwitchListener();
     }
 
+    //sets views with user info from parse database
+    private void setUserInfo() {
+        tvRadius.setText(Integer.toString(ParseUser.getCurrentUser().getInt(RADIUS_KEY)) + " mi");
+        barRadius.setProgress(ParseUser.getCurrentUser().getInt(RADIUS_KEY));
+        tvLocation.setText(getUserAddress());
+        name.setText(ParseUser.getCurrentUser().getString("name"));
+        ParseFile file = ParseUser.getCurrentUser().getParseFile(PROFILE_IMAGE_KEY);
+        Glide.with(this).load(file.getUrl()).circleCrop().into(profile_image);
+    }
+
+    //gets the user location from parse and returns a formatted string
     private String getUserAddress() {
         double latitude = ParseUser.getCurrentUser().getDouble(LATITUDE_KEY);
         double longitude = ParseUser.getCurrentUser().getDouble(LONGITUDE_KEY);
@@ -225,7 +231,6 @@ public class ProfileFragment extends Fragment {
     public void setPriceChipsListener() {
         for (int i = 0; i<priceChips.getChildCount(); i++) {
             Chip chip = (Chip)priceChips.getChildAt(i);
-
 
             // Set the chip checked change listener
             chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -323,6 +328,7 @@ public class ProfileFragment extends Fragment {
         return result.substring(0, result.length()-1);
     }
 
+    //returns numerical value of each food category
     private int getCategoryNum(String s) {
         if(s.equals(CATEGORY_ONE)) return 0;
         if(s.equals(CATEGORY_TWO)) return 1;
@@ -340,6 +346,7 @@ public class ProfileFragment extends Fragment {
         return 0;
     }
 
+    //returns string value from num value of food category
     public String getCategoryName(int position){
         if(position == 0) return CATEGORY_ONE;
         if(position == 1) return CATEGORY_TWO;
@@ -357,16 +364,18 @@ public class ProfileFragment extends Fragment {
         return "";
     }
 
+    //sets up the switch that indicates whether specific categories are selected
     private void setCategorySwitchListener() {
         categorySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(!isChecked) {
+                    //turn off all chips
                     for (int i = 0; i<categoryChips.getChildCount(); i++) {
                         Chip chip = (Chip) categoryChips.getChildAt(i);
                         chip.setChecked(false);
-
                     }
+                    //save categories string as empty
                     userViewModel.setCategories("");
                     ParseUser.getCurrentUser().put(CATEGORIES_KEY, "");
                     ParseUser.getCurrentUser().saveInBackground();
@@ -375,6 +384,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    //sets the camera button to open the camera
     public void setCameraBtn() {
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -434,6 +444,7 @@ public class ProfileFragment extends Fragment {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
+    //sets up the edit button to change user name
     private void setEditNameButton() {
         edit_name.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -443,6 +454,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    //open dialog where user can change name
     private void openEditNameDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
 

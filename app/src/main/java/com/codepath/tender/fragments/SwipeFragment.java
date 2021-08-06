@@ -350,6 +350,7 @@ public class SwipeFragment extends Fragment {
         restaurantViewModel.fetchRestaurants(latitude, longitude, 30, offset, radius, prices, categories, "best_match");
     }
 
+    //creates the confetti animation
     public void buildConfetti() {
         konfettiView.build()
                 .addColors(Color.rgb(0, 151, 172 ), Color.rgb(255, 208, 141), Color.rgb(246, 131, 112))

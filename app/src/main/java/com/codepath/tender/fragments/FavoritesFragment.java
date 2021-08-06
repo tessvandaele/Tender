@@ -27,14 +27,11 @@ public class FavoritesFragment extends Fragment implements RecyclerTouchItemHelp
     private RecyclerView recyclerView;
     private FavoritesAdapter adapter;
     private RestaurantViewModel model;
-    private FavoritesAdapter.OnClickListenerDelete listener;
     private LinearLayoutManager layoutManager;
-
     ArrayList<Restaurant> favorites;
 
     //empty constructor
-    public FavoritesFragment() {
-    }
+    public FavoritesFragment() {}
 
     //inflate layout
     @Override
@@ -51,7 +48,7 @@ public class FavoritesFragment extends Fragment implements RecyclerTouchItemHelp
         model = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
 
         //adapter and layout manager set up
-        adapter = new FavoritesAdapter(getContext(), favorites, listener);
+        adapter = new FavoritesAdapter(getContext(), favorites);
         recyclerView.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
